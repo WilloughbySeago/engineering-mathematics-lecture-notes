@@ -4,12 +4,13 @@
 \strictpagecheck
 
 \usepackage{csquotes}
+\usepackage{cancel}
 
 \usepackage{tikz}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz-external/]
 
-
+\PassOptionsToPackage{hyphens}{url}
 \usepackage[pdfauthor={Willoughby Seago},pdftitle={Engineering Mathematics 1},pdfkeywords={engineering,mathematics}]{hyperref}  % Should be loaded second last (cleveref last)
 \colorlet{hyperrefcolor}{blue!60!black}
 \hypersetup{colorlinks=true, linkcolor=hyperrefcolor, urlcolor=hyperrefcolor}
@@ -26,6 +27,7 @@ noabbrev
 \setmathfont[range={\int, \oint, \otimes, \oplus, \bigotimes, \bigoplus}]{Latin Modern Math}
 
 % Highlight colour
+\colorlet{highlight}{glasgowBlue}
 
 % Title page info
 \title{Engineering Mathematics}
@@ -41,7 +43,6 @@ noabbrev
 % Commands
 % Maths
 
-
 \begin{document}
     \frontmatter
     \titlepage
@@ -50,8 +51,519 @@ noabbrev
     % \listoffigures
     \mainmatter
     
-    \chapter{Introduction}
+    \chapter*{Introduction}
     Welcome to \textit{Engineering Mathematics 1}.
     These are the lecture notes for block 1 of the course.
+    The notes here should cover all of the content of the lectures, plus some more.
+    The content delivered in lectures is the only \emph{examinable} content.
+    That doesn't mean you should ignore the rest of the material though!
+    Learning the bare minimum amount needed for the exam is not a good way to prepare for the exam, and will only hold you back later.
     
+    If you find an error in these notes (and I'm sure there will be some) please either contact me via email\footnote{\texttt{willoughby dot seago at glasgow dot ac dot uk}}, or create an issue on \textit{Github}\footnote{\url{https://github.com/WilloughbySeago/engineering-mathematics-lecture-notes}}
+    Learning how \textit{Github} works will be very useful if you ever plan to write code (and you will write code at some point).
+    
+    \section{Notes Format}
+    The notes are \emph{approximately} divided up into one chapter per lecture.
+    The key content is in the definitions and examples.
+    You don't need to remember these word for word, but you should be able to recreate the definitions and reproduce the work that went into doing an example.
+    
+    \begin{dfn}{}{}
+        Boxes like this will be used to state definitions.
+        You don't need to remember these word for word, but you should be able to give an equivalent definition.
+    \end{dfn}
+    
+    Other definitions are given in the text with the word in \define{bold} being defined.
+    These are still important definitions to know.
+    
+    \begin{ntn}{}{}
+        Boxes like this are used to define notation.
+        You are expected to be familiar with this notation.
+    \end{ntn}
+    
+    \begin{exm}{}{}
+        Boxes like this will be used for examples.
+        These may or may not have been covered in the lecture.
+        You don't need to remember the exact details of any example.
+        That said, the examples should be similar to questions that could be asked in an exam, so make sure you \emph{understand} the example.
+    \end{exm}
+    
+    \begin{app}{}{}
+        Boxes like this will be used for applications.
+        These are basically examples but with a bit more context, so the deal is the same: understand them, you don't need to memorise them.
+    \end{app}
+    
+    \begin{problem}{}{}
+        Boxes like this are used to give problems.
+        You should attempt these, but there's no grade for them.
+        Some may require you to pause and work something out, others you can just think about.
+        There are no answers provided for these, but I'm happy to discuss them.
+    \end{problem}
+    
+    \begin{cde}{}{}
+        Boxes like this will be used for code.
+        This will mostly be \textit{Matlab} code, since you should all learn some \textit{Matlab} during the course.
+        You don't need to memorise or understand this code for the exams, but I find that if I can code something up then I probably understand it well.
+        
+        I'm not an expert at \textit{Matlab}, so don't trust my code too much!
+    \end{cde}
+    
+    \begin{important}
+        Boxes like this will contain important ideas!
+    \end{important}
+    
+    \begin{wrn}
+        Here's a warning, just pointing out something to look out for.
+        This might be an edge case to consider or a common mistake that students make.
+    \end{wrn}
+    
+    \begin{remark}{}{}
+        This is a side comment, it's definitely not examinable, and you don't need to understand it.
+        It's just there if you're interested in the maths (and is part of my sneaky plan to convince you all that maths is interesting!).
+        I may also add links to relevant sources (usually just the \textit{Wikipedia} page, most of the time \textit{Wikipedia} is actually very good for maths, if a bit hard to read).
+        You are under no obligation to look at any of these links.
+        I'd be happy to discuss this content with you if you want, but not during lectures, and not if it gets in the way of other students discussing examinable material.
+    \end{remark}
+    
+    \chapter{Sets}
+    \section{Sets}
+    \begin{dfn}{Set}{}
+        A \defineindex{set} is a collection of things.
+        We call the things in the set \define{elements}\index{element} of the set.
+    \end{dfn}
+    
+    \begin{ntn}{}{}
+        If \(X\) is a set then we write \(a \in X\) to mean \(a\) is an element of \(X\).
+        We may also write \(a \notin X\) to mean \(a\) is \emph{not} an element of \(X\).
+    \end{ntn}
+    
+    There are several ways to define a set.
+    The first is to just list all of the elements.
+    We do this in curly brackets:
+    \begin{equation}
+        \{1, 2, 3\}, \qquad \{a, \beta, \clubsuit, \symcal{D}\}, \qquad \{1, \pi, \{42, 57\}\}.
+    \end{equation}
+    Notice that the elements can be pretty much anything, numbers, symbols, or even other sets, and we can mix and match these in a set.
+    The order of elements is not important, and we ignore any repeats.
+    So all of the following are the same set:
+    \begin{equation}
+        \{1, 2, 3\}, \qquad \{2, 1, 3\}, \qquad \{1, 1, 2, 3\}, \qquad \{1, 3, 2, 1, 3, 2, 2, 2\}.
+    \end{equation}
+    
+    \begin{remark}{}{}
+        This definition, \enquote{a collection of things} is somewhat vague.
+        Unfortunately giving a precise definition of a set is actually very hard.
+        The state-of-the-art definition is the axioms of \href{https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory}{Zermelo--Fraenkel (ZF) set theory}, which are pretty complicated (possibly with the addition of the axiom of choice for ZFC).
+        They're mostly concerned with edge cases that we don't have to worry about.
+        The only rule we really need to add is that no set can be an element of itself, otherwise we have problems with \href{https://en.wikipedia.org/wiki/Russell%27s_paradox}{Russel's paradox}.
+    \end{remark}
+    
+    Two sets are \define{equal}\index{equality of sets} if they have \emph{exactly} the same elements.
+    That is, if \(X\) and \(Y\) are sets then \(X = Y\) if every element of \(X\) is an element of \(Y\) and every element of \(Y\) is an element of \(X\).
+    
+    Sets can have any number of elements, including zero.
+    There is only one set with zero elements, and it's called the \defineindex{empty set}, and denoted \(\emptyset\).
+    Sets can also have an infinite number of elements!
+    The number of elements of a set is called the \defineindex{cardinality} of the set.
+    
+    Another way to define a set is from an existing set and a condition.
+    We do this using curly brackets to 
+    For example, if we have the set \(A = \{1, 2, \dotsc, 10\}\) then we can form new sets using the notation
+    \begin{equation}
+        \{a \in A \mid \text{condition on } a\}.
+    \end{equation}
+    Note that some texts will use \(:\) in place of \(\mid\).
+    For example,
+    \begin{align}
+        \{a \in A \mid a \text{ is even}\} &= \{2, 4, 6, 8, 10\},\\
+        \{x \in A \mid x \ne 7\} &= \{1, 2, 3, 4, 5, 6, 8, 9, 10\},\\
+        \{\alpha \in A \mid 2\alpha \in A\} &= \{1, 2, 3, 4, 5\}.
+    \end{align}
+    It is important to include which set \(a\) comes from, done here with \(a \in A\).
+    If you don't then it's not clear which values of \(a\) we should try in the condition.
+    You can also write which set \(a\) comes from as part of the condition.
+    
+    \subsection{Special Sets}
+    The following definitions are some sets that it's useful to have a special notation for.
+    These use an alternative font called black board bold, so called because when writing on the board drawing two lines can stand in for the ability to write in bold.
+    Here's the uppercase alphabet in black board bold for reference:
+    \begin{equation}
+        \symbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}.
+    \end{equation}
+    Note that this will look slightly different in different fonts.
+    I suggest having a practice writing the black board bold letters used in the following definitions.
+    
+    \begin{dfn}{Natural Numbers}{}
+        The \defineindex{natural numbers} is the set
+        \begin{equation}
+            \naturals = \{1, 2, 3, \dotsc\}
+        \end{equation}
+        of all positive whole numbers.
+    \end{dfn}
+    \begin{remark}{}{}
+        Some people (including me) would prefer to define the natural numbers as
+        \begin{equation}
+            \naturals \stackrel{!}{=} \{0, 1, 2, 3, \dotsc\}.
+        \end{equation}
+        However, both the textbook and the chosen convention of the university is that \(0 \notin \naturals\), so that's what we'll go with.
+        This is simply a choice of convention, there's nothing incorrect about either definition, it's just which one is more useful for the maths you're currently doing.
+        
+        Because of the ambiguity of what \(\naturals\) may mean with these differing conventions it's common to see other notations, such as
+        \begin{gather}
+            \naturals^{*} = \naturals^{\times} = \naturals_{>0} = \integers_{>0} = \{1, 2, 3, \dotsc\};\\
+            \naturals \cup \{0\} = \naturals_0 = \integers_{\ge 0} = \{0, 1, 2, 3, \dotsc\}.
+        \end{gather}
+        Don't worry about any symbols you haven't seen before here, but I may occasionally use \(\integers_{\ge 0}\) or \(\integers_{>0}\).
+    \end{remark}
+    
+    \begin{dfn}{Integers}{}
+        The \defineindex{integers} is the set
+        \begin{equation}
+            \integers = \{\dotsc, -3, -2, -1, 0, 1, 2, 3, \dotsc\}
+        \end{equation}
+        of all whole numbers.
+    \end{dfn}
+    
+    \begin{dfn}{Rational Numbers}{}
+        The \defineindex{rational numbers} is the set
+        \begin{equation}
+            \rationals = \left\{ \frac{a}{b} \mid a, b \in \integers \text{, and } b \ne 0 \right\}
+        \end{equation}
+        of all fractions.
+    \end{dfn}
+    
+    Note that \(1/2\), \(2/4\), \(3/6\), and so on all appear as \(a/b\) for some choice of \(a\) and \(b\), but these are all equal, so between them only define one element of \(\rationals\).
+    An equivalent definition that gets around this overspecification is
+    \begin{equation}
+        \rationals = \left\{ \frac{a}{b} \mid a, b \in \integers \text{, and } \gcd(a, b) = 1 \right\}.
+    \end{equation}
+    Then we get \(1/2\), but not \(2/4\) or \(3/6\) since \(\gcd(2, 4) = 2\) and \(\gcd(3, 6) = 3\).
+    Here \(\gcd\) is the \defineindex{greatest common divisor}, the largest natural number which divides all of the inputs.
+    
+    \begin{dfn}{Real Numbers}{}
+        The \defineindex{real numbers} is the set, \(\reals\), the elements of which are all points on the number line.
+    \end{dfn}
+    
+    For example, the real numbers contains all of the integers and all of the rationals, but also things like \(\pi\), \(\e\), and \(\sqrt{2}\).
+    Another way of thinking about this is that \(\rationals\) consists of all numbers which have a repeating decimal expansion (including, for example, \(0.5\), which is just \(0.500000\) with \(0\) repeating forever).
+    Then \(\reals\) is all numbers including those without a repeating decimal expansion, such as \(\pi = 3.1415926\ldots\).
+    
+    \begin{remark}{}{}
+        I've said \enquote{all numbers} here, but that's a bit of a circular definition, since when I say number I really mean real number.
+        You'll see in block 2 that there are other \enquote{numbers} that aren't real.
+        These are the complex numbers, denoted \(\complex\).
+        In fact, there are many sets we can define in maths that we may wish to call \enquote{numbers}, so be careful when you use the term \enquote{number} to specify what you mean by that.
+        
+        There are \href{https://en.wikipedia.org/wiki/Construction_of_the_real_numbers}{several (equivalent) formal definitions of the real numbers} which don't have this problem of circular definitions.
+        However, they're pretty hard to understand and even harder to use, so they aren't that helpful for us.
+    \end{remark}
+    
+    \section{Operations and Orders}
+    \subsection{Operations}
+    \begin{dfn}{Binary Operation}{}
+        Let \(S\) be a set.
+        A binary operation, say \(*\), on \(S\) takes in two elements, \(a, b \in S\), and outputs another element, \(a * b \in S\).
+    \end{dfn}
+    
+    Note that we're just using \(*\) as symbol here for a general binary operation.
+    Other symbols, such as \(+\), \(-\), \(\times\), \(\cdot\), or even no symbol (just write \(ab\) for the product) are often used.
+    
+    \begin{exm}{}{exm:binary operations on R}
+        The following define binary operations on \(\reals\):
+        \begin{itemize}
+            \item \(a * b = a + b\);
+            \item \(a * b = a - b\);
+            \item \(a * b = ab\);
+            \item \(a * b = \max\{a, b\}\);
+            \item \(a * b = (a + b) / 2\);
+            \item \(a * b = 14\).
+        \end{itemize}
+    \end{exm}
+    
+    Whenever we have a binary operation there are two properties that we usually want to check for.
+    
+    The first is commutativity, which says that the order doesn't matter.
+    
+    \begin{dfn}{Commutative}{}
+        A binary operation, \(*\), on \(S\) is called \defineindex{commutative} if \(a * b = b * a\) for all \(a, b \in S\).
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        Addition on \(\reals\) is commutative: \(x + y = y + x\) for all \(x, y \in \reals\).
+        Subtraction on \(\reals\) is noncommutative: \(5 - 2 = 3\) and \(2 - 5 = -3\).
+        Note that it's enough to provide a counterexample (here \(5\) and \(2\)) to show that an operation isn't commutative, but to show it is commutative you have to show that the order doesn't matter for all possible inputs.
+        
+        Multiplication on \(\reals\) is also commutative.
+        
+        If you're familiar with matrices note that matrix multiplication is noncommutative.
+        Another example of a noncommutative operation you may be familiar with is the cross product (or vector product) of two vectors.
+    \end{exm}
+    
+    \begin{problem}{}{}
+        Are the other operations of \cref{exm:binary operations on R} commutative?
+    \end{problem}
+    
+    The other condition is associativity, which says that if we do the operation multiple times it doesn't matter how we put brackets around it.
+    
+    \begin{dfn}{Associative}{}
+        A binary operation, \(*\), on \(S\) is called \defineindex{associative} if \((a * b) * c = a * (b * c)\) for all \(a, b, c \in S\).
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        Addition on \(\reals\) is commutative: \((x + y) + z = x + (y + z)\).
+        Subtraction on \(\reals\) is not associative: \((5 - 2) - 3 = 3 - 3 = 0\) and \(5 - (2 - 3) = 5 - (-1) = 6\).
+        
+        Multiplication on \(\reals\) is also associative.
+        
+        If you're familiar with matrices note that matrix multiplication is associative.
+        The vector cross product is nonassociative.
+    \end{exm}
+    
+    \begin{problem}{}{}
+        Are the other operations of \cref{exm:binary operations on R} commutative?
+    \end{problem}
+    
+    \subsection{Orders}
+    An order is similar to a binary operation, in that it takes in two elements of some set, \(S\).
+    However, the output isn't another value of \(S\), but instead the statement is either true or false.
+    For example, \(1 < 3\) is true, and \(3 < 1\) is false.
+    
+    There is also a natural way to order sets, and that's by subset.
+    
+    \begin{dfn}{Subset}{}
+        A set, \(X\), is a \defineindex{subset} of a set, \(Y\), if every element of \(X\) is also an element of \(Y\).
+        In symbols, if \(a \in X\) then \(a \in Y\).
+        
+        We say that \(Y\) is a \defineindex{superset} of \(X\) if \(X\) is a subset of \(Y\).
+        
+        If \(X \ne Y\) and \(X\) is a subset of \(Y\) then we say \(X\) is a \defineindex{proper subset} of \(Y\), and \(Y\) is a \defineindex{proper superset} of \(X\).
+        The word \defineindex{strict} may also be used instead of proper.
+    \end{dfn}
+    
+    Note that this is similar to the definition of when two sets are equal, but without the \enquote{exactly}.
+    There can be elements of \(Y\) which are not elements of \(X\).
+    
+    Nowhere in the definition does it say that \(X\) needs to have elements.
+    If \(X = \emptyset\) then it is true that every element of \(X\) is an element of \(Y\), it's just that there are no elements of \(X\).
+    Thus, the empty set is a subset of all sets, \(\emptyset \subseteq Y\).
+    
+    \begin{remark}{}{}
+        The empty set satisfies any property which can be stated as \enquote{such and such is true for all elements of \(X\)}.
+        We say that the property holds \href{https://en.wikipedia.org/wiki/Vacuous_truth}{vacuously}.
+        For example, if I have an empty field it is true to say that every horse in the field is purple!
+    \end{remark}
+    
+    \begin{ntn}{}{}
+        If \(X\) is a subset of \(Y\) we write \(X \subseteq Y\) or \(Y \subseteq X\).
+        If \(X\) is a proper subset of \(Y\) we write \(X \subset Y\) or \(Y \supset X\).
+        
+        \begin{wrn}
+            Some sources write \(\subset\) to mean subset and \(\subsetneq\) to mean proper subset, so be careful.
+        \end{wrn}
+    \end{ntn}
+    
+    \begin{exm}{}{}
+        Can you see why each of the following is true?
+        Note that \(\cancel{\phantom{x}}\) is used to mean that the statement without the \(\cancel{\phantom{x}}\) is false.
+        \begin{itemize}
+            \item \(\{1, 2, 3\} \subset \{1, 2, 3, 4\}\);
+            \item \(\{1, 2, 3\} \subseteq \{1, 2, 3, 4\}\);
+            \item \(\{1, 2, 3\} \subseteq \{1, 2, 3\}\);
+            \item \(\{1, 2, 3\} \not\subset \{1, 2, 3\}\);
+            \item \(\{1, 2, 3, 4\} \not\subseteq \{1, 2, 3\}\);
+            \item \(\{1, 2, 3, 4\} \not\subset \{1, 2, 3\}\).
+        \end{itemize}
+    \end{exm}
+    
+    \begin{exm}{}{}
+        Notice that we have a chain of inclusions:
+        \begin{equation}
+            \naturals \subset \integers \subset \rationals \subset \reals.
+        \end{equation}
+        Can you come up with an element of each set which was not in the previous set, showing that these are strict subsets?
+        If you know about the complex numbers already then note that we can extend this by \(\reals \subset \complex\).
+    \end{exm}
+    
+    \begin{problem}{}{}
+        Can you list all subsets of \(\{1\}\), \(\{1, 2\}\), \(\{1, 2, 3\}\), and \(\{1, 2, 3, 4\}\)?
+        Hint: don't forget the empty set and the whole set.
+        
+        Can you spot a pattern in the number of subsets?
+    \end{problem}
+    
+    We can think of \(\subseteq\) as defining an order on sets, just like \(\le\) is an order on \(\reals\).
+    One difference is that for any two real numbers, \(x\) and \(y\), we always have either \(x \le y\) or \(y \le x\) (or both if \(x = y\)).
+    However, for sets this isn't the case.
+    For example, if \(X = \{1, 2, 3\}\) and \(Y = \{3, 4, 5\}\) then it isn't true that \(X \subseteq Y\), since \(1 \notin Y\), and it isn't true that \(Y \subseteq X\), since \(4 \notin X\).
+    
+    \begin{remark}{}{}
+        The difference highlighted above is the difference between a \href{https://en.wikipedia.org/wiki/Total_order}{total order} and a \href{https://en.wikipedia.org/wiki/Partially_ordered_set}{partial order}.
+        The real numbers with \(\le\) are a total order (in fact, this can be taken as one of the defining properties of \(\reals\)), whereas sets are only partially ordered by \(\subseteq\).
+    \end{remark}
+    
+    \subsection{Operations on Sets}
+    In this section let \(A\) and \(B\) be sets.
+    
+    \begin{dfn}{Union}{}
+        The \defineindex{union} of \(A\) and \(B\) is the set, \(A \cup B\), containing all elements of either \(A\) \emph{or} \(B\).
+        In symbols,
+        \begin{equation}
+            A \cup B = \{x \mid x \in A \text{ or } x \in B\}.
+        \end{equation}
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(\{1, 2, 3\} \cup \{4, 5, 6\} = \{1, 2, 3, 4, 5, 6\}\);
+            \item \(\{1, 2, 3\} \cup \emptyset = \{1, 2, 3\}\);
+            \item \(\naturals \cup \integers = \integers\);
+            \item \(\naturals \cup \{0\} = \{0, 1, 2, 3, \dotsc\} = \integers_{\ge 0}\).
+        \end{itemize}
+    \end{exm}
+    
+    Notice that the union of two sets needn't be a new set.
+    In particular, if \(A\) is a subset of \(B\) then \(A \cup B = B\).
+    
+    \begin{dfn}{Intersection}{}
+        The \defineindex{intersection} of \(A\) and \(B\) is the set, \(A \cap B\), containing al elements of \emph{both} \(A\) \emph{and} \(B\).
+        In symbols,
+        \begin{equation}
+            A \cap B = \{x \mid x \in A \text{ and } x \in B\}.
+        \end{equation}
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(\{1, 2, 3\} \cap \{4, 5, 6\} = \emptyset\);
+            \item \(\{1, 2, 3\} \cap \{2, 3, 4\} = \{2, 3\}\);
+            \item \(\reals \cap \rationals = \rationals\);
+            \item \(\integers \cap \{x \in \reals \mid -3 \le x \le 3\} = \{-3, -2, -1, 0, 1, 2, 3\}\).
+        \end{itemize}
+    \end{exm}
+    
+    Notice that the intersection of two sets needn't be a new set.
+    In particular, if \(A\) is a subset of \(B\) then \(A \cap B = A\).
+    
+    \begin{dfn}{Difference}{}
+        The \defineindex{difference} of \(A\) and \(B\) is the set, denoted \(A \setminus B\) or \(A - B\), containing all elements of \(A\) which are \emph{not} elements of \(B\).
+        In symbols,
+        \begin{equation}
+            A \setminus B = \{x \in A \mid x \notin B\}.
+        \end{equation}
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(\{1, 2, 3, 4, 5\} \setminus \{4, 5\} = \{1, 2, 3\}\);
+            \item \(\reals \setminus \rationals\) is the \defineindex{irrational numbers}, all numbers which don't have a repeating decimal expansion;
+            \item \(\integers \setminus \naturals = \{\dotsc, -3, -2, -1, 0\}\);
+            \item \(\integers_{\ge 0} \setminus \{0\} = \naturals\).
+        \end{itemize}
+    \end{exm}
+    
+    All of these ways of combining sets can be pictured using Venn diagrams (\cref{fig:venn diagram union intersection difference}).
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{union-intersection-difference-of-sets}
+        \begin{tikzpicture}[scale=0.8]
+            \draw (-1.5*1.5, -1.5) rectangle (1.5*1.5, 1.5);
+            \draw [glasgowBlue, ultra thick, fill=glasgowBlue!50!white] (-0.5, 0) circle [radius=1];
+            \node [glasgowBlue] at (-0.5, 0) {\(A\)};
+            \begin{scope}[xshift=5cm]
+                \draw (-1.5*1.5, -1.5) rectangle (1.5*1.5, 1.5);
+                \draw [glasgowPillarbox, ultra thick, fill=glasgowPillarbox!50!white] (0.5, 0) circle [radius=1];
+                \node [glasgowPillarbox] at (0.5, 0) {\(B\)};
+            \end{scope}
+            \begin{scope}[yshift=-5cm, xshift=2.5cm]
+                \draw (-4.5, -3) rectangle (4.5, 3);
+                \draw [glasgowLeaf, ultra thick, fill=glasgowLeaf!50!white] (0, 1.73) arc (60:300:2) arc (-120:120:2) -- cycle;
+                \node [glasgowLeaf] at (0, 0) {\(A \cup B\)};
+            \end{scope}
+            \begin{scope}[yshift=-11.5cm, xshift=2.5cm]
+                \draw (-4.5, -3) rectangle (4.5, 3);
+                \draw [glasgowSlate, ultra thick, fill=glasgowSlate!50!white, opacity=0.2] (0, 1.73) arc (60:300:2) arc (-120:120:2) -- cycle;
+                \draw [glasgowLeaf, ultra thick, fill=glasgowLeaf!50!white] (0, 1.73) arc (120:240:2) arc (-60:60:2) -- cycle;
+                \node [glasgowLeaf] at (0, 0) {\(A \cap B\)};
+            \end{scope}
+            \begin{scope}[yshift=-18cm, xshift=2.5cm]
+                \draw (-4.5, -3) rectangle (4.5, 3);
+                \draw [glasgowSlate, ultra thick, fill=glasgowSlate!50!white, opacity=0.2] (0, 1.73) arc (60:300:2) arc (-120:120:2) -- cycle;
+                \draw [glasgowLeaf, ultra thick, fill=glasgowLeaf!50!white] (0, 1.73) arc (60:300:2) arc (240:120:2) -- cycle;
+                \node [glasgowLeaf] at (-2, 0) {\(A \setminus B\)};
+            \end{scope}
+        \end{tikzpicture}
+        \caption{The union, intersection, and set difference of the sets \(A\) and \(B\) represented as Venn diagrams.}
+        \label{fig:venn diagram union intersection difference}
+    \end{figure}
+    
+    \section{Power Rules}
+    Let \(a \in \reals\) be positive.
+    For \(n \in \naturals\) we define\footnote{The symbol \(\coloneq\) is sometimes used to mean that the left-hand-side is \emph{defined} to be the same as the right-hand-side.}
+    \begin{equation}
+        a^n \coloneq \underbrace{a \cdot a \dotsm a}_{n \text{ factors}}.
+    \end{equation}
+    
+    From this definition we can derive the first power rule, specifically,
+    \begin{equation}
+        a^n a^m = a^{n + m}.
+    \end{equation}
+    To see this we simply write out the definitions:
+    \begin{equation}
+        a^n a^m = \underbrace{a \dotsm a}_{n \text{ factors}} \cdot \underbrace{a \dotsm a}_{m \text{ factors}} = \underbrace{a \dotsm a}_{n + m \text{ factors}} = a^{n + m}.
+    \end{equation}
+    
+    Now, often in maths we have a definition that we want to extend in some way.
+    In this case, what if we want to define \(a^0\)?
+    A good way to do this is to look at what results hold for that definition, and make the extended definition in such a way that these properties still hold\footnote{The other way results get generalised in maths is pretty much the opposite of this, we ask instead what would happen if we deliberately break a property that holds in the more restricted case.}.
+    In this case we have that \(a^n a^m = a^{n + m}\).
+    If we take \(m = 0\) then we should have \(a^n a^0 = a^{n + 0} = a^n\).
+    So, we can see that if we define
+    \begin{equation}
+        a^0 \coloneq 1
+    \end{equation} 
+    then this result is still true, so that's the definition we'll take.
+    
+    We can continue on with this.
+    If we want to define \(a^{-n}\) for \(n \in \naturals\) then we should define it in such a way that the equation \(a^n a^{-n} = a^{n + (-n)} = a^0 = 1\) holds.
+    That is, we should make the definition
+    \begin{equation}
+        a^{-n} = \frac{1}{a^n}.
+    \end{equation}
+    
+    Another property that we can check holds for \(n, m \in \naturals\) is
+    \begin{equation}
+        (a^n)^m = a^{nm}.
+    \end{equation}
+    To see this holds we again just write out the definitions:
+    \begin{equation}
+        (a^n)^m = \underbrace{a^n \dotsm a^n}_{m \text{ factors}} = \underbrace{\underbrace{a \dotsm a}_{n \text{ factors}} \cdot \underbrace{a \dotsm a}_{n \text{ factors}}}_{m \text{ factors}} = \underbrace{a \dotsm a}_{nm \text{ factors}} = a^{nm}.
+    \end{equation}
+    
+    Now we can ask how we should define \(a^{1/n}\).
+    If we still want this property to hold we should have \((a^{1/n})^n = a^{n/n} = a^1 = a\).
+    That is, we should define \(a^{1/n}\) to be the number whose \(n\)th power is \(a\).
+    If that's a bit confusing just consider \(n = 2\).
+    Then \(a^{1/2}\) should be the number which squares to \(a\).
+    That is, \(a^{1/2} = \sqrt{2}\).
+    More generally,
+    \begin{equation}
+        a^{1/n} \coloneq \sqrt[n]{a}.
+    \end{equation}
+    
+    \begin{remark}{}{}
+        There's a slight subtlety here about exactly what we mean by \(\sqrt{a}\) or \(\sqrt[n]{a}\).
+        For example, both \(2\) and \(-2\) square to give \(4\).
+        When \(a\) is a positive real number we will always mean that \(\sqrt[n]{a}\) is the \emph{positive} real number whose \(n\)th power is \(a\).
+        When \(a\) is negative or even complex then we have to be more careful.
+    \end{remark}
+    
+    For ease of use here are all of the results of this section in one place.
+    For \(a\) a positive real number and \(m, n \in \naturals\) we have
+    \begin{equation}
+        a^na^m = a^{n + m}, \quad a^0 = 1, \quad a^{-n} = \frac{1}{a^n}, \qand a^{1/n} = \sqrt[n]{a}.
+    \end{equation}
+    Note that these can all be combined, for example,
+    \begin{equation}
+        a^{n/m} = \sqrt[m]{a^n} = (\sqrt[m]{a})^n.
+    \end{equation}
 \end{document}
