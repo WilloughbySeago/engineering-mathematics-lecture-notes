@@ -1,0 +1,79 @@
+%%%%% File NotesBoxes.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{LectureNotes}[2025/09/09 v1.0 Lecture Notes]
+
+% Packages
+\RequirePackage{xparse}  % Needed for command formatting
+\RequirePackage{amsmath}  % Needed for \DeclareMathOperator
+\RequirePackage{amsfonts}  % Needed for black board bold
+\ifluatex  % if lualatex used then loaded mathtools before unicode-math
+
+\else
+    \RequirePackage{mathtools}  % Needed for \DeclarePairedDelimiter 
+\fi
+\RequirePackage{bm}  % Needed for bold vectors
+
+% Upright e for exponential
+\ifluatex
+    \newcommand{\e}{\symrm{e}}
+\else
+    \newcommand{\e}{\mathrm{e}}
+\fi
+
+
+% Absolute value/Norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+% Derivatives --------------------------------------------------------------
+%\RequirePackage{diffcoeff}[=v4]
+\RequirePackage{diffcoeff}[]
+% Set default to be upright d
+%\diffdef{}{op-symbol=\mathrm{d}}
+% define other types of derivative
+% material derivative
+%\diffdef{m}{op-symbol=\mathrm{D}}
+%\newcommand*{\diffm}{\diff.m.}
+% difference derivative
+%\diffdef{D}{op-symbol=\Delta}
+%\newcommand*{\diffD}{\diff.D.}
+
+% fix \dl
+\let\@dl\dl
+\renewcommand*{\dl}[1]{\@dl0#1}
+% define \dd to be differential w/ extra spacing
+\newcommand*{\dd}[1]{\mskip2mu \dl{#1}}
+% End derivatives ---------------------------------------------------------
+
+% Number sets -------------------------------------------------------------
+
+% Define style that number sets will have
+\newcommand*{\numset}[1]{\mathbb{#1}}
+
+\newcommand*{\naturals}{\numset{N}}
+\newcommand*{\integers}{\numset{Z}}
+\newcommand*{\rationals}{\numset{Q}}
+\newcommand*{\reals}{\numset{R}}
+\newcommand*{\complex}{\numset{C}}
+\newcommand*{\quaternions}{\numset{H}}
+\newcommand*{\octonions}{\numset{O}}
+\newcommand*{\field}{\numset{F}}
+
+% End number sets ---------------------------------------------------------
+
+% Wordy operators ---------------------------------------------------------
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\cosec}{cosec}
+\DeclareMathOperator{\cosech}{cosech}
+% End wordy operators -----------------------------------------------------
+
+% Spaced words for maths
+% I often end up writing something like
+% \qquad\text{...}\qquad
+% where ... is and, or, where, etc. so here are some macros for this:
+\newcommand*{\qqand}{\qquad\text{and}\qquad}
+\newcommand*{\qand}{\quad\text{and}\quad}
+\newcommand*{\qqor}{\qquad\text{or}\qquad}
+\newcommand*{\qor}{\quad\text{or}\quad}
+\newcommand*{\qqwhere}{\qquad\text{where}\qquad}
+\newcommand*{\qwhere}{\quad\text{where}\quad}

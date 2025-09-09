@@ -1,0 +1,660 @@
+%%%%% File NotesBoxes.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{LectureBoxes}[2025/09/09 v1.0 Lecture Boxes]
+
+%%%%%% Packages
+\RequirePackage{xparse}  % For more advanced command giving
+\RequirePackage{listings}  % For code snippets
+\RequirePackage{tcolorbox}  % For boxes
+
+% Credit --------------------------------------------------------------------
+% The design, and most of the code, for these boxes comes from the textbooks
+% written by Jonathan Gelason (https://github.com/GleasSpty)
+% End Credit ----------------------------------------------------------------
+
+% tcolorbox libraries -------------------------------------------------------
+\tcbuselibrary{skins}
+\tcbuselibrary{theorems}
+\tcbuselibrary{breakable}
+\tcbuselibrary{hooks}
+% End tcolorbox libraries ---------------------------------------------------
+
+\tcbsetforeverylayer{shield externalize}  % Don't externalise tcolorboxes or tcolorboxes within tcolorboxes
+
+% Colours -------------------------------------------------------------------
+\RequirePackage{xcolor}
+% TODO Check which colours are actually used
+% TODO Design colour scheme
+\definecolor{highlight}{RGB}{243,102,25} % Define the highlight color used for highlighting throughout the book
+\definecolor{beige}{rgb}{0.96, 0.96, 0.86} % Definitions, etc..
+\definecolor{azure(web)(azuremist)}{rgb}{0.94, 1.0, 1.0} % For examples.
+\definecolor{darkcerulean}{rgb}{0.03, 0.27, 0.49} % Important boxes
+% End colours ---------------------------------------------------------------
+
+% Make tcolorbox theorems work with cleveref's cref -------------------------
+% I don't know how this works, but it does (not anymore but I'm scared to delete it incase I need it again), copied from
+% https://github.com/GleasSpty
+%\renewcommand{\new@tcbtheorem}[5][]{%
+%    \@@newtcolorbox[auto counter,#1]{#2}[3][]{#4,%
+%        title={\tcb@theo@title{#3}{\thetcbcounter}{##2}},%
+%        list entry={\protect\numberline{\thetcbcounter}##2},%
+%        code={\gdef\@currentlabelname{##2}\tcb@theo@label{#5}{##3}},%
+%        ##1}%
+%    \@@newtcolorbox[#1,no counter,list inside=]{#2*}[2][]{#4,%
+%        title={\tcb@theo@title{#3}{\@empty}{##2}},%
+%        ##1}%
+%}
+% End make tcolorbox theorems work with cleverref's cref --------------------
+
+% Important box -------------------------------------------------------------
+% The simplest box, centred, slightly narrower than the text, for highlighting key points
+\newtcolorbox{important}{center,%
+    colframe=highlight!95,%
+    colback=highlight!5,%
+    width=.9\linewidth,%
+}
+% End important box ---------------------------------------------------------
+
+% Counter shenanigans -------------------------------------------------------
+% To the best of my understanding this section makes it so that resetting a counter doesn't mess up hyperlinks? This could be completely wrong but it works so don't touch it.
+\newcommand{\blankline}{\vspace{\baselineskip}}
+\newcounter{step}
+\setcounter{step}{0}
+\crefname{step}{Step}{Steps}
+\newcounter{proofnumber} % step is reset, so in order for all the links to have unique anchors, must redefine \theHstep.  We use proofnumber to do this
+\renewcommand{\theHstep}{\arabic{proofnumber}.\arabic{step}}
+\NewDocumentCommand{\Step}{m o}{%
+    \stepcounter{proofnumber}%
+    \refstepcounter{step}%
+    \vspace*{0pt plus \baselineskip} % Good place to put glue to help out with underfull vbox warnings
+    \ifthenelse{\value{step}=1}{}{%
+        \par%
+        \blankline
+    }
+    \noindent
+    \textsc{Step  \thestep :  #1}\IfNoValueF{#2}{\label{#2}}
+    
+    \noindent\ignorespaces
+}
+% End counter shenanigans ---------------------------------------------------
+
+% Proof environment ---------------------------------------------------------
+\BeforeBeginEnvironment{proof}{%
+    \tcblower % Forces proofs to go in lower part of box
+    \setcounter{step}{0}
+}
+% End proof environment -----------------------------------------------------
+
+% Theorem environment -------------------------------------------------------
+\BeforeBeginEnvironment{thm}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{thm}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Theorem}{Theorems}]%
+{thm}{Theorem}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=highlight,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=highlight,%
+    colframe=highlight,%
+    colback=black!5,%
+    boxrule=1pt,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{highlight}---}},%
+    terminator sign={.\ },%
+    label type=thm,%
+    label separator=,}
+{}
+% End theorem environment ---------------------------------------------------
+
+% Proposition environment ---------------------------------------------------
+
+\BeforeBeginEnvironment{prp}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+\AfterEndEnvironment{prp}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Proposition}{Propositions}]%
+{prp}{Proposition}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=highlight,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=highlight,%
+    colframe=highlight,%
+    colback=black!5,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{highlight}---}},%
+    terminator sign={\ },%
+    label type=prp,%
+    label separator=,}
+{}
+
+% End proposition environment -----------------------------------------------
+
+% Claim environment ---------------------------------------------------------
+
+\BeforeBeginEnvironment{clm}{%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+\AfterEndEnvironment{clm}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Claim}{Claims}]%
+{clm}{Claim}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=highlight,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=highlight,%
+    colframe=highlight,%
+    colback=black!5,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{highlight}---}},%
+    terminator sign={\ },%
+    label type=clm,%
+    label separator=,}
+{}
+
+% End claim environment -----------------------------------------------------
+
+% Corollary environment -----------------------------------------------------
+\BeforeBeginEnvironment{crl}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{crl}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Corollary}{Corollaries}]%
+{crl}{Corollary}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=highlight,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=highlight,%
+    colframe=highlight,%
+    colback=black!5,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{highlight}---}},%
+    terminator sign={\ },%
+    label type=crl,%
+    label separator=,}%
+{}
+% End corollary environment -------------------------------------------------
+
+% Lemma environment ---------------------------------------------------------
+\BeforeBeginEnvironment{lma}{%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{lma}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Lemma}{Lemmas}]%
+{lma}{Lemma}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=highlight,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=highlight,%
+    colframe=highlight,%
+    colback=black!5,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{highlight}---}},%
+    terminator sign={\ },%
+    label type=lma,%
+    label separator=,}%
+{}
+% End lemma environment -----------------------------------------------------
+
+% Definition environment ----------------------------------------------------
+\BeforeBeginEnvironment{dfn}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{dfn}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Definition}{Definitions}]%
+{dfn}{Definition}%f
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=beige!35,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=dfn,%
+    label separator=,}
+{}
+% End definition environment ------------------------------------------------
+
+% Example environment -------------------------------------------------------
+\BeforeBeginEnvironment{exm}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{exm}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Example}{Examples}]%
+{exm}{Example}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+%    before title app={{\tiny\ensuremath{\blacksquare}}\nobreakspace},%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=azure(web)(azuremist)!45,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=exm,%
+    label separator=,
+}{}
+% End example environment ---------------------------------------------------
+
+% Application environment ---------------------------------------------------
+\BeforeBeginEnvironment{app}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{app}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Application}{Applications}]%
+{app}{Application}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+%    before title app={{\tiny\ensuremath{\blacksquare}}\nobreakspace},%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=azure(web)(azuremist)!45,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=app,%
+    label separator=,
+}{}
+% End application environment -----------------------------------------------
+
+% Code environment ----------------------------------------------------------
+\BeforeBeginEnvironment{cde}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{cde}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Code}{Code}]%
+{cde}{Code}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+%    before title app={{\tiny\ensuremath{\blacksquare}}\nobreakspace},%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=codeBackgroundColor,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=cde,%
+    label separator=,
+}{}
+% End code environment ------------------------------------------------------
+
+% Notation environment ------------------------------------------------------
+\BeforeBeginEnvironment{ntn}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{ntn}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Notation}{Notation}]%
+{ntn}{Notation}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=beige!35,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=ntn,%
+    label separator=,}
+{}
+% End notation environment --------------------------------------------------
+
+%% Notation environment ------------------------------------------------------
+%\BeforeBeginEnvironment{ntn}{%
+%    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+%    \refstepcounter{equation}%
+%}
+%
+%\AfterEndEnvironment{ntn}{%
+%    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+%}
+%
+%\newtcbtheorem[number freestyle={\noexpand\theequation},%
+%crefname={Notation}{Notation}]%
+%{ntn}{Notation}%
+%{enhanced jigsaw,%
+%    enforce breakable,%
+%    shrink break goal=0.5\baselineskip,%
+%    segmentation style=solid,%
+%    theorem style=plain,%
+%    fonttitle=\sffamily\upshape\bfseries\small,%
+%    coltitle=black,%
+%    description font=\sffamily\upshape\bfseries\small,%
+%    description color=black,%
+%    colframe=highlight,%
+%    colback=beige!35,%
+%    boxrule=0pt,%
+%    leftrule=4pt,%
+%    sharp corners,%
+%    description delimiters={}{},%
+%    separator sign={\nobreakspace {\color{black}---}},%
+%    terminator sign={\ },%
+%    label type=ntn,%
+%    label separator=,}
+%{}
+%% End notation environment --------------------------------------------------
+
+% Problem environment -------------------------------------------------------
+\newcounter{problem}
+\counterwithin{problem}{section}
+
+\BeforeBeginEnvironment{problem}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{problem}%
+}
+
+\AfterEndEnvironment{problem}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theproblem},%
+crefname={Problem}{Problems}]%
+{problem}{Problem}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    %    before title app={{\tiny\ensuremath{\blacksquare}}\nobreakspace},%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=azure(web)(azuremist)!45,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label separator=,
+}{}
+% End problem environment ---------------------------------------------------
+
+%% Notation environment ------------------------------------------------------
+%\BeforeBeginEnvironment{ntn}{%
+%    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+%    \refstepcounter{equation}%
+%}
+%
+%\AfterEndEnvironment{ntn}{%
+%    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+%}
+%
+%\newtcbtheorem[number freestyle={\noexpand\theequation},%
+%crefname={Notation}{Notation}]%
+%{ntn}{Notation}%
+%{enhanced jigsaw,%
+%    enforce breakable,%
+%    shrink break goal=0.5\baselineskip,%
+%    segmentation style=solid,%
+%    theorem style=plain,%
+%    fonttitle=\sffamily\upshape\bfseries\small,%
+%    coltitle=black,%
+%    description font=\sffamily\upshape\bfseries\small,%
+%    description color=black,%
+%    colframe=highlight,%
+%    colback=beige!35,%
+%    boxrule=0pt,%
+%    leftrule=4pt,%
+%    sharp corners,%
+%    description delimiters={}{},%
+%    separator sign={\nobreakspace {\color{black}---}},%
+%    terminator sign={\ },%
+%    label type=ntn,%
+%    label separator=,}
+%{}
+%% End notation environment --------------------------------------------------
+
+% Numbered remark environment -------------------------------------------------------
+\BeforeBeginEnvironment{remark}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{remark}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Remark}{Remarks}]%
+{remark}{Remark}%
+{enhanced jigsaw,%
+    enforce breakable,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=azure(web)(azuremist)!45,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label type=ntn,%
+    label separator=,}
+{}
+% End numbered remark environment ---------------------------------------------------
+
+% unnumbered Remark environment --------------------------------------------------------
+\newenvironment{rmk}{
+    \par%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+    \small % Smaller font size
+    \begin{list}{}{
+            \leftmargin=35pt % Indentation on the left
+            \rightmargin=25pt%
+            \ignorespaces}%
+        \item % Indentation on the right
+        \makebox[-2.5pt]{%
+	  \tikzexternaldisable
+            \begin{tikzpicture}[overlay]
+                \node[draw=highlight!60,line width=1pt,minimum size=0.5cm,circle,fill=highlight!25,font=\sffamily\bfseries,inner sep=2pt,outer sep=0pt] at (-15pt,0pt){\textcolor{highlight}{R}};%
+            \end{tikzpicture}
+	  \tikzexternalenable
+        } % Highlight coloured R in a circle
+        \advance\baselineskip -1pt%
+        \noindent%
+        \unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip%
+    }%
+    {%
+    \end{list}%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+}
+% End unnumbered remark environment ----------------------------------------------------
+
+% Warning environment -------------------------------------------------------
+\newenvironment{wrn}{
+    \par%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+    \small % Smaller font size
+    \begin{list}{}{
+            \leftmargin=35pt % Indentation on the left
+            \rightmargin=25pt%
+            \ignorespaces}%
+        \item % Indentation on the right
+        \makebox[-2.5pt]{%
+	  \tikzexternaldisable
+            \begin{tikzpicture}[overlay]
+                \node[draw=red!60,line width=1pt,minimum size=0.5cm,circle,fill=red!25,font=\sffamily\bfseries,inner sep=2pt,outer sep=0pt] at (-15pt,0pt){\textcolor{red}{!}};%
+            \end{tikzpicture}
+            \tikzexternalenable
+        } % Red ! in a circle
+        \advance\baselineskip -1pt%
+        \noindent%
+        \unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip\unskip%
+    }%
+    {%
+    \end{list}%
+    \vspace*{0pt plus 3pt minus 3pt} % To help with underfull vbox warnings
+}
+% End warning environment ---------------------------------------------------
+
+%%%%% Code boxes - Listings setup -------------------------------------------
+% Colours for code ----------------------------------------------------------
+% Colours based on solarized colour scheme
+\definecolor{codeBackgroundColor}{RGB}{253,246,227}  % Off white
+%\definecolor{codeBackgroundColor}{RGB}{7,54,66}  % Dark blue/gray
+\definecolor{codeTextColor}{RGB}{101,123,131}  % slightly light blue/gray
+\definecolor{codeKeyWordColor}{RGB}{133,153,0}  % Green
+\definecolor{codeCommentColor}{RGB}{42,161,152}  % Cyan
+\definecolor{codeStringColor}{RGB}{181,137,0}  % Yellow
+\definecolor{codeLineNumberColor}{RGB}{147,161,161}  % light blue/gray
+% End colours for code ------------------------------------------------------
+
+% Listings setup ------------------------------------------------------------
+\lstset{
+    basicstyle=\color{codeTextColor},
+    keywordstyle=\color{codeKeyWordColor},
+    commentstyle={\itshape\color{codeCommentColor}},
+    stringstyle={\ttfamily\color{codeStringColor}},
+    showstringspaces=false,
+    numberstyle={\color{codeLineNumberColor}\tiny},
+    numbers=left,
+    numbersep=0.1cm
+}
+% End listings setup --------------------------------------------------------

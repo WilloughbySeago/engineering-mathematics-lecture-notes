@@ -1,0 +1,57 @@
+% !TeX program = lualatex
+\documentclass[fleqn]{LectureClass/LectureClass}
+
+\strictpagecheck
+
+\usepackage{csquotes}
+
+\usepackage{tikz}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz-external/]
+
+
+\usepackage[pdfauthor={Willoughby Seago},pdftitle={Engineering Mathematics 1},pdfkeywords={engineering,mathematics}]{hyperref}  % Should be loaded second last (cleveref last)
+\colorlet{hyperrefcolor}{blue!60!black}
+\hypersetup{colorlinks=true, linkcolor=hyperrefcolor, urlcolor=hyperrefcolor}
+\usepackage[
+capitalize,
+nameinlink,
+noabbrev
+]{cleveref} % Should be loaded last
+
+% My packages
+\usepackage{LectureBoxes/LectureBoxes}
+\usepackage{LectureNotes/LectureNotes}
+
+\setmathfont[range={\int, \oint, \otimes, \oplus, \bigotimes, \bigoplus}]{Latin Modern Math}
+
+% Highlight colour
+
+% Title page info
+\title{Engineering Mathematics}
+\author{Willoughby Seago}
+\date{24th September 2025}
+\subtitle{Block 1}
+\subsubtitle{University of Glasgow}
+\renewcommand{\abstracttext}{
+    These are the lecture notes for block 1 of the \textit{Engineering Mathematics 1} (ENG1063) course.
+    They contain the material covered in the lectures and more.
+    Last updated on \today{} at \printtime{}.}
+
+% Commands
+% Maths
+
+
+\begin{document}
+    \frontmatter
+    \titlepage
+    \innertitlepage{}
+    \tableofcontents
+    % \listoffigures
+    \mainmatter
+    
+    \chapter{Introduction}
+    Welcome to \textit{Engineering Mathematics 1}.
+    These are the lecture notes for block 1 of the course.
+    
+\end{document}
