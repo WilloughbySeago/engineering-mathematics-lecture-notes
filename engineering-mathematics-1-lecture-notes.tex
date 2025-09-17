@@ -5,10 +5,14 @@
 
 \usepackage{csquotes}
 \usepackage{cancel}
+\usepackage{placeins}
 
 \usepackage{tikz}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz-external/]
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 \PassOptionsToPackage{hyphens}{url}
 \usepackage[pdfauthor={Willoughby Seago},pdftitle={Engineering Mathematics 1},pdfkeywords={engineering,mathematics}]{hyperref}  % Should be loaded second last (cleveref last)
@@ -36,30 +40,32 @@ noabbrev
 \subtitle{Block 1}
 \subsubtitle{University of Glasgow}
 \renewcommand{\abstracttext}{
-    These are the lecture notes for block 1 of the \textit{Engineering Mathematics 1} (ENG1063) course.
+    These are the lecture notes for block 1 of the \textit{Engineering Mathematics~1} (ENG1063) course.
     They contain the material covered in the lectures and more.
     Last updated on \today{} at \printtime{}.}
 
 % Commands
 % Maths
+\newcommand{\vv}[1]{\symbfup{#1}}
 
 \begin{document}
     \frontmatter
     \titlepage
-    \innertitlepage{}
+    \innertitlepage{tikz-external/intervals}
     \tableofcontents
-    % \listoffigures
+    \listoffigures
     \mainmatter
     
-    \chapter*{Introduction}
-    Welcome to \textit{Engineering Mathematics 1}.
+    \setcounter{chapter}{-1}
+    \chapter{Introduction}
+    Welcome to \textit{Engineering Mathematics 1}!
     These are the lecture notes for block 1 of the course.
     The notes here should cover all of the content of the lectures, plus some more.
     The content delivered in lectures is the only \emph{examinable} content.
     That doesn't mean you should ignore the rest of the material though!
-    Learning the bare minimum amount needed for the exam is not a good way to prepare for the exam, and will only hold you back later.
+    Learning the bare minimum amount needed for the exam is \emph{not} a good way to prepare for the exam, and will only hold you back later.
     
-    If you find an error in these notes (and I'm sure there will be some) please either contact me via email\footnote{\texttt{willoughby dot seago at glasgow dot ac dot uk}}, or create an issue on \textit{Github}\footnote{\url{https://github.com/WilloughbySeago/engineering-mathematics-lecture-notes}}
+    If you find an error in these notes (and I'm sure there will be some) please either contact me via email\footnote{\texttt{willoughby dot seago at glasgow dot ac dot uk}}, or create an issue on \textit{Github}\footnote{\url{https://github.com/WilloughbySeago/engineering-mathematics-lecture-notes}}.
     Learning how \textit{Github} works will be very useful if you ever plan to write code (and you will write code at some point).
     
     \section{Notes Format}
@@ -84,12 +90,12 @@ noabbrev
         Boxes like this will be used for examples.
         These may or may not have been covered in the lecture.
         You don't need to remember the exact details of any example.
-        That said, the examples should be similar to questions that could be asked in an exam, so make sure you \emph{understand} the example.
+        The examples should be similar to questions that could be asked in an exam, so make sure you \emph{understand} the example.
     \end{exm}
     
     \begin{app}{}{}
         Boxes like this will be used for applications.
-        These are basically examples but with a bit more context, so the deal is the same: understand them, you don't need to memorise them.
+        These are basically examples but with a bit more context, so the deal is the same: understand them, don't need to memorise them.
     \end{app}
     
     \begin{problem}{}{}
@@ -117,12 +123,44 @@ noabbrev
     \end{wrn}
     
     \begin{remark}{}{}
-        This is a side comment, it's definitely not examinable, and you don't need to understand it.
+        This is a side comment, it's definitely \emph{not examinable}, and you don't need to understand it.
         It's just there if you're interested in the maths (and is part of my sneaky plan to convince you all that maths is interesting!).
         I may also add links to relevant sources (usually just the \textit{Wikipedia} page, most of the time \textit{Wikipedia} is actually very good for maths, if a bit hard to read).
         You are under no obligation to look at any of these links.
         I'd be happy to discuss this content with you if you want, but not during lectures, and not if it gets in the way of other students discussing examinable material.
     \end{remark}
+    
+    \section{Symbols and Alphabets}
+    Maths is full of lots of symbols.
+    Any important ones will be defined in the notes.
+    We also like to use other alphabets in maths.
+    The Greek alphabet (\cref{tab:greek alphabet}) is particularly common.
+    Some upper case letters, as well as lower case omicron, are the same as the corresponding Latin (normal) letters, so we don't use them in maths.
+    There are also some letters with common \enquote{variant} forms, which are the same letter but in different fonts.
+    Occasionally people will use both a letter and its variant to mean different things, but this should be avoided, just pick the one you prefer the look of and use that.
+    
+    \begin{table}
+        \caption[The Greek alphabet.]{The Greek alphabet.}
+        \label{tab:greek alphabet}
+        \begin{tabular}{lcclcc}
+            \toprule
+            Letter & Lower case & Upper case & Letter & Lower case & Upper case\\
+            \midrule
+            Alpha & \(\alpha\) & \(\Alpha\) & Nu & \(\nu\) & \(\Nu\)\\
+            Beta & \(\beta\) & \(\Beta\) & Xi & \(\xi\) & \(\Xi\)\\
+            Gamma & \(\gamma\) & \(\Gamma\) & Omicron & \(\omicron\) & \(\Omicron\)\\
+            Delta & \(\delta\) & \(\Delta\) & Pi & \(\pi\) or \(\varpi\) & \(\Pi\)\\
+            Epsilon & \(\varepsilon\) or \(\epsilon\) & \(\Epsilon\) & Rho & \(\rho\) or \(\varrho\) & \(\Rho\)\\
+            Zeta & \(\zeta\) & \(\Zeta\) & Sigma & \(\sigma\) or \(\varsigma\) & \(\Sigma\)\\
+            Eta & \(\eta\) & \(\Eta\) & Tau & \(\tau\) & \(\Tau\)\\
+            Theta & \(\theta\) or \(\vartheta\) & \(\Theta\) & Upsilon & \(\upsilon\) & \(\Upsilon\)\\
+            Iota & \(\iota\) & \(\Iota\) & Phi & \(\phi\) or \(\varphi\) & \(\Phi\)\\
+            Kappa & \(\kappa\) or \(\varkappa\) & \(\Kappa\) & Chi & \(\chi\) & \(\Chi\)\\
+            Lambda & \(\lambda\) & \(\Lambda\) & Psi & \(\psi\) & \(\Psi\)\\
+            Mu & \(\mu\) & \(\Mu\) & Omega & \(\omega\) & \(\Omega\)\\
+            \bottomrule
+        \end{tabular}
+    \end{table}
     
     \chapter{Sets}
     \section{Sets}
@@ -150,7 +188,7 @@ noabbrev
     \end{equation}
     
     \begin{remark}{}{}
-        This definition, \enquote{a collection of things} is somewhat vague.
+        This definition -- a collection of things -- is somewhat vague.
         Unfortunately giving a precise definition of a set is actually very hard.
         The state-of-the-art definition is the axioms of \href{https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory}{Zermelo--Fraenkel (ZF) set theory}, which are pretty complicated (possibly with the addition of the axiom of choice for ZFC).
         They're mostly concerned with edge cases that we don't have to worry about.
@@ -161,7 +199,7 @@ noabbrev
     That is, if \(X\) and \(Y\) are sets then \(X = Y\) if every element of \(X\) is an element of \(Y\) and every element of \(Y\) is an element of \(X\).
     
     Sets can have any number of elements, including zero.
-    There is only one set with zero elements, and it's called the \defineindex{empty set}, and denoted \(\emptyset\).
+    The set with zero elements is called the \defineindex{empty set}, and denoted \(\emptyset\) or \(\{\}\)\footnote{Sometimes the symbols \(\not0\) or \(\phi\) are used also.}.
     Sets can also have an infinite number of elements!
     The number of elements of a set is called the \defineindex{cardinality} of the set.
     
@@ -171,7 +209,9 @@ noabbrev
     \begin{equation}
         \{a \in A \mid \text{condition on } a\}.
     \end{equation}
+    The resulting set is all elements of \(A\) which make the condition true.
     Note that some texts will use \(:\) in place of \(\mid\).
+    
     For example,
     \begin{align}
         \{a \in A \mid a \text{ is even}\} &= \{2, 4, 6, 8, 10\},\\
@@ -184,7 +224,7 @@ noabbrev
     
     \subsection{Special Sets}
     The following definitions are some sets that it's useful to have a special notation for.
-    These use an alternative font called black board bold, so called because when writing on the board drawing two lines can stand in for the ability to write in bold.
+    These use an alternative font called black board bold, so called because when writing on the board doubling up some lines is about as close to a bold font as you can get.
     Here's the uppercase alphabet in black board bold for reference:
     \begin{equation}
         \symbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}.
@@ -204,7 +244,7 @@ noabbrev
         \begin{equation}
             \naturals \stackrel{!}{=} \{0, 1, 2, 3, \dotsc\}.
         \end{equation}
-        However, both the textbook and the chosen convention of the university is that \(0 \notin \naturals\), so that's what we'll go with.
+        However, both the textbook and the chosen convention of the Glasgow university maths courses is that \(0 \notin \naturals\), so that's what we'll go with.
         This is simply a choice of convention, there's nothing incorrect about either definition, it's just which one is more useful for the maths you're currently doing.
         
         Because of the ambiguity of what \(\naturals\) may mean with these differing conventions it's common to see other notations, such as
@@ -223,6 +263,10 @@ noabbrev
         of all whole numbers.
     \end{dfn}
     
+    \begin{remark}{}{}
+        The integers are denoted by \(\integers\), which comes from the German \textit{z\"ahlen}, which means count.
+    \end{remark}
+    
     \begin{dfn}{Rational Numbers}{}
         The \defineindex{rational numbers} is the set
         \begin{equation}
@@ -230,6 +274,10 @@ noabbrev
         \end{equation}
         of all fractions.
     \end{dfn}
+    
+    \begin{remark}{}{}
+        The rationals are denoted by \(\rationals\), because they are all quotients, which is just another word for fraction.
+    \end{remark}
     
     Note that \(1/2\), \(2/4\), \(3/6\), and so on all appear as \(a/b\) for some choice of \(a\) and \(b\), but these are all equal, so between them only define one element of \(\rationals\).
     An equivalent definition that gets around this overspecification is
@@ -249,7 +297,7 @@ noabbrev
     
     \begin{remark}{}{}
         I've said \enquote{all numbers} here, but that's a bit of a circular definition, since when I say number I really mean real number.
-        You'll see in block 2 that there are other \enquote{numbers} that aren't real.
+        You'll see in block 2 that there are other \enquote{numbers} that aren't real numbers\footnote{Which isn't to say they aren't \enquote{real} in the day-to-day sense of existing (and being useful).}.
         These are the complex numbers, denoted \(\complex\).
         In fact, there are many sets we can define in maths that we may wish to call \enquote{numbers}, so be careful when you use the term \enquote{number} to specify what you mean by that.
         
@@ -257,15 +305,122 @@ noabbrev
         However, they're pretty hard to understand and even harder to use, so they aren't that helpful for us.
     \end{remark}
     
+    \begin{dfn}{Intervals}{}
+        An \defineindex{interval} is a segment of the number line.
+        An interval can either be \define{open}\index{open interval}, \define{closed}\index{closed interval}, or \define{half-open}\index{half-open interval}, depending on whether we include the endpoints or not.
+        Let \(a, b \in \reals\) with \(a \le b\).
+        \begin{itemize}
+            \item Open interval between \(a\) and \(b\):
+            \begin{equation}
+                (a, b) = \{x \in \reals \mid a < x < b\}.
+            \end{equation}
+            \item Closed interval between \(a\) and \(b\):
+            \begin{equation}
+                [a, b] = \{x \in \reals \mid a \le x \le b\}.
+            \end{equation}
+            \item Half-open intervals between \(a\) and \(b\):
+            \begin{align}
+                (a, b] &= \{x \in \reals \mid a < x \le b\},\\
+                [a, b) &= \{x \in \reals \mid a \le x < b\}.
+            \end{align}
+        \end{itemize}
+        Note that brackets mean we exclude the endpoint and square brackets mean we include it.
+    \end{dfn}
+    
+    We can draw intervals as lines on the number line.
+    When we do the convention is that an empty circle means we leave out the endpoint, and a filled in circle means we include it.
+    See \cref{fig:intervals}.
+    
+    \begin{figure}[ht]
+        \centering
+        \tikzsetnextfilename{intervals}
+        \begin{tikzpicture}[scale=0.8]
+            \node [left, xshift=-0.5cm] at (-5.5, 0) {\([-3, 2]\)};
+            \draw [<->] (-5.5, 0) -- (5.5, 0);
+            \foreach \i in {0, ..., 5} {
+                \node at (\i, -0.3) {\(\i\)};
+            }
+            \foreach \i in {1, ..., 5} {
+                \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+            }
+            \draw [ultra thick, glasgowPillarbox] (-3, 0) -- (2, 0);
+            \fill [glasgowPillarbox] (-3, 0) circle [radius=0.1];
+            \fill [glasgowPillarbox] (2, 0) circle [radius=0.1];
+            \begin{scope}[yshift=-1.5cm]
+                \node [left, xshift=-0.5cm] at (-5.5, 0) {\((0, 3)\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \draw [glasgowPillarbox, ultra thick] (0, 0) circle [radius=0.1];
+                \draw [glasgowPillarbox, ultra thick] (3, 0) circle [radius=0.1];
+                \draw [ultra thick, glasgowPillarbox] (0.1, 0) -- (2.9, 0);
+            \end{scope}
+            \begin{scope}[yshift=-3cm]
+                \node [left, xshift=-0.5cm] at (-5.5, 0) {\((-4, 4]\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \draw [glasgowPillarbox, ultra thick] (-4, 0) circle [radius=0.1];
+                \fill [glasgowPillarbox] (4, 0) circle [radius=0.1];
+                \draw [ultra thick, glasgowPillarbox] (-3.9, 0) -- (4, 0);
+            \end{scope}
+            \begin{scope}[yshift=-4.5cm]
+                \node [left, xshift=-0.5cm] at (-5.5, 0) {\([0, 1)\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \fill [glasgowPillarbox] (0, 0) circle [radius=0.1];
+                \draw [glasgowPillarbox, ultra thick] (1, 0) circle [radius=0.1];
+                \draw [ultra thick, glasgowPillarbox] (0, 0) -- (0.9, 0);
+            \end{scope}
+        \end{tikzpicture}
+        \caption{Intervals plotted on the number line.}
+        \label{fig:intervals}
+    \end{figure}
+    
+    We can also include the symbols \(\infty\) and \(-\infty\) in our intervals.
+    The rule is that if \(x \in \reals\) then \(x < \infty\), \(x \le \infty\), \(x > -\infty\) and \(x \ge -\infty\) are always true.
+    However, \(\infty\) is \emph{not} a real number, and so it doesn't make sense to include it as an endpoint.
+    We cannot write \([0, \infty]\), but we can write \([0, \infty)\), which is the set
+    \begin{equation}
+        [0, \infty) = \{x \in \reals \mid 0 \le x < \infty\},
+    \end{equation}
+    which is just the non-negative real numbers.
+    
+    \begin{remark}{}{}
+        Note that for any \(a \in \reals\) we have \((a, a) = \{x \in \reals \mid a < x < a\} = \emptyset\), there is no number that is both strictly greater than \(a\) and strictly less than \(a\).
+        So \(\emptyset\) is an open interval.
+        
+        We also have \((-\infty, \infty) = \{x \in \reals \mid -\infty < x < \infty\} = \reals\), so \(\reals\) is an open interval.
+        
+        The fact that \(\reals\) and \(\emptyset\) are both open intervals is important in an area of maths called \href{https://en.wikipedia.org/wiki/Topological_space#Definition_via_open_sets}{topology}, which generalises the notion of open and closed intervals.
+        
+        Notice that for any \(a \in \reals\) we have \([a, a] = \{x \in \reals \mid a \le x \le a\} = \{a\}\), so any singleton set is a closed interval.
+    \end{remark}
+    
+    
+    
     \section{Operations and Orders}
     \subsection{Operations}
     \begin{dfn}{Binary Operation}{}
         Let \(S\) be a set.
-        A binary operation, say \(*\), on \(S\) takes in two elements, \(a, b \in S\), and outputs another element, \(a * b \in S\).
+        A binary operation, say~\(*\), on \(S\) takes in two elements, \(a, b \in S\), and outputs another element, \(a * b \in S\).
     \end{dfn}
     
     Note that we're just using \(*\) as symbol here for a general binary operation.
-    Other symbols, such as \(+\), \(-\), \(\times\), \(\cdot\), or even no symbol (just write \(ab\) for the product) are often used.
+    Other symbols, such as \(+\), \(-\), \(\times\), \(\cdot\), \(\circ\), or even no symbol (e.g., just writing \(ab\) for the product) are often used.
     
     \begin{exm}{}{exm:binary operations on R}
         The following define binary operations on \(\reals\):
@@ -280,12 +435,19 @@ noabbrev
     \end{exm}
     
     Whenever we have a binary operation there are two properties that we usually want to check for.
+    Not every binary operation has these properties, but when they do they are often particularly nice, so it's always useful to know.
     
     The first is commutativity, which says that the order doesn't matter.
     
     \begin{dfn}{Commutative}{}
         A binary operation, \(*\), on \(S\) is called \defineindex{commutative} if \(a * b = b * a\) for all \(a, b \in S\).
     \end{dfn}
+    
+    \begin{remark}{}{}
+        You may also hear the term \enquote{abelian} used to describe a commutative operation.
+        This is named for the mathematician Niels Henrik Abel.
+        This phrase is typically used when \(S\) equipped with the binary operation forms a \href{https://en.wikipedia.org/wiki/Group_(mathematics)}{group} (don't worry if you don't know what a group is).
+    \end{remark}
     
     \begin{exm}{}{}
         Addition on \(\reals\) is commutative: \(x + y = y + x\) for all \(x, y \in \reals\).
@@ -308,8 +470,11 @@ noabbrev
         A binary operation, \(*\), on \(S\) is called \defineindex{associative} if \((a * b) * c = a * (b * c)\) for all \(a, b, c \in S\).
     \end{dfn}
     
+    When an operation is associative we usually don't bother putting the brackets in since it doesn't matter where we put them.
+    Note that the definition of associativity only uses three elements, but it actually means that for any number of elements where we put the brackets is not important.
+    
     \begin{exm}{}{}
-        Addition on \(\reals\) is commutative: \((x + y) + z = x + (y + z)\).
+        Addition on \(\reals\) is associative: \((x + y) + z = x + (y + z)\).
         Subtraction on \(\reals\) is not associative: \((5 - 2) - 3 = 3 - 3 = 0\) and \(5 - (2 - 3) = 5 - (-1) = 6\).
         
         Multiplication on \(\reals\) is also associative.
@@ -341,6 +506,7 @@ noabbrev
     
     Note that this is similar to the definition of when two sets are equal, but without the \enquote{exactly}.
     There can be elements of \(Y\) which are not elements of \(X\).
+    In fact, a common way to show that two sets, \(X\) and \(Y\), are equal is to show that \(X \subseteq Y\) and \(Y \subseteq X\).
     
     Nowhere in the definition does it say that \(X\) needs to have elements.
     If \(X = \emptyset\) then it is true that every element of \(X\) is an element of \(Y\), it's just that there are no elements of \(X\).
@@ -353,7 +519,7 @@ noabbrev
     \end{remark}
     
     \begin{ntn}{}{}
-        If \(X\) is a subset of \(Y\) we write \(X \subseteq Y\) or \(Y \subseteq X\).
+        If \(X\) is a subset of \(Y\) we write \(X \subseteq Y\) or \(Y \supseteq X\).
         If \(X\) is a proper subset of \(Y\) we write \(X \subset Y\) or \(Y \supset X\).
         
         \begin{wrn}
@@ -414,6 +580,7 @@ noabbrev
     \begin{exm}{}{}
         \begin{itemize}
             \item \(\{1, 2, 3\} \cup \{4, 5, 6\} = \{1, 2, 3, 4, 5, 6\}\);
+            \item \(\{1, 2, 3\} \cup \{2, 3, 4\} = \{1, 2, 3, 4\}\);
             \item \(\{1, 2, 3\} \cup \emptyset = \{1, 2, 3\}\);
             \item \(\naturals \cup \integers = \integers\);
             \item \(\naturals \cup \{0\} = \{0, 1, 2, 3, \dotsc\} = \integers_{\ge 0}\).
@@ -424,7 +591,7 @@ noabbrev
     In particular, if \(A\) is a subset of \(B\) then \(A \cup B = B\).
     
     \begin{dfn}{Intersection}{}
-        The \defineindex{intersection} of \(A\) and \(B\) is the set, \(A \cap B\), containing al elements of \emph{both} \(A\) \emph{and} \(B\).
+        The \defineindex{intersection} of \(A\) and \(B\) is the set, \({A \cap B}\), containing al elements of \emph{both} \(A\) \emph{and} \(B\).
         In symbols,
         \begin{equation}
             A \cap B = \{x \mid x \in A \text{ and } x \in B\}.
@@ -496,6 +663,107 @@ noabbrev
         \label{fig:venn diagram union intersection difference}
     \end{figure}
     
+    When the sets in question are intervals we can also draw them on the number line to compute the union, intersection, and difference (\cref{fig:interval combinations}).
+    The union is anywhere there's a line.
+    The intersection is anywhere the lines overlap.
+    The difference leaves a hole in the first interval where the second interval is.
+    
+    The intersection of two intervals is always an interval, but the union and difference of two intervals isn't necessarily an interval, sometimes there's a hole.
+    We can still write the result as a union of intervals though.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{interval-combinations}
+        \begin{tikzpicture}[scale=0.8]
+            \node at (0, 1.5) {\(\textcolor{glasgowPillarbox}{[-3, 1)} \cup \textcolor{glasgowBlue}{(-1, 2)} = \textcolor{glasgowLeaf}{[-3, 2)}\)};
+            \draw [<->] (-5.5, 0) -- (5.5, 0);
+            \foreach \i in {0, ..., 5} {
+                \node at (\i, -0.3) {\(\i\)};
+            }
+            \foreach \i in {1, ..., 5} {
+                \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+            }
+            \draw [ultra thick, glasgowPillarbox] (-3, 0.5) -- (0.9, 0.5);
+            \fill [glasgowPillarbox] (-3, 0.5) circle [radius=0.1];
+            \draw [glasgowPillarbox, ultra thick] (1, 0.5) circle [radius=0.1];
+            \draw [ultra thick, glasgowBlue] (-0.9, 1) -- (1.9, 1);
+            \draw [glasgowBlue, ultra thick] (2, 1) circle [radius=0.1];
+            \draw [glasgowBlue, ultra thick] (-1, 1) circle [radius=0.1];
+            \draw [ultra thick, glasgowLeaf] (-3, 0) -- (1.9, 0);
+            \fill [glasgowLeaf] (-3, 0) circle [radius=0.1];
+            \draw [glasgowLeaf, ultra thick] (2, 0) circle [radius=0.1];
+            
+            \begin{scope}[yshift=-3.5cm]
+                \node at (0, 1.5) {\(\textcolor{glasgowPillarbox}{[-3, -1)} \cup \textcolor{glasgowBlue}{(1, 2)}\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \draw [ultra thick, glasgowPillarbox] (-3, 0.5) -- (-1.1, 0.5);
+                \fill [glasgowPillarbox] (-3, 0.5) circle [radius=0.1];
+                \draw [glasgowPillarbox, ultra thick] (-1, 0.5) circle [radius=0.1];
+                \draw [ultra thick, glasgowBlue] (1.1, 1) -- (1.9, 1);
+                \draw [glasgowBlue, ultra thick] (2, 1) circle [radius=0.1];
+                \draw [glasgowBlue, ultra thick] (1, 1) circle [radius=0.1];
+                \draw [ultra thick, glasgowLeaf] (-3, 0) -- (-1.1, 0);
+                \draw [ultra thick, glasgowLeaf] (1, 0) -- (2, 0);
+                \fill [glasgowLeaf] (-3, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (-1, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (1, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (2, 0) circle [radius=0.1];
+            \end{scope}
+            
+            \begin{scope}[yshift=-7cm]
+                \node at (0, 1.5) {\(\textcolor{glasgowPillarbox}{[-3, 1)} \cap \textcolor{glasgowBlue}{(-1, 2)} = \textcolor{glasgowLeaf}{(-1, 1)}\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \draw [ultra thick, glasgowPillarbox] (-3, 0.5) -- (0.9, 0.5);
+                \fill [glasgowPillarbox] (-3, 0.5) circle [radius=0.1];
+                \draw [glasgowPillarbox, ultra thick] (1, 0.5) circle [radius=0.1];
+                \draw [ultra thick, glasgowBlue] (-0.9, 1) -- (1.9, 1);
+                \draw [glasgowBlue, ultra thick] (2, 1) circle [radius=0.1];
+                \draw [glasgowBlue, ultra thick] (-1, 1) circle [radius=0.1];
+                \draw [ultra thick, glasgowLeaf] (-0.9, 0) -- (0.9, 0);
+                \draw [glasgowLeaf, ultra thick] (-1, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (1, 0) circle [radius=0.1];
+            \end{scope}
+            
+            \begin{scope}[yshift=-10.5cm]
+                \node at (0, 1.5) {\(\textcolor{glasgowPillarbox}{[-3, 4)} \setminus \textcolor{glasgowBlue}{(-1, 2)}\)};
+                \draw [<->] (-5.5, 0) -- (5.5, 0);
+                \foreach \i in {0, ..., 5} {
+                    \node at (\i, -0.3) {\(\i\)};
+                }
+                \foreach \i in {1, ..., 5} {
+                    \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                }
+                \draw [ultra thick, glasgowPillarbox] (-3, 0.5) -- (3.9, 0.5);
+                \fill [glasgowPillarbox] (-3, 0.5) circle [radius=0.1];
+                \draw [glasgowPillarbox, ultra thick] (4, 0.5) circle [radius=0.1];
+                \draw [ultra thick, glasgowBlue] (-0.9, 1) -- (1.9, 1);
+                \draw [glasgowBlue, ultra thick] (2, 1) circle [radius=0.1];
+                \draw [glasgowBlue, ultra thick] (-1, 1) circle [radius=0.1];
+                \draw [ultra thick, glasgowLeaf] (-3, 0) -- (-1.1, 0);
+                \fill [glasgowLeaf] (-3, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (-1, 0) circle [radius=0.1];
+                \draw [ultra thick, glasgowLeaf] (2.1, 0) -- (3.9, 0);
+                \draw [glasgowLeaf, ultra thick] (2, 0) circle [radius=0.1];
+                \draw [glasgowLeaf, ultra thick] (4, 0) circle [radius=0.1];
+            \end{scope}
+        \end{tikzpicture}
+        \caption[Union, intersection, and difference of intervals.]{Union, intersection, and set difference of intervals. Note that even when the result is made of two different line segments it's still all one set.}
+        \label{fig:interval combinations}
+    \end{figure}
+    
+    \FloatBarrier
     \section{Power Rules}
     Let \(a \in \reals\) be positive.
     For \(n \in \naturals\) we define\footnote{The symbol \(\coloneq\) is sometimes used to mean that the left-hand-side is \emph{defined} to be the same as the right-hand-side.}
@@ -512,12 +780,12 @@ noabbrev
         a^n a^m = \underbrace{a \dotsm a}_{n \text{ factors}} \cdot \underbrace{a \dotsm a}_{m \text{ factors}} = \underbrace{a \dotsm a}_{n + m \text{ factors}} = a^{n + m}.
     \end{equation}
     
-    Now, often in maths we have a definition that we want to extend in some way.
+    Often in maths we have a definition that we want to extend in some way.
     In this case, what if we want to define \(a^0\)?
     A good way to do this is to look at what results hold for that definition, and make the extended definition in such a way that these properties still hold\footnote{The other way results get generalised in maths is pretty much the opposite of this, we ask instead what would happen if we deliberately break a property that holds in the more restricted case.}.
     In this case we have that \(a^n a^m = a^{n + m}\).
     If we take \(m = 0\) then we should have \(a^n a^0 = a^{n + 0} = a^n\).
-    So, we can see that if we define
+    We can see that if we define
     \begin{equation}
         a^0 \coloneq 1
     \end{equation} 
@@ -527,7 +795,7 @@ noabbrev
     If we want to define \(a^{-n}\) for \(n \in \naturals\) then we should define it in such a way that the equation \(a^n a^{-n} = a^{n + (-n)} = a^0 = 1\) holds.
     That is, we should make the definition
     \begin{equation}
-        a^{-n} = \frac{1}{a^n}.
+        a^{-n} \coloneq \frac{1}{a^n}.
     \end{equation}
     
     Another property that we can check holds for \(n, m \in \naturals\) is
@@ -539,13 +807,13 @@ noabbrev
         (a^n)^m = \underbrace{a^n \dotsm a^n}_{m \text{ factors}} = \underbrace{\underbrace{a \dotsm a}_{n \text{ factors}} \cdot \underbrace{a \dotsm a}_{n \text{ factors}}}_{m \text{ factors}} = \underbrace{a \dotsm a}_{nm \text{ factors}} = a^{nm}.
     \end{equation}
     
-    Now we can ask how we should define \(a^{1/n}\).
+    Next we ask how we should define \(a^{1/n}\).
     If we still want this property to hold we should have \((a^{1/n})^n = a^{n/n} = a^1 = a\).
     That is, we should define \(a^{1/n}\) to be the number whose \(n\)th power is \(a\).
     If that's a bit confusing just consider \(n = 2\).
     Then \(a^{1/2}\) should be the number which squares to \(a\).
-    That is, \(a^{1/2} = \sqrt{2}\).
-    More generally,
+    That is, \(a^{1/2} = \sqrt{a}\).
+    More generally, we make the definition
     \begin{equation}
         a^{1/n} \coloneq \sqrt[n]{a}.
     \end{equation}
@@ -566,4 +834,663 @@ noabbrev
     \begin{equation}
         a^{n/m} = \sqrt[m]{a^n} = (\sqrt[m]{a})^n.
     \end{equation}
+    
+    \chapter{Equations and Inequalities}
+    \section{Absolute Value}
+    Sometimes we want to \enquote{throw away} the sign of a quantity.
+    To do so we make the following definition.
+    We use a piecewise definition, which lists the output and then the condition when that output applies:
+    \begin{equation}
+        \begin{cases}
+            \text{output 1} & \text{condition 1};\\
+            \text{output 2} & \text{condition 2};\\
+            \vdots & \vdots.
+        \end{cases}
+    \end{equation}
+    Make sure to cover all cases when you do this.
+    
+    \begin{dfn}{Absolute Value}{}
+        For \(x \in \reals\) we define the \defineindex{absolute value} of \(x\) to be the quantity
+        \begin{equation}
+            \abs{x} \coloneq 
+            \begin{cases}
+                x & \text{if } x \ge 0;\\
+                -x & \text{if } x < 0.
+            \end{cases}
+        \end{equation}
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        What is \(\abs{3}\)?
+        Well, \(3 \ge 0\), so \(\abs{3} = 3\).
+        
+        What is \(\abs{-5}\)?
+        Well, \(-5 < 0\), so \(\abs{-5} = -(-5) = 5\).
+    \end{exm}
+    
+    This is plotted in \cref{fig:abs value plot}.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{abs-value-plot}
+        \begin{tikzpicture}
+            \begin{axis}[
+                title = Plot of \(\abs{x}\),
+                xlabel = \(x\),
+                ylabel = \(y\),
+                axis x line = bottom,
+                axis y line = middle,
+                xtick distance = 1,
+                ytick distance = 1,
+                height = 0.45\textwidth,
+                width = 0.9\textwidth
+                ]
+                \addplot [color=glasgowBlue, mark=none, very thick] {abs(x)};
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Plot of \(y = \abs{x}\).}
+        \label{fig:abs value plot}
+    \end{figure}
+    
+    The idea here is that \(\abs{x}\) is the distance from \(0\) to \(x\), it doesn't matter which side of the number line \(x\) is on, the distance is \(\abs{x}\).
+    For example, both \(2\) and \(-2\) are a  distance\footnote{On the number line there are no units, but in real life we probably want distances to have units.} \(2\) from \(0\).
+    
+    The absolute value is multiplicative, that is, if \(x, y \in \reals\) then
+    \begin{equation}
+        \abs{x}\abs{y} = \abs{xy}.
+    \end{equation}
+    Think about it, the sign of \(x\) and \(y\) in \(xy\) only controls which side of zero \(xy\) is on, not how far away it is.
+    For example, \(2 \cdot 5 = (-2)(-5) = 10\) and \(2(-5) = (-2)5 = -10\), however we add minus signs the result is always \(10\) away from the origin.
+    
+    Another property is slightly less obvious, it's called the \defineindex{triangle inequality}, it states that for \(x, y \in \reals\) we have
+    \begin{equation}
+        \abs{x + y} \le \abs{x} + \abs{y}.
+    \end{equation}
+    To see this notice that if we want to get as far away from \(0\) as possible then both \(x\) and \(y\) should have the same sign.
+    In this case we get equality above.
+    If the signs are different then \(x + y\) will always be closer to \(0\).
+    
+    \begin{remark}{}{}
+        This result is called the triangle inequality because the same result is true when we measure distances in the plane.
+        There \(\vv{x}\) and \(\vv{y}\) are vectors and \(\abs{\vv{x}}\) and \(\abs{\vv{y}}\) are the distance of these points from \(\vv{0} = (0, 0)\).
+        The triangle comes from the definition of adding vectors, joining them tip-to-tail (\cref{fig:triangle inequality}), and completing the triangle.
+        The resulting vector's length is always at most as long as the lengths of the other two vectors combined, and it only achieves this length when both \(\vv{x}\) and \(\vv{y}\) point in the same direction.
+        
+        Our case is just the one-dimensional version of this, where direction is just indicated by a sign.
+    \end{remark}
+    
+    \begin{figure}[ht]
+        \tikzsetnextfilename{triangle-inequality}
+        \begin{tikzpicture}
+            \draw [thick, ->] (0, 0) -- ++ (4, 1) node [midway, below] {\(\vv{x}\)};
+            \draw [thick, ->] (4, 1) -- ++ (-1, 2) node [midway, right] {\(\vv{y}\)};
+            \draw [thick, ->] (0, 0) -- ++ (3, 3) node [midway, above left] {\(\vv{x} + \vv{y}\)};
+        \end{tikzpicture}
+        \caption[The triangle inequality]{The triangle inequality: \(\abs{\vv{x} + \vv{y}} \le \abs{\vv{x}} + \abs{\vv{y}}\).}
+        \label{fig:triangle inequality}
+    \end{figure}
+    
+    \begin{remark}{}{}
+        The notion of a distance satisfying the triangle inequality generalises to the notion of a \href{https://en.wikipedia.org/wiki/Metric_space}{metric space}.
+        There are some other requirements too: distance should always be positive, the distance of something from itself should be zero, the distance between two different things is positive, and it doesn't matter if we measure from \(x\) to \(y\) or \(y\) to \(x\), the distance should be the same.
+    \end{remark}
+    
+    \section{Inequalities}
+    We can solve inequalities, just like we can solve equations, by finding the \emph{set} of all possible solutions.
+    The only thing to be careful about is that if we multiply or divide both sides of an inequality by a negative number then we need to \enquote{flip the inequality}.
+    So, \(\le\) becomes \(\ge\) and \(<\) becomes \(>\).
+    To see why this is true just notice that \(3 < 5\) and \(-3 > -5\).
+    
+    The following example shows how we can use sets, particularly intervals, to find the solution sets of algebraic inequalities.
+    Note that often it's easier to leave things in terms of inequalities until the end, and only then turn the answer into a set.
+    
+    \begin{exm}{}{}
+        Find the set of all \(x \in \reals\) satisfying
+        \begin{equation}
+            \frac{1}{3 - x} < 2.
+        \end{equation}
+        
+        We can split into three solutions, depending on whether \(3 - x\) is positive, negative, or zero.
+        \begin{enumerate}
+            \item If \(3 - x = 0\) then we're dividing by \(0\), which isn't allowed, so we must exclude \(x = 3\) from our final solution set.
+            \item If \(3 - x > 0\) then we must have that \(3 > x\).
+            We can then multiply by \(3 - x\) giving
+            \begin{equation}
+                1 < 2(3 - x) = 6 - 2x.
+            \end{equation}
+            Then we can add subtract \(6\) from both sides giving
+            \begin{equation}
+                -5 < -2x.
+            \end{equation}
+            Dividing by \(-2\), and remembering to flip the inequality, we have
+            \begin{equation}
+                \frac{5}{2} > x.
+            \end{equation}
+            So, the solution for this case is that \(x < 3\) and \(x < 5/2\) (note \(5/2 = 2.5 < 3\)).
+            Both can be true at once, and in particular for both to be true we need to have \(x < 5/2\).
+            We can turn \(x < 3\) and \(x < 5/2\) into the interval notation \(x \in (-\infty, 3)\) and \(x \in (-\infty, 5/2)\).
+            The solution for this case is then the intersection \((-\infty, 3) \cap (-\infty, 5/2) = (-\infty, 5/2)\).
+            \item If \(3 - x < 0\) then we must have that \(3 < x\).
+            We can then multiply by \(3 - x\) and flip the inequality, giving
+            \begin{equation}
+                1 > 6 - 2x.
+            \end{equation}
+            Subtracting \(6\), dividing by \(-2\), and flipping the inequality again we get
+            \begin{equation}
+                \frac{5}{2} < x.
+            \end{equation}
+            So we have \(x > 3\) and \(x > 5/2\), or \(x \in (3, \infty)\) and \(x \in (5/2, \infty)\).
+            Both conditions must be true, so the solution set is the intersection: \((3, \infty) \cap (5/2, \infty) = (3, \infty)\).
+        \end{enumerate}
+        So if \(x\) is in either \((-\infty, 5/2)\) or \((3, \infty)\) as long as \(x \ne 3\) we have a solution.
+        Thus, the solution set is \(\big((-\infty, 5/2) \cup (3, \infty)\big) \setminus \{3\} = (-\infty, 5/2) \cup (3, \infty)\).
+        Note that \(3\) wasn't actually in either solution set here, so removing it doesn't change anything.
+        This won't always be the case.
+        It may be more familiar to state the solution as \(x < 5/2\) or \(x > 3\), but really we should state what sort of object \(x\) is, a real number, so the solution set is \(\{x \in \reals \mid x < 5/2 \text{ or } x > 3\}\), which is exactly \((-\infty, 5/2) \cup (3, \infty)\).
+        
+        \Cref{fig:inequalities example 1} shows how we can plot \(y = 1/(3 - x)\) and \(y = 2\) to solve this graphically.
+        There we see that between \(5/2\) and \(3\) the graph is at or above \(y = 2\), so our solution should be \(\reals \setminus [5/2, 3] = (-\infty, 5/2) \cup (3, \infty)\).
+        
+        The solution set is plotted on the number line in \cref{fig:inequalities example 1 solution}.
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{inequality-example-1-plot}
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title = Graphical solution to \(\displaystyle \frac{1}{3 - x} < 2\),
+                    xlabel = \(x\),
+                    ylabel = \(y\),
+                    xtick distance = 1,
+                    ytick distance = 3,
+                    height = 0.45\textwidth,
+                    width = 0.9\textwidth,
+                    ymax=4,
+                    ymin=-12,
+                    xmin=-3,
+                    xmax=8
+                ]
+                \addplot [color=glasgowPillarbox, mark=none, very thick, domain=3.05:10, samples=500] {{1/(3 - x)}};
+                \addplot [color=glasgowPillarbox, mark=none, very thick, domain=-5:2.9, samples=500] {{1/(3 - x)}};
+                \addplot [color=glasgowBlue, thick, dashed, domain=-5:10] {2};
+                \addplot [color=black, mark=none, dotted]  coordinates {(3, -12) (3, 3)};
+                \addplot [color=black, mark=none, dotted]  coordinates {(2.5, -12) (2.5, 3)};
+            \end{axis}
+        \end{tikzpicture}
+        \caption[Graphical solution to \(1/(3 - x) < 2\).]{Graphical solution to \(1/(3 - x) < 2\). The horizontal line is \(y = 2\), and the curve is \(y = 1/(3 - x)\). Only between the vertical dashed lines at \(x = 5/2\) and \(x = 3\) is the curve above \(y = 2\). Note that there's a horizontal asymptote at \(y = 0\), so the curve never rises up to cross \(y = 2\) again on the right.}
+        \label{fig:inequalities example 1}
+    \end{figure}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{inequality-example-1-solution-set}
+        \begin{tikzpicture}
+            \draw [<->] (-1, 0) -- (6, 0);
+            \foreach \i in {0, ..., 6} {
+                \node at (\i, -0.3) {\(\i\)};
+            }
+            \foreach \i in {1} {
+                \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+            }
+            \draw [ultra thick, glasgowLeaf, ->] (2.4, 0) -- (-1, 0);
+            \draw [ultra thick, glasgowLeaf, ->] (3.1, 0) -- (6, 0);
+            \draw [glasgowLeaf, ultra thick] (2.5, 0) circle [radius=0.1];
+            \draw [glasgowLeaf, ultra thick] (3, 0) circle [radius=0.1];
+        \end{tikzpicture}
+        \caption[Solution set of \(1/(3 - x) < 2\).]{Solution set of \(1/(3 - x) < 2\), which is \((-\infty, 5/2) \cup (3, \infty)\).}
+        \label{fig:inequalities example 1 solution}
+    \end{figure}
+    
+    \begin{exm}{}{}
+        Find the set of all \(x \in \reals\) satisfying
+        \begin{equation}
+            \frac{x - 2}{x + 1} > 4.
+        \end{equation}
+        
+        If we were solving an equality we would start by multiplying by \(x + 1\), but we have to be careful, because \(x + 1\) may be negative.
+        We'll split into cases:
+        \begin{itemize}
+            \item If \(x + 1 = 0\) then we're dividing by \(0\), which isn't allowed.
+            So we manually exclude \(x = -1\) from the final result.
+            \item If \(x + 1\) is positive then \(x + 1 > 0\), so \(x > -1\).
+            Then we want to solve
+            \begin{equation}
+                x - 2 > 4(x + 1) = 4x + 4.
+            \end{equation}
+            Subtracting \(x\) from both and subtracting \(4\) from both sides we get
+            \begin{equation}
+                -6 > 3x.
+            \end{equation}
+            Dividing by \(3\) we get
+            \begin{equation}
+                -2 > x.
+            \end{equation}
+            We see that in this case we need \(x > -1\) and \(x < -2\), which can't both be true, so this case doesn't contribute any solutions (but we still needed to check it!).
+            The solution set from this case is \(\emptyset\).
+            \item If \(x + 1\) is negative then \(x + 1 < 0\), so \(x < -1\).
+            We can multiply by \(x + 1\), flipping the inequality as we do, giving
+            \begin{equation}
+                x - 2 < 4(x + 1) = 4x + 4.
+            \end{equation}
+            Subtracting \(x\) and \(4\) from both sides we get
+            \begin{equation}
+                -6 < 3x.
+            \end{equation}
+            Dividing by \(3\) we get
+            \begin{equation}
+                -2 < x.
+            \end{equation}
+            So we need to have \(x > -2\) and \(x < -1\) at the same time.
+            This means the solution set is the interval \((-2, -1)\).
+        \end{itemize}
+        The full solution set is then the union of the solution sets of each case.
+        So it's \(\emptyset \cup (-2, -1) = (-2, -1)\), and note that \(-1\) is not in the solution so we don't need to remove it.
+        It may be more familiar to state the solution as \(-2 < x < -1\), but we should really specify what sort of thing \(x\) is, a real number, so we should give the solution set as \(\{x \in \reals \mid -2 < x < -1\}\), which is exactly the interval \((-2, -1)\).
+        
+        \Cref{fig:inequalities example 2} shows how we can plot \(y = (x - 2)/(x + 1)\) and \(y = 4\) to solve this graphically.
+        There we see that between \(-2\) and \(-1\) the graph is at or above \(y = 4\), so our solution should be \((-2, -1)\).
+        Note that we want the graph to be strictly above \(y = 4\), so we don't include the endpoints.
+        
+        The solution set is plotted on the number line in \cref{fig:inequalities example 2 solution}.
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{inequalities-example-2-plot}
+        \begin{tikzpicture}
+            \begin{axis}[
+                title = Graphical solution to \(\displaystyle \frac{x - 2}{x + 1} > 4\),
+                xlabel = \(x\),
+                ylabel = \(y\),
+                xtick distance = 1,
+                ytick distance = 3,
+                height = 0.45\textwidth,
+                width = 0.9\textwidth,
+                ymin=-8,
+                ymax=8
+                ]
+                \addplot [color=glasgowPillarbox, mark=none, very thick, domain=-5:-1.1, samples=500] {{(x - 2))/(x + 1)}};
+                \addplot [color=glasgowPillarbox, mark=none, very thick, domain=-0.9:5, samples=500] {{(x - 2))/(x + 1)}};
+                \addplot [color=glasgowBlue, thick, dashed] {4};
+                \addplot [color=black, mark=none, dotted]  coordinates {(-2, -8) (-2, 8)};
+                \addplot [color=black, mark=none, dotted]  coordinates {(-1, -8) (-1, 8)};
+            \end{axis}
+        \end{tikzpicture}
+        \caption[Graphical solution to \((x - 2)/(x + 1) > 4\).]{Graphical solution to \((x - 2)/(x + 1) > 4\). The horizontal line is \(y = 4\), and the curve is \(y = (x - 2)/(x + 1)\). Only between the vertical dashed lines at \(x = -2\) and \(x = -1\) is the curve above \(y = 4\). Note that there's a horizontal asymptote at \(y = 1\), so the curve never rises up to cross \(y = 4\) again on the right.}
+        \label{fig:inequalities example 2}
+    \end{figure}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{inequality-example-2-solution-set}
+        \begin{tikzpicture}
+            \draw [<->] (-4, 0) -- (2, 0);
+            \foreach \i in {0, ..., 2} {
+                \node at (\i, -0.3) {\(\i\)};
+            }
+            \foreach \i in {1, ..., 4} {
+                \node at (-\i, -0.3) {\(\mathllap{-}\i\)};
+            }
+            \draw [ultra thick, glasgowLeaf] (-1.9, 0) -- (-1.1, 0);
+            \draw [glasgowLeaf, ultra thick] (-2, 0) circle [radius=0.1];
+            \draw [glasgowLeaf, ultra thick] (-1, 0) circle [radius=0.1];
+        \end{tikzpicture}
+        \caption[Solution set of \((x - 2)/(x + 1) > 4\).]{Solution set of \((x - 2)/(x + 1) > 4\), which is \((-2, -1)\).}
+        \label{fig:inequalities example 2 solution}
+    \end{figure}
+    
+    You'll see from these examples that plotting things can be very useful, at least to check your answers.
+    Making these plots by hand would require that you solve these inequalities.
+    Fortunately, we can often use a computer to make our plots for us.
+    Have a go at plotting these in something like \href{https://www.desmos.com/calculator}{Desmos}.
+    Or if you know a little bit of programming you could use Matplotlib and Python, Matlab, or your preferred language with plotting capabilities.
+    Notice that I still used the answer to plot the vertical lines, but you could estimate them from the graph, or use some more advanced code to compute them for you.
+    
+    \begin{cde}{}{cde:matlab inequalities plot}
+        Here's some Matlab code to plot \(y = (x - 2) / (x + 1)\) and \(y = 4\).
+        The output is \cref{fig:inequalities example 2 matlab}.
+        
+        \begin{lstlisting}[gobble=12, language=Matlab]
+            x1 = linspace(-5, -1.1, 100);
+            x2 = linspace(-0.9, 5, 100);
+            
+            function y = f(x)
+                y = (x - 2) ./ (x + 1);
+            end
+            
+            hold on
+            axis([-5, 5, -2, 5])
+            plot(x1, f(x1), Color="r")
+            plot(x2, f(x2), Color="r")
+            plot([-5, 5], [4, 4], "b--")
+            plot([-2, -2], [-2, 5], "k:", Marker="none")
+            plot([-1, -1], [-2, 5], "k:", Marker="none")
+            title("Graphical solution to (x - 2) / (x + 1) > 4")
+            xlabel("x")
+            ylabel("y")
+        \end{lstlisting}
+    \end{cde}
+    
+    \begin{figure}
+        \centering
+        \includegraphics{images/matlab-inequalities-plot-output}
+        \caption{The output of \cref{cde:matlab inequalities plot}.}
+        \label{fig:inequalities example 2 matlab}
+    \end{figure}
+    
+    \begin{exm}{}{}
+        Find the set of all \(x \in \reals\) satisfying
+        \begin{equation}
+            \abs{3x + 6} + x < 4.
+        \end{equation}
+        We consider cases, \(3x + 6 \ge 0\) and \(3x + 6 < 0\):
+        \begin{enumerate}
+            \item If \(3x + 6 \ge 0\) then \(\abs{3x + 6} = 3x + 6\), and so we have
+            \begin{equation}
+                3x + 6 + x < 4
+            \end{equation}
+            which we can solve to find
+            \begin{equation}
+                x < -\frac{1}{2}.
+            \end{equation}
+            As a set, \(x \in (-\infty, -1/2)\).
+            \item If \(3x + 6 < 0\) then \(\abs{3x + 6} = -(3x + 6)\), and so we have
+            \begin{equation}
+                -3x - 6 + x < 4
+            \end{equation}
+            which we can solve (remembering to flip the inequality when we divide by a negative) to find
+            \begin{equation}
+                x > -1/2
+            \end{equation}
+            As a set, \(x \in (-1/2, \infty)\).
+        \end{enumerate}
+        The solution set is then \((-\infty, -5) \cap (-1/2, \infty) = (-5, -1/2)\), so \(-5 < x < -1/2\).
+    \end{exm}
+    
+    \begin{cde}{}{cde:mathematica inequalities plot}
+        Here's some code plotting \(y = \abs{3x + 6} + x\) and \(y = 4\) in Mathematica.
+        Here I use \lstinline[language=Mathematica]|Solve| to find the intersection points, then plot the graph with \lstinline[language=Mathematica]|Plot| and plot the vertical lines with \lstinline[language=Mathematica]|Line|.
+        The \lstinline[language=Mathematica]|Show| and \lstinline[language=Mathematica]|Graphics| commands just make everything appear on the same plot.
+        The output is \cref{fig:mathematica inequalities plot}.
+        
+        \begin{lstlisting}[gobble=12, language=Mathematica]
+            intersectx = x /. Solve[Abs[3 x + 6] + x == 4];
+            Show[{
+                Plot[{Abs[3 x + 6] + x, 4}, {x, -10, 2}],
+                Graphics[{Dashed, 
+                    Line[{{intersectx[[1]], -2},
+                        {intersectx[[1]], 14}}], 
+                    Line[{{intersectx[[2]], -2},
+                        {intersectx[[2]], 14}}]}]
+            }]
+        \end{lstlisting}
+    \end{cde}
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/inequalities-plot-abs-value-mathematica-output}
+        \caption{The output of \cref{cde:mathematica inequalities plot}}
+        \label{fig:mathematica inequalities plot}
+    \end{figure}
+    
+    \section{Quadratics}
+    A \defineindex{quadratic equation} is an equation of the form
+    \begin{equation}
+        \label{eqn:quardatic}
+        ax^2 + bx + c = 0.
+    \end{equation}
+    Here \(x\) is a variable and the coefficients, \(a\), \(b\), and \(c\) are some sort of numbers.
+    We'll assume our coefficients are real numbers, but sometimes it makes sense to restrict to integers, and in the next block you'll see that often it's useful to extend to complex numbers.
+    
+    The goal is to find all values of \(x\) which make this equation true.
+    If we restrict \(x\) to be a real number then it turns out that such an equation has either \(0\), \(1\), or \(2\) solutions.
+    This follows from the quadratic equation, which is our first method for solving quadratics.
+    
+    \subsection{Quadratic Formula}
+    The \defineindex{quadratic formula} provides the solution(s), \(x\), to the quadratic equation of \cref{eqn:quardatic}.
+    The solution(s) are
+    \begin{equation}
+        x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}.
+    \end{equation}
+    
+    Notice the square root.
+    If \(x\) is to be a real number we can only take square roots of non-negative quantities.
+    We call \(\Delta = b^2 - 4ac\) the \defineindex{discriminant} of the quadratic.
+    It helps us tell the difference between which case we're in, \(0\), \(1\) or \(2\) solutions:
+    \begin{itemize}
+        \item If \(\Delta > 0\) then \(x = (-b + \sqrt{\Delta})/2a\) and \(x = (-b - \sqrt{\Delta})/2a\) are two distinct real solutions.
+        \item If \(\Delta = 0\) then \(x = -b/2a\) is the only solution, you'll also hear this being called a repeated root (root just being another word for the solution to an equation).
+        It's as if this solution somehow appears twice, we'll see why in the next section on factorisation.
+        \item If \(\Delta < 0\) then we can't take the square root, and so there are no real solutions.
+        You'll see in the next block that there are \emph{complex} solutions still.
+        In fact, if we allow complex roots then there are always two solutions, so long as we count the repeated solutions of the \(\Delta = 0\) case as two solutions (which is why we say 2 \emph{distinct} solutions for \(\Delta > 0\)).
+    \end{itemize}
+    
+    \begin{exm}{}{}
+        Solve
+        \begin{equation}
+            3x^2 + x - 2 = 0
+        \end{equation}
+        using the quadratic equation.
+        
+        We simply identify \(a = 3\), \(b = 1\), and \(c = -2\).
+        We then have \(\Delta = b^2 - 4ac = 1^2 - 4 \cdot 3 \cdot (-2) = 25\), which is positive, so we expect two distinct solutions.
+        Plugging these values into the equation we find the solutions are
+        \begin{equation}
+            x = \frac{-1 \pm \sqrt{25}}{2 \cdot 3}
+        \end{equation}
+        which gives the solutions
+        \begin{equation}
+            x = \frac{-1 - 5}{6} = -1, \qqand x = \frac{-1 + 5}{6} = \frac{2}{3}.
+        \end{equation}
+    \end{exm}
+    
+    \subsection{Factorising}
+    When the roots of a quadratic aren't too horrible it is often possible to factorise it.
+    Then the roots are simply the values of \(x\) which make each term in the factorisation vanish.
+    
+    \begin{exm}{}{}
+        Solve
+        \begin{equation}
+            3x^2 + x - 2 = 0
+        \end{equation}
+        by factorising.
+        
+        The factorisation process is a bit of an art.
+        We'll assume that there are no fractions appearing as coefficients of \(x\) in the formula (you can always multiply by any denominator that appears to get rid of it).
+        Then the factorisation must be of the form
+        \begin{equation}
+            (3x + \alpha)(x + \beta) = 0
+        \end{equation}
+        for some \(\alpha, \beta \in \reals\).
+        There are several methods for finding \(\alpha\) and \(\beta\).
+        One is just to stare at this for a while until you can see the solution.
+        Another is to expand these brackets and equate coefficients, so let's do that.
+        Expanding the brackets we get
+        \begin{equation}
+            3x^2 + \alpha x + 3\beta x + \alpha \beta = 3x^2 + (\alpha + 3\beta) x + \alpha \beta.
+        \end{equation}
+        Equating coefficients we have that \(\alpha + 3\beta = 1\) and \(\alpha \beta = -2\).
+        These are simultaneous equations, which can also be solved in many ways.
+        The second equation tells us that \(\beta = -2/\alpha\), which we can substitute into the first, giving
+        \begin{equation}
+            \alpha - \frac{2}{3}\alpha = 1 \implies \frac{1}{3}\alpha = 1 \implies \alpha = 3.
+        \end{equation}
+        Then we have \(\beta = -2/3\).
+        This gives
+        \begin{equation}
+            \left( 3x + 3 \right)\left( x - \frac{2}{3} \right) = 0.
+        \end{equation}
+        For this to be true it must be that either
+        \begin{equation}
+            3x + 3 = 0, \qqor x - \frac{2}{3} = 0.
+        \end{equation}
+        Solving these equations we have
+        \begin{equation}
+            x = -1, \qqor x = \frac{2}{3}.
+        \end{equation}
+    \end{exm}
+    
+    Consider the quadratic \(x^2 - 2x + 1\).
+    This has \(\Delta = (-2)^2 - 4 \cdot 1 \cdot 1 = 0\) and factorises as \((x - 1)^2\).
+    The two factors of \(x - 1\) are why we call \(x = 1\) a repeated root of this quadratic.
+    
+    \subsection{Completing The Square}
+    The quadratic
+    \begin{equation}
+        ax^2 + bx + c = 0
+    \end{equation}
+    can always be written as
+    \begin{equation}
+        a\left( x + \frac{b}{2a} \right)^2 - \frac{b^2}{4a} + c = ax^2 + bx + c,
+    \end{equation}
+    which you can check by expanding the left hand side.
+    The process of doing so is called \defineindex{completing the square}.
+    
+    I advise that you \emph{don't} memorise this formula.
+    Instead just practice with specific quadratics and you'll learn the process for completing the square.
+    
+    While completing the square is usually not the fastest way to solve a quadratic equation it can be useful if you're trying to plot a quadratic, since it's generally easier to plot a quadratic of the form \((x - p)^2 + q = 0\), since the turning point of this quadratic has a turning point at \((p, q)\).
+    Be careful about signs when you do this.
+    
+    \begin{exm}{}{}
+        Solve
+        \begin{equation}
+            3x^2 + x - 2 = 0
+        \end{equation}
+        by completing the square.
+        
+        First factorise out the coefficient of \(x^2\) from the \(x^2\) and \(x\) terms, giving
+        \begin{equation}
+            3(x^2 + x/3) - 2 = 0.
+        \end{equation}
+        Our goal is to write \(x^2 + x/3\) in the form \((x + p)^2 + q\) for some \(p\) and \(q\).
+        To do this I like to equate coefficients, expanding we have
+        \begin{equation}
+            (x + p)^2 + q = x^2 + 2px + p^2 + q = x^2 + \frac{1}{3}x.
+        \end{equation}
+        Equating coefficients we have \(2p = 1/3\), so \(p = 1/6\).
+        We also have \(p^2 + q = 0\), so \(q = -1/36\).
+        Then we have
+        \begin{equation}
+            3\left( \left( x + \frac{1}{6} \right)^2 - \frac{1}{36} \right) - 2 = 0.
+        \end{equation}
+        Expanding the outer brackets this becomes
+        \begin{equation}
+            3\left( x + \frac{1}{6} \right)^2 - \frac{25}{12} = 0.
+        \end{equation}
+        At this point it's a good idea to expand fully and check that you get \(3x^2 + x - 2\) back.
+        
+        Now that we have this form we can add \(25/12\) to both sides, giving
+        \begin{equation}
+            3\left( x + \frac{1}{6} \right)^2 = \frac{25}{12}.
+        \end{equation}
+        Dividing by \(3\) we get
+        \begin{equation}
+            \left( x + \frac{1}{6} \right)^2 = \frac{25}{36}.
+        \end{equation}
+        To undo the squaring we take the square root, and we take \(\pm\) as well, giving
+        \begin{equation}
+            x + \frac{1}{6} = \pm \frac{5}{6}.
+        \end{equation}
+        Finally, we can add \(1/6\) to both sides giving the solution
+        \begin{equation}
+            x = \frac{1}{6} \pm \frac{5}{6},
+        \end{equation}
+        which gives the solutions
+        \begin{equation}
+            x = \frac{1}{6} - \frac{5}{6} = -\frac{2}{3}, \qqor x = \frac{1}{6} + \frac{5}{6} = 1.
+        \end{equation}
+    \end{exm}
+    
+    We can follow the same process as above but working with general \(a\), \(b\), and \(c\).
+    Starting with 
+    \begin{equation}
+        a\left( x + \frac{b}{2a} \right)^2 - \frac{b^2}{4a} + c = ax^2 + bx + c,
+    \end{equation}
+    we can add the constant term to each side,
+    \begin{equation}
+        a\left( x + \frac{b}{2a} \right)^2 = \frac{b^2}{4a} - c.
+    \end{equation}
+    Dividing by \(a\) we get
+    \begin{equation}
+        \left( x + \frac{b}{2a} \right)^2 = \frac{b^2}{4a^2} - \frac{c}{a}.
+    \end{equation}
+    We can undo the squaring by taking square roots, remembering to include \(\pm\) so we don't lose solutions:
+    \begin{equation}
+        x + \frac{b}{2a} = \pm \sqrt{\frac{b^2}{4a^2} - \frac{c}{a}}.
+    \end{equation}
+    Some manipulation of fractions and square roots gives us
+    \begin{equation}
+        \sqrt{\frac{b^2}{4a^2} - \frac{c}{a}} = \sqrt{\frac{b^2 - 4ac}{4a^2}} = \frac{\sqrt{b^2 - 4ac}}{2a}.
+    \end{equation}
+    Finally, adding \(b/2a\) to both sides we end up with
+    \begin{equation}
+        x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a},
+    \end{equation}
+    which is exactly the quadratic equation!
+    
+    \subsection{Graphical Solution}
+    If you can plot the quadratic then the solution is just where it crosses the \(x\)-axis.
+    \Cref{fig:desmos parabola} shows a plot done in \href{https://www.desmos.com/calculator}{Desmos}.
+    When you have this plot you can just hover the mouse over the line to find \emph{approximate} values.
+    This isn't a great method for finding solutions with one hundred percent certainty, but you can use it to guess solutions, \(\alpha\) and \(\beta\), then plug these into \((x - \alpha)(x - \beta)\) and expand, if you guessed correctly then you'll get the original quadratic back.
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/desmos-quadratic-plot}
+        \caption{Plot of \(y = 3x^2 + x - 2\) in Desmos.}
+        \label{fig:desmos parabola}
+    \end{figure}
+    
+    \subsection{Computer Solution}
+    The truth is that most people aren't solving quadratics manually.
+    That being said it's important to understand quadratics as the second simplest (after a straight line) case of a polynomial.
+    It's also a good way to learn about roots, turning points, and other properties of more general equations.
+    This means that I can't, in good conscience, suggest that you just use a computer to solve all quadratics, but it can be done, and once you've had enough practice solving quadratics by hand it's a reasonable thing to do.
+    
+    Note that a computer doesn't know if the solutions need to be real, so most will give you complex roots, which you can then choose to keep or exclude.
+    If your solutions contain things like square roots of a negative, or the symbols \(i\) or \(j\) then that's a sign that the returned solution is complex.
+    
+    \begin{cde}{}{}
+        Here's how to solve a quadratic equation in Matlab.
+        This needs the \enquote{Symbolic Math Toolbox} add-on.
+        \begin{lstlisting}[gobble=12, language=Matlab]
+            syms x;
+            solve(3*x^2 + x - 2 == 0)
+            >>> [-1, 2/3]
+        \end{lstlisting}
+        
+        Here's how to solve a quadratic equation in Mathematica.
+        \begin{lstlisting}[gobble=12, language=Mathematica]
+             In[1] Solve[3x^2 + x - 2 == 0]
+            Out[1] {{x -> -1}, {x -> 2/3}}
+        \end{lstlisting}
+        
+        Here's how to solve a quadratic equation in Python.
+        This needs the \enquote{Sympy} package.
+        \begin{lstlisting}[gobble=12, language=python]
+            from sympy import solveset
+            from sympy.abc import x
+            solveset(3*x**2 + x - 2)
+            >>> {-1, 2/3}
+        \end{lstlisting}
+    \end{cde}
+    
+    \subsection{Quadratic Inequalities}
+    \begin{exm}{}{}
+        Solve
+        \begin{equation}
+            3x^2 + x - 2 \le 0.
+        \end{equation}
+        We already know that the two key points are \(x = -2/3\) and \(x = 1\).
+        It just remains to see if the inequality is satisfied between these points our outside of them.
+        Looking at \cref{fig:desmos parabola} we see that the graph dips below the \(x\)-axis, which is \(y = 0\), between these points.
+        So, we want between these points.
+        Notice also that at these points \(3x^2 + x - 2\) is \(0\), and we want to include \(0\) since we have \(\le\).
+        Therefore, the solution set is the interval \([-2/3, 1]\).
+    \end{exm}
+    
+    \chapter{Binomial Theorem}
 \end{document}
