@@ -11,6 +11,8 @@
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz-external/]
 
+\usetikzlibrary{shapes.geometric}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
@@ -47,6 +49,22 @@ noabbrev
 % Commands
 % Maths
 \newcommand{\vv}[1]{\symbfup{#1}}
+\directlua{
+function factorial (f)
+if f < 2 then  return 1 else  return f*factorial(f-1) end
+end
+
+function nchoosek(n, k)
+return factorial(n) // (factorial(n-k) * factorial(k))
+end
+}
+\tikzset{hexagon/.style={
+        regular polygon, regular polygon sides=6, shape border rotate=30,
+        minimum size=1cm, inner sep=0pt,
+        draw, ultra thick, execute at begin node={\setbox0\hbox\bgroup},
+        execute at end node={\egroup\pgfmathparse{min(4ex,\wd0)/\wd0}%
+            \scalebox{\pgfmathresult}{\box0}}
+}}
 
 \begin{document}
     \frontmatter
@@ -1493,4 +1511,379 @@ noabbrev
     \end{exm}
     
     \chapter{Binomial Theorem}
+    \section{Index Notation}
+    Suppose you're designing a part for a car engine.
+    One thing you may worry about is if the part can stand up to the temperatures in a car.
+    You could start the car, wait a bit, then measure the temperature of the car.
+    However, this isn't a great experiment, the car is likely to be a different temperature depending on how long its been running, how hard the engine is being pushed, the external temperature, and many other factors.
+    A better experiment is to add a temperature logger to the car's engine which takes a temperature measurement, say every 5 minutes.
+    
+    The nice thing about maths is that we can do some analysis of this data before we've even collected it!
+    All we have to do is come up with a name for the data, then we can do maths with it without having to know the actual value!
+    So, before you do this hypothetical experiment you might decide to give a name to every temperature you measure.
+    A sensible choice is \(T\) for temperature for the first measurement.
+    Then the second measurement can be \(t\).
+    We can swap to Greek letters, calling the result of the next three measurements \(\tau\), \(\theta\) and \(\Theta\).
+    Now we have a problem, because we've run out of T-like letters, and soon we'll run out of all letters if we keep up like this.
+    If we were taking hundreds of measurements this is a really bad way to label the results.
+    
+    A much better idea is to call the first measurement \(T_0\), then the second \(T_1\) and the third \(T_2\) and so on.
+    We've chosen to start at \(0\), but you can start at \(1\) as well, you just have to adjust other things later.
+    Similarly, we might label the times at which the measurements were made \(t_0\), \(t_1\), and so on.
+    For short, we call our measurements \(T_i\) and \(t_i\), where \(i\) is standing in for any \defineindex{index} (that's what we call the subscript letter), which usually means \(i = 1, \dotsc, N\), where \(N + 1\) is the total number of measurements we take.
+    
+    One important value to consider in our experiment is the maximum temperature, which we might denote \(\max\{T_i\}\).
+    Another value that might be important, say if we're worried about thermal expansion, is the rate of temperature change.
+    We can approximate the rate of temperature change between times \(t_i\) and \(t_{i+1}\) as
+    \begin{equation}
+        \frac{T_{i+1} - T_i}{t_{i+1} - t_i}.
+    \end{equation}
+    Note that \(t_{i+1} - t_i\) is just 5 minutes, so \((T_{i+1} - T_i)/5\) will give us the temperature change in degrees per minute (assuming \(T_i\) is measured in degrees celsius).
+    
+    Another important value is the average temperature, which can be computed as
+    \begin{equation}
+        \frac{T_0 + T_1 + \dotsb + T_N}{N + 1}.
+    \end{equation}
+    This \(\dotsb\) is sometimes not quite as precise as we need.
+    Instead, we have a special notation for sums like this.
+    
+    \begin{ntn}{Sigma Notation}{}
+        If \(T_0, \dotsc, T_N\) are some values then we write
+        \begin{equation}
+            \label{eqn:sum}
+            \sum_{k=0}^N T_k
+        \end{equation}
+        for
+        \begin{equation}
+            T_0 + T_1 + \dotsb + T_N.
+        \end{equation}
+    \end{ntn}
+    
+    \begin{remark}{}{}
+        The \(\sum\) symbol comes from the Greek letter \(\Sigma\) (sigma), which is just a capital S for Sum.
+    \end{remark}
+    
+    We read \cref{eqn:sum} as \enquote{the sum from \(k = 0\) to \(N\) of \(T_k\)}.
+    We call \(k = 0\) and \(N\) the \define{limits}\index{limit!of sum} of the sum.
+    To evaluate the expression\footnote{Note that inline it's common to move the limits of the sum up and to the side.} \(\sum_{k=0}^N T_k\) we start with \(k = 0\), which gives us \(T_0\), then \(k = 1\), which gives \(T_1\), and so on, up to \(k = N\), which gives \(T_N\).
+    We sum up these results, giving \(T_0 + T_1 + \dotsb + T_N\).
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(\displaystyle\sum_{k=0}^5 T_k = T_0 + T_1 + T_2 + T_3 + T_4 + T_5\);
+            \item \(\displaystyle\sum_{r=2}^7 r^2 = 2^2 + 3^2 + 4^2 + 6^2 + 7^2 = 114\);
+            \item \(\displaystyle\sum_{\ell=-5}^{-2} \ell(\ell + 1) = -5(-5 + 1) + -4(-4 + 1) + -3(-3 + 1) + -2(-2 + 1) = 40\);
+            \item \(\displaystyle\sum_{i=4}^6 \frac{2}{i}\alpha_i = \frac{2}{4}\alpha_4 + \frac{2}{5} \alpha_5 + \frac{2}{6} \alpha_6 = \frac{1}{2} \alpha_4 + \frac{2}{5}\alpha_5 + \frac{1}{3} \alpha_6\).
+            \item \(\displaystyle\sum_{i=1}^3 \sum_{j=1}^3 a_i b_j\), first evaluate the inner sum, \(\sum_{j=1}^3 b_j = b_1 + b_2 + b_3\), and then the outer one, giving
+            \begin{equation}
+                a_1(b_1 + b_2 + b_3) + a_2(b_1 + b_2 + b_3) + a_3(b_1 + b_2 + b_3).
+            \end{equation}
+            Of course, you can expand this, and rearrange the terms to write it in different ways.
+        \end{itemize}
+    \end{exm}
+    
+    \begin{problem}{}{}
+        Evaluate the following sums\footnote{Ans: 362, 6, 3025, 175}
+        \begin{itemize}
+            \item \(\displaystyle\sum_{x=7}^{10} (x^2 + 2x)\);
+            \item \(\displaystyle\sum_{\alpha = -2}^{2} \abs{\alpha}\);
+            \item \(\displaystyle\sum_{s=1}^{10} s^3\);
+            \item \(\displaystyle\sum_{i=1}^7 \sum_{j=1}^2 (2i + 3j)\)
+        \end{itemize}
+    \end{problem}
+    
+    \begin{wrn}
+        Sometimes you'll see sums where one of the limits is \(\infty\).
+        You have to be careful with these sums because sometimes it doesn't make sense to sum together infinitely many things.
+    \end{wrn}
+    
+    \begin{wrn}
+        Note that \(i\) and \(j\) are both commonly used as indices in sums.
+        Don't confuse them with the complex unit, \(\sqrt{-1}\).
+    \end{wrn}
+    
+    \begin{remark}{}{}
+        When you have to write lots of sums writing \(k = 0\) and \(N\) over and over gets pretty tiresome.
+        You'll probably see people write
+        \begin{equation}
+            \displaystyle \sum_{k} T_k \qqor \sum T_k.
+        \end{equation}
+        You then have to work out where \(k\) starts and finishes from context, or even that it's \(k\) that is being summed in the first place!
+        Avoid doing this until you are really comfortable with the sum notation, and avoid doing it in exams as well.
+    \end{remark}
+    
+    Using this notation we can write the average temperature as
+    \begin{equation}
+        \frac{1}{N + 1} \sum_{k = 0}^{N} T_k.
+    \end{equation}
+    
+    This notation is very useful, and very common, so make sure you're happy with it.
+    There's a similar notation for multiplication.
+    
+    \begin{ntn}{}{}
+        If \(T_0, \dotsc, T_N\) are some values we write
+        \begin{equation}
+            \prod_{k=0}^N T_k
+        \end{equation}
+        for
+        \begin{equation}
+            T_0 T_1 \dotsm T_N.
+        \end{equation}
+    \end{ntn}
+    
+    \begin{remark}{}{}
+        The \(\prod\) symbol comes from the Greek letter \(\Pi\) (pi) which is just capital P for product.
+    \end{remark}
+    
+    \section{Factorials and Binomial Coefficients}
+    \begin{dfn}{Factorial}{}
+        For \(n \in \naturals\) we define the \defineindex{factorial} of \(n\), written \(n!\) and read \enquote{\(n\) factorial}, to be the product of all of the whole numbers from \(1\) to \(n\).
+        That is,
+        \begin{equation}
+            n! = 1 \cdot 2 \cdot \dotsb (n - 1) n.
+        \end{equation}
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        Here's \(n!\) for \(n = 1, \dotsc, 10\):
+        \begin{equation*}
+            \begin{array}{r|rrrrrrrrrr}
+                n & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+                n! & 1 & 2 & 6 & 24 & 120 & 720 & 5040 & 40320 & 362880 & 3628800
+            \end{array}
+        \end{equation*}
+        Notice how quickly the factorial grows, by \(10\) we're already at about 3.6 million! [That's an exclamation mark, not another factorial]
+    \end{exm}
+    
+    If you start calculating some factorials by hand you'll realise that you're doing the same calculations over and over.
+    For example, if we compute \(6!\) we need to compute \(5!\) along the way:
+    \begin{equation}
+        6! = \underbrace{1 \cdot 2 \cdot 3 \cdot 4 \cdot 5}_{5!} \cdot 6.
+    \end{equation}
+    In general, if we compute \(n!\) we need to compute \((n-1)!\) along the way:
+    \begin{equation}
+        n! = \underbrace{1 \dotsm (n - 1)}_{(n-1)!} n.
+    \end{equation}
+    This gives us a recursive way to compute factorials, which can also be taken as an alternative definition.
+    For \(n \in \naturals\) we have
+    \begin{equation}
+        n! \coloneq 
+        \begin{cases}
+            1 & n = 1;\\
+            (n - 1)! \cdot n & n > 1.
+        \end{cases}
+    \end{equation}
+    
+    \begin{cde}{}{}
+        Here's a python program which computes the factorial of an input:
+        \begin{lstlisting}[gobble=12, language=python]
+            def factorial(n: int) -> int:
+                if n == 1:
+                    return 1
+                return n * factorial(n - 1)
+        \end{lstlisting}
+        Note that this is \emph{not} an efficient way to compute this, but it's the most direct implementation of the equation above.
+        Also, better code would check for invalid inputs, such as negative numbers, or non-integers, but that gets in the way of understanding the maths.
+        
+        Here's a similar implementation in Haskell
+        \begin{lstlisting}[language=haskell, gobble=12]
+            factorial :: Int -> Int
+            factorial 1 = 1
+            factorial n = n * factorial (n - 1)
+        \end{lstlisting}
+        The first line just says the input and output are both integers.
+        Haskell can automatically determine cases from this list of definitions.
+    \end{cde}
+    
+    One sensible question after we define something is \enquote{so what}?
+    Why should we care about the factorial?
+    One answer is that \(n!\) is the number of ways to arrange \(n\) (distinct) objects in a row.
+    If we have the set \(\{1, 2\}\) there are \(2\) different ways to order these elements, \enquote{\(12\)} or \enquote{\(21\)}.
+    If we have the set \(\{1, 2, 3\}\) there are \(6\) different ways to order these elements, \enquote{\(123\)}, \enquote{\(132\)}, \enquote{\(213\)}, \enquote{\(231\)}, \enquote{\(312\)} or \enquote{\(321\)}.
+    We can keep going like this, there are \(24\) different ways to order the elements of \(\{1, 2, 3, 4\}\), and so on.
+    
+    Notice that we can rearrange the second part of the recursive definition to get that \((n-1)! = n!/n\).
+    Using this we can extend the definition of factorial to \(0\).
+    If \(n - 1 = 0\) then \(n = 1\) and we have
+    \begin{equation}
+        0! = \frac{1!}{1} = \frac{1}{1} = 1.
+    \end{equation}
+    We then extend our definition of factorial to all non-negative integers by defining \(0! \coloneq 1\).
+    
+    \begin{remark}{}{}
+        There are several other justifications for why \(0! = 1\) is the correct definition to make.
+        At the end of the day we make definitions in maths because they're useful, and \(0! = 1\) is the most useful definition, mostly because it fits into lots of patterns, including the following.
+        
+        \begin{itemize}
+            \item Think about \(n!\) as the number of ways of arranging \(n\) things.
+            If we have \(\{1\}\) then there's only one way to order the elements, \enquote{\(1\)}.
+            If we have \(\emptyset = \{\}\) then there's also only one way to order the elements, \enquote{\(\)} (that's the empty list, but it's still a valid ordering of no things).
+        
+            \item Next year you'll learn some \href{https://en.wikipedia.org/wiki/Complex_analysis}{complex analysis}, in that course you may come across the \href{https://en.wikipedia.org/wiki/Gamma_function}{gamma function},
+            \begin{equation}
+                \Gamma(z) \coloneq \int_0^{\infty} t^{z - 1} \e^{-t} \dd{t}.
+            \end{equation}
+            Don't worry about any of these symbols if they're not familiar or just a bit scary.
+            The important thing is that you can show that the gamma function is such that \(\Gamma(n) = (n - 1)!\) for any \(n \in \naturals\), and also \(\Gamma(1) = 1\) so we should define \((1 - 1)! = 0! = 1\) if we want this pattern to continue.
+            The gamma function actually allows us to extend the factorial to negative numbers and even non-whole numbers!
+            For example, you can evaluate this function at \(3/2\) and you find that \(\Gamma(3/2) = \sqrt{\pi}\).
+            If you spend enough time in proximity to \enquote{Popular Maths}, say on Youtube, you'll probably see someone claiming that \(1/2\) factorial is \(\sqrt{\pi}\), and this is what they mean.
+            It isn't really correct to call this the factorial though unless the input is a positive whole number (which then includes \(0! = \Gamma(1)\) since \(1\) is positive).
+        \end{itemize}
+     \end{remark}
+     
+     A reasonable question, following on from the question of ordering things, is the following.
+     If I have a set of \(n\) objects how many different ways can I pick \(k\) of them?
+     When faced with a question like this it's often good to look at a few examples with small numbers.
+     If \(k = 0\) then there's one way to pick a set of \(0\) elements from \(\{1, \dotsc, n\}\), you take \(\emptyset\).
+     Similarly, if \(k = n\) then there's only one way to pick a set of \(n\) elements from \(\{1, \dotsc, n\}\), you take \(\{1, \dotsc, n\}\).
+     If \(k = 1\) then there's \(n\) ways to pick a set of \(1\) element from \(\{1, \dotsc, n\}\), we could take \(\{1\}\), \(\{2\}\), and so on up to \(\{n\}\).
+     
+     If \(k = 2\) then things are a bit trickier, so let's fix a value of \(n\) as well, say \(n = 4\).
+     We can take \(\{1, 2\}\), \(\{1, 3\}\), \(\{1, 4\}\), \(\{2, 3\}\), \(\{2, 4\}\), or \(\{3, 4\}\).
+     That's \(6\) different ways to make the choice.
+     If you keep playing around with small values, and if you pick the sets in a sensible order, then you may start to see a pattern emerging.
+     The key is to think about ordering the items, and then forgetting the orders again at the end.
+     We've been doing this implicitly by choosing to call our elements \(1, \dotsc, n\).
+     
+     Here's a way to pick \(k\) elements from any \(n\) element set.
+     First, order the \(n\) elements in some way.
+     There are \(n!\) ways to do this.
+     Then pick the first \(k\) elements.
+     There's a problem with this though, if I swap two elements amongst the first \(k\) the result doesn't change, and if I swap two elements among the last \(n - k\) the result doesn't change again.
+     For example, if \(n = 6\) and \(k = 3\) then I can order my elements as \(123456\).
+     Then I take the first three elements, \(123\).
+     Forgetting the order this gives us the set \(\{1, 2, 3\}\).
+     However, if I'd picked any of the orders \(132456\), \(123465\), \(132465\), and so on I would still result in picking \(\{1, 2, 3\}\) as the final set (although the order may be different, but that's not important for a set).
+     
+     What we see is that the \(n!\) ways to order these elements results in us over counting the number of subsets of size \(k\).
+     In particular, we over count by a factor of the number of ways of rearranging the first \(k\) elements, which is \(k!\), and a factor of the number of ways of arranging the last \(n - k\) elements, which is \((n - k)!\).
+     The result is that the number of ways of picking \(k\) things from a set of \(n\) things is
+     \begin{equation}
+         \frac{n!}{k!(n - k)!}.
+     \end{equation}
+     
+     \begin{dfn}{Binomial Coefficient}{}
+         The \defineindex{binomial coefficient} is defined by
+         \begin{equation}
+             \binom{n}{k} = {}_nC_k = {}^nC_k \coloneq \frac{n!}{k!(n - k)!}.
+         \end{equation}
+     \end{dfn}
+     
+     The reason for the name \enquote{binomial coefficient} will become clear in the next section.
+     
+     \begin{problem}{}{}
+         Compute the following binomial coefficients\footnote{Ans: 10, 6, 10, 20, 252}.
+         For the first three try using the formula and counting the number of subsets.
+         For the others you can just use the formula
+         \begin{equation}
+             \binom{5}{3}; \quad \binom{6}{3}; \quad \binom{4}{2}; \quad \binom{10}{9}; \qand \binom{10}{5}.
+         \end{equation}
+         Hint: Finding subsets with \(9\) out of \(10\) things is the same as finding subsets which don't contain \(1\) out of \(10\) things.
+     \end{problem}
+     
+     \subsection{Binomial Expansion}
+     A \defineindex{binomial} is any expression of the form \(a + b\).
+     The expansion part is that we often need to compute \((a + b)^2\), \((a + b)^3\), or even higher powers.
+     Fortunately, there's a fast way to do it.
+     We can use the \defineindex{binomial theorem}.
+     
+     \begin{thm}{Binomial Theorem}{}
+         For \(n \in \naturals\) we have
+         \begin{equation}
+             (a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k}b^k.
+         \end{equation}
+     \end{thm}
+     
+     \begin{exm}{}{}
+         Compute \((x + 3)^2\):
+         \begin{align}
+             (x + 3)^2 &= \sum_{k=0}^2 \binom{2}{k} x^{2 - k}3^k\\
+             &= \binom{2}{0} x^{2 - 0} 3^0 + \binom{2}{1} x^{2 - 1} 3^1 + \binom{2}{2} x^{2 - 2} 3^2\\
+             &= x^2 + 2 x \cdot 3 + 9\\
+             &= x^2 + 6x + 9.
+         \end{align}
+         
+         Compute \((a + b)^3\):
+         \begin{align}
+             (a + b)^3 &= \sum_{k=0}^3 \binom{3}{k} a^{3 - k} b^k\\
+             &= \binom{3}{0} a^{3 - 0} b^0 + \binom{3}{1} a^{3 - 1} b^1 + \binom{3}{2} a^{3 - 2} b^2 + \binom{3}{3} a^{3 - 3} b^3\\
+             &= a^3 + 3a^2b + 3ab^2 + b^3.
+         \end{align}
+         
+         Compute \((x + y)^4\):
+         \begingroup
+         \allowdisplaybreaks
+         \begin{align}
+             (a + b)^4 &= \sum_{k=0}^4 \binom{4}{k} x^{4 - k} y^k\\
+             &= \binom{4}{0} x^4 y^0 + \binom{4}{1} x^3 y^1 + \binom{4}{2} x^2 y^2 + \binom{4}{3} x^1 y^3 + \binom{4}{4} x^0 y^4\\
+             &= x^4 + 4x^3y + 6x^2y^2 + 4xy^3 + y^4.
+         \end{align}
+         \endgroup
+     \end{exm}
+     
+     Some things to notice which help you avoid errors:
+     \begin{itemize}
+         \item If you add up the exponents (including 1) in each term you'll always get \(n\).
+         In the last example we get \(4 + 0\), \(3 + 1\), \(2 + 2\), \(1 + 3\), and \(0 + 4\), all of which add up to \(4\).
+         \item The coefficients should increase up to some value, then decrease in reverse.
+         For these three examples the coefficients go \(1, 2, 1\), then \(1, 3, 3, 1\), then \(1, 4, 6, 4, 1\).
+     \end{itemize}
+     
+     The nice thing about the binomial theorem (also known as the binomial formula) is that you don't always have to compute the whole thing.
+     Suppose you just want to know what the coefficient of \(h^{32}\) is in \((x/y + h)^{50}\).
+     You can compute this, it's just
+     \begin{equation}
+         \binom{50}{32} \left( \frac{x}{y} \right)^{50 - 32} = 18053528883775\frac{x^{18}}{y^{18}}.
+     \end{equation}
+     Okay, that's a bit of a silly example, but it really is useful to be able to quickly determine coefficients of single terms sometimes.
+     
+     \begin{exm}{}{}
+         Suppose you're computing interest.
+         If the interest is paid at a rate of \(5\%\) annually then after \(3\) years the amount is \(1.05^3N\) where \(N\) is the original amount.
+         If you don't have a calculator you can compute \(1.05^n\) using the binomial expansion.
+         First, write \(1.05 = 1 + 0.05\) and note that \(0.05 = 5/100\).
+         Then we have
+         \begin{align}
+             1.05^3 &= \left( 1 + \frac{5}{100} \right)^3\\
+             &= \sum_{k=0}^{3} \binom{3}{k} 1^{3 - k} \frac{5^k}{100^k}\\
+             &= \binom{3}{0} + \binom{3}{1} \frac{5}{100} + \binom{3}{2} \frac{5^2}{100^2} + \binom{3}{3} \frac{5^3}{100^3}\\
+             &= 1 + 3 \cdot \frac{5}{100} + 3 \cdot \frac{25}{10000} + \frac{125}{1000000}\\
+             &= 1 + \frac{15}{100} + \frac{75}{10000} + \frac{125}{1000000}
+         \end{align}
+         If we only care about computing things to the nearest thousandth then we can approximate this as
+         \begin{equation}
+             1.05^3 \approx 1 + \frac{15}{100} = 1 + 0.15 = 1.15.
+         \end{equation}
+         If we want more accuracy we can include more terms.
+         Including all of them gives
+         \begin{equation}
+             1 + 0.15 + 0.0075 + 0.000125 = 1.157625.
+         \end{equation}
+         All of that can be done without a calculator, and actually gave one more decimal place of accuracy than the first calculator I checked it with!
+     \end{exm}
+     
+     \begin{remark}{}{}
+         Computing approximations like this, where we are adding smaller and smaller terms, will generalise to the notion of Taylor series.
+         We'll discuss these in Block 4.
+     \end{remark}
+     
+     As you practice this you'll likely learn the coefficients for the first few exponents off by heart.
+     In fact, there's a chance you recognise them already.
+     Pascal's triangle (\cref{fig:pascals triangle}) is constructed by starting with \(1\)s on two sides.
+     Then the rule to fill in the triangle is that each element is the sum of the two elements above it to either side.
+     The result is that the rows are exactly the coefficients of the binomial expansion corresponding to that row number, that is, the binomial coefficients!
+     
+     \begin{figure}
+         \centering
+         % Code from https://tex.stackexchange.com/a/198941/180184
+         % Released under CC BY-SA 3.0
+         \tikzsetnextfilename{pascals-triangle}
+         \tikz[x=1cm*sin 60, y=1.5cm*cos 60]
+         \foreach \n in {0,...,11}
+         \foreach \k in {0,...,\n}    
+         \node [hexagon] at (-\n/2+\k, -\n) {\directlua{tex.print("" .. nchoosek(\n,\k))}};
+         \caption{Pascal's triangle.}
+         \label{fig:pascals triangle}
+     \end{figure}
 \end{document}

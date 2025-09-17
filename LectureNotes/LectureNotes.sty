@@ -40,7 +40,7 @@
 
 % fix \dl
 \let\@dl\dl
-\renewcommand*{\dl}[1]{\@dl0#1}
+\renewcommand*{\dl}[1]{\@dl#1}
 % define \dd to be differential w/ extra spacing
 \newcommand*{\dd}[1]{\mskip2mu \dl{#1}}
 % End derivatives ---------------------------------------------------------
