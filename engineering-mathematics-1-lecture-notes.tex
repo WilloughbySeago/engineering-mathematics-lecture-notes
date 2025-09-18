@@ -6,6 +6,8 @@
 \usepackage{csquotes}
 \usepackage{cancel}
 \usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{subcaption}
 
 \usepackage{tikz}
 \usetikzlibrary{external}
@@ -29,6 +31,8 @@ noabbrev
 % My packages
 \usepackage{LectureBoxes/LectureBoxes}
 \usepackage{LectureNotes/LectureNotes}
+
+\lstset{basicstyle=\color{codeTextColor}\ttfamily}
 
 \setmathfont[range={\int, \oint, \otimes, \oplus, \bigotimes, \bigoplus}]{Latin Modern Math}
 
@@ -180,6 +184,7 @@ end
         \end{tabular}
     \end{table}
     
+    \part{Sets and Algebra}
     \chapter{Sets}
     \section{Sets}
     \begin{dfn}{Set}{}
@@ -1730,160 +1735,755 @@ end
             If you spend enough time in proximity to \enquote{Popular Maths}, say on Youtube, you'll probably see someone claiming that \(1/2\) factorial is \(\sqrt{\pi}\), and this is what they mean.
             It isn't really correct to call this the factorial though unless the input is a positive whole number (which then includes \(0! = \Gamma(1)\) since \(1\) is positive).
         \end{itemize}
-     \end{remark}
+    \end{remark}
      
-     A reasonable question, following on from the question of ordering things, is the following.
-     If I have a set of \(n\) objects how many different ways can I pick \(k\) of them?
-     When faced with a question like this it's often good to look at a few examples with small numbers.
-     If \(k = 0\) then there's one way to pick a set of \(0\) elements from \(\{1, \dotsc, n\}\), you take \(\emptyset\).
-     Similarly, if \(k = n\) then there's only one way to pick a set of \(n\) elements from \(\{1, \dotsc, n\}\), you take \(\{1, \dotsc, n\}\).
-     If \(k = 1\) then there's \(n\) ways to pick a set of \(1\) element from \(\{1, \dotsc, n\}\), we could take \(\{1\}\), \(\{2\}\), and so on up to \(\{n\}\).
+    A reasonable question, following on from the question of ordering things, is the following.
+    If I have a set of \(n\) objects how many different ways can I pick \(k\) of them?
+    When faced with a question like this it's often good to look at a few examples with small numbers.
+    If \(k = 0\) then there's one way to pick a set of \(0\) elements from \(\{1, \dotsc, n\}\), you take \(\emptyset\).
+    Similarly, if \(k = n\) then there's only one way to pick a set of \(n\) elements from \(\{1, \dotsc, n\}\), you take \(\{1, \dotsc, n\}\).
+    If \(k = 1\) then there's \(n\) ways to pick a set of \(1\) element from \(\{1, \dotsc, n\}\), we could take \(\{1\}\), \(\{2\}\), and so on up to \(\{n\}\).
      
-     If \(k = 2\) then things are a bit trickier, so let's fix a value of \(n\) as well, say \(n = 4\).
-     We can take \(\{1, 2\}\), \(\{1, 3\}\), \(\{1, 4\}\), \(\{2, 3\}\), \(\{2, 4\}\), or \(\{3, 4\}\).
-     That's \(6\) different ways to make the choice.
-     If you keep playing around with small values, and if you pick the sets in a sensible order, then you may start to see a pattern emerging.
-     The key is to think about ordering the items, and then forgetting the orders again at the end.
-     We've been doing this implicitly by choosing to call our elements \(1, \dotsc, n\).
+    If \(k = 2\) then things are a bit trickier, so let's fix a value of \(n\) as well, say \(n = 4\).
+    We can take \(\{1, 2\}\), \(\{1, 3\}\), \(\{1, 4\}\), \(\{2, 3\}\), \(\{2, 4\}\), or \(\{3, 4\}\).
+    That's \(6\) different ways to make the choice.
+    If you keep playing around with small values, and if you pick the sets in a sensible order, then you may start to see a pattern emerging.
+    The key is to think about ordering the items, and then forgetting the orders again at the end.
+    We've been doing this implicitly by choosing to call our elements \(1, \dotsc, n\).
      
-     Here's a way to pick \(k\) elements from any \(n\) element set.
-     First, order the \(n\) elements in some way.
-     There are \(n!\) ways to do this.
-     Then pick the first \(k\) elements.
-     There's a problem with this though, if I swap two elements amongst the first \(k\) the result doesn't change, and if I swap two elements among the last \(n - k\) the result doesn't change again.
-     For example, if \(n = 6\) and \(k = 3\) then I can order my elements as \(123456\).
-     Then I take the first three elements, \(123\).
-     Forgetting the order this gives us the set \(\{1, 2, 3\}\).
-     However, if I'd picked any of the orders \(132456\), \(123465\), \(132465\), and so on I would still result in picking \(\{1, 2, 3\}\) as the final set (although the order may be different, but that's not important for a set).
+    Here's a way to pick \(k\) elements from any \(n\) element set.
+    First, order the \(n\) elements in some way.
+    There are \(n!\) ways to do this.
+    Then pick the first \(k\) elements.
+    There's a problem with this though, if I swap two elements amongst the first \(k\) the result doesn't change, and if I swap two elements among the last \(n - k\) the result doesn't change again.
+    For example, if \(n = 6\) and \(k = 3\) then I can order my elements as \(123456\).
+    Then I take the first three elements, \(123\).
+    Forgetting the order this gives us the set \(\{1, 2, 3\}\).
+    However, if I'd picked any of the orders \(132456\), \(123465\), \(132465\), and so on I would still result in picking \(\{1, 2, 3\}\) as the final set (although the order may be different, but that's not important for a set).
      
-     What we see is that the \(n!\) ways to order these elements results in us over counting the number of subsets of size \(k\).
-     In particular, we over count by a factor of the number of ways of rearranging the first \(k\) elements, which is \(k!\), and a factor of the number of ways of arranging the last \(n - k\) elements, which is \((n - k)!\).
-     The result is that the number of ways of picking \(k\) things from a set of \(n\) things is
-     \begin{equation}
-         \frac{n!}{k!(n - k)!}.
-     \end{equation}
+    What we see is that the \(n!\) ways to order these elements results in us over counting the number of subsets of size \(k\).
+    In particular, we over count by a factor of the number of ways of rearranging the first \(k\) elements, which is \(k!\), and a factor of the number of ways of arranging the last \(n - k\) elements, which is \((n - k)!\).
+    The result is that the number of ways of picking \(k\) things from a set of \(n\) things is
+    \begin{equation}
+        \frac{n!}{k!(n - k)!}.
+    \end{equation}
      
-     \begin{dfn}{Binomial Coefficient}{}
-         The \defineindex{binomial coefficient} is defined by
-         \begin{equation}
-             \binom{n}{k} = {}_nC_k = {}^nC_k \coloneq \frac{n!}{k!(n - k)!}.
-         \end{equation}
-     \end{dfn}
+    \begin{dfn}{Binomial Coefficient}{}
+        The \defineindex{binomial coefficient} is defined by
+        \begin{equation}
+            \binom{n}{k} = {}_nC_k = {}^nC_k \coloneq \frac{n!}{k!(n - k)!}.
+        \end{equation}
+    \end{dfn}
      
-     The reason for the name \enquote{binomial coefficient} will become clear in the next section.
+    The reason for the name \enquote{binomial coefficient} will become clear in the next section.
      
-     \begin{problem}{}{}
-         Compute the following binomial coefficients\footnote{Ans: 10, 6, 10, 20, 252}.
-         For the first three try using the formula and counting the number of subsets.
-         For the others you can just use the formula
-         \begin{equation}
-             \binom{5}{3}; \quad \binom{6}{3}; \quad \binom{4}{2}; \quad \binom{10}{9}; \qand \binom{10}{5}.
-         \end{equation}
-         Hint: Finding subsets with \(9\) out of \(10\) things is the same as finding subsets which don't contain \(1\) out of \(10\) things.
-     \end{problem}
+    \begin{problem}{}{}
+        Compute the following binomial coefficients\footnote{Ans: 10, 6, 10, 20, 252}.
+        For the first three try using the formula and counting the number of subsets.
+        For the others you can just use the formula
+        \begin{equation}
+            \binom{5}{3}; \quad \binom{6}{3}; \quad \binom{4}{2}; \quad \binom{10}{9}; \qand \binom{10}{5}.
+        \end{equation}
+        Hint: Finding subsets with \(9\) out of \(10\) things is the same as finding subsets which don't contain \(1\) out of \(10\) things.
+    \end{problem}
      
-     \subsection{Binomial Expansion}
-     A \defineindex{binomial} is any expression of the form \(a + b\).
-     The expansion part is that we often need to compute \((a + b)^2\), \((a + b)^3\), or even higher powers.
-     Fortunately, there's a fast way to do it.
-     We can use the \defineindex{binomial theorem}.
+    \subsection{Binomial Expansion}
+    A \defineindex{binomial} is any expression of the form \(a + b\).
+    The expansion part is that we often need to compute \((a + b)^2\), \((a + b)^3\), or even higher powers.
+    Fortunately, there's a fast way to do it.
+    We can use the \defineindex{binomial theorem}.
      
-     \begin{thm}{Binomial Theorem}{}
-         For \(n \in \naturals\) we have
-         \begin{equation}
-             (a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k}b^k.
-         \end{equation}
-     \end{thm}
+    \begin{thm}{Binomial Theorem}{}
+        For \(n \in \naturals\) we have
+        \begin{equation}
+            (a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k}b^k.
+        \end{equation}
+    \end{thm}
      
-     \begin{exm}{}{}
-         Compute \((x + 3)^2\):
-         \begin{align}
-             (x + 3)^2 &= \sum_{k=0}^2 \binom{2}{k} x^{2 - k}3^k\\
-             &= \binom{2}{0} x^{2 - 0} 3^0 + \binom{2}{1} x^{2 - 1} 3^1 + \binom{2}{2} x^{2 - 2} 3^2\\
-             &= x^2 + 2 x \cdot 3 + 9\\
-             &= x^2 + 6x + 9.
-         \end{align}
+    \begin{exm}{}{}
+        Compute \((x + 3)^2\):
+        \begin{align}
+            (x + 3)^2 &= \sum_{k=0}^2 \binom{2}{k} x^{2 - k}3^k\\
+            &= \binom{2}{0} x^{2 - 0} 3^0 + \binom{2}{1} x^{2 - 1} 3^1 + \binom{2}{2} x^{2 - 2} 3^2\\
+            &= x^2 + 2 x \cdot 3 + 9\\
+            &= x^2 + 6x + 9.
+        \end{align}
+        
+        Compute \((a + b)^3\):
+        \begin{align}
+            (a + b)^3 &= \sum_{k=0}^3 \binom{3}{k} a^{3 - k} b^k\\
+            &= \binom{3}{0} a^{3 - 0} b^0 + \binom{3}{1} a^{3 - 1} b^1 + \binom{3}{2} a^{3 - 2} b^2 + \binom{3}{3} a^{3 - 3} b^3\\
+            &= a^3 + 3a^2b + 3ab^2 + b^3.
+        \end{align}
          
-         Compute \((a + b)^3\):
-         \begin{align}
-             (a + b)^3 &= \sum_{k=0}^3 \binom{3}{k} a^{3 - k} b^k\\
-             &= \binom{3}{0} a^{3 - 0} b^0 + \binom{3}{1} a^{3 - 1} b^1 + \binom{3}{2} a^{3 - 2} b^2 + \binom{3}{3} a^{3 - 3} b^3\\
-             &= a^3 + 3a^2b + 3ab^2 + b^3.
-         \end{align}
-         
-         Compute \((x + y)^4\):
-         \begingroup
-         \allowdisplaybreaks
-         \begin{align}
-             (a + b)^4 &= \sum_{k=0}^4 \binom{4}{k} x^{4 - k} y^k\\
-             &= \binom{4}{0} x^4 y^0 + \binom{4}{1} x^3 y^1 + \binom{4}{2} x^2 y^2 + \binom{4}{3} x^1 y^3 + \binom{4}{4} x^0 y^4\\
-             &= x^4 + 4x^3y + 6x^2y^2 + 4xy^3 + y^4.
-         \end{align}
-         \endgroup
-     \end{exm}
+        Compute \((x + y)^4\):
+        \begingroup
+        \allowdisplaybreaks
+        \begin{align}
+            (a + b)^4 &= \sum_{k=0}^4 \binom{4}{k} x^{4 - k} y^k\\
+            &= \binom{4}{0} x^4 y^0 + \binom{4}{1} x^3 y^1 + \binom{4}{2} x^2 y^2 + \binom{4}{3} x^1 y^3 + \binom{4}{4} x^0 y^4\\
+            &= x^4 + 4x^3y + 6x^2y^2 + 4xy^3 + y^4.
+        \end{align}
+        \endgroup
+    \end{exm}
      
-     Some things to notice which help you avoid errors:
-     \begin{itemize}
-         \item If you add up the exponents (including 1) in each term you'll always get \(n\).
-         In the last example we get \(4 + 0\), \(3 + 1\), \(2 + 2\), \(1 + 3\), and \(0 + 4\), all of which add up to \(4\).
-         \item The coefficients should increase up to some value, then decrease in reverse.
-         For these three examples the coefficients go \(1, 2, 1\), then \(1, 3, 3, 1\), then \(1, 4, 6, 4, 1\).
-     \end{itemize}
+    Some things to notice which help you avoid errors:
+    \begin{itemize}
+        \item If you add up the exponents (including 1) in each term you'll always get \(n\).
+        In the last example we get \(4 + 0\), \(3 + 1\), \(2 + 2\), \(1 + 3\), and \(0 + 4\), all of which add up to \(4\).
+        \item The coefficients should increase up to some value, then decrease in reverse.
+        For these three examples the coefficients go \(1, 2, 1\), then \(1, 3, 3, 1\), then \(1, 4, 6, 4, 1\).
+    \end{itemize}
      
-     The nice thing about the binomial theorem (also known as the binomial formula) is that you don't always have to compute the whole thing.
-     Suppose you just want to know what the coefficient of \(h^{32}\) is in \((x/y + h)^{50}\).
-     You can compute this, it's just
-     \begin{equation}
-         \binom{50}{32} \left( \frac{x}{y} \right)^{50 - 32} = 18053528883775\frac{x^{18}}{y^{18}}.
-     \end{equation}
-     Okay, that's a bit of a silly example, but it really is useful to be able to quickly determine coefficients of single terms sometimes.
+    The nice thing about the binomial theorem (also known as the binomial formula) is that you don't always have to compute the whole thing.
+    Suppose you just want to know what the coefficient of \(h^{32}\) is in \((x/y + h)^{50}\).
+    You can compute this, it's just
+    \begin{equation}
+        \binom{50}{32} \left( \frac{x}{y} \right)^{50 - 32} = 18053528883775\frac{x^{18}}{y^{18}}.
+    \end{equation}
+    Okay, that's a bit of a silly example, but it really is useful to be able to quickly determine coefficients of single terms sometimes.
      
-     \begin{exm}{}{}
-         Suppose you're computing interest.
-         If the interest is paid at a rate of \(5\%\) annually then after \(3\) years the amount is \(1.05^3N\) where \(N\) is the original amount.
-         If you don't have a calculator you can compute \(1.05^n\) using the binomial expansion.
-         First, write \(1.05 = 1 + 0.05\) and note that \(0.05 = 5/100\).
-         Then we have
-         \begin{align}
-             1.05^3 &= \left( 1 + \frac{5}{100} \right)^3\\
-             &= \sum_{k=0}^{3} \binom{3}{k} 1^{3 - k} \frac{5^k}{100^k}\\
-             &= \binom{3}{0} + \binom{3}{1} \frac{5}{100} + \binom{3}{2} \frac{5^2}{100^2} + \binom{3}{3} \frac{5^3}{100^3}\\
-             &= 1 + 3 \cdot \frac{5}{100} + 3 \cdot \frac{25}{10000} + \frac{125}{1000000}\\
-             &= 1 + \frac{15}{100} + \frac{75}{10000} + \frac{125}{1000000}
-         \end{align}
-         If we only care about computing things to the nearest thousandth then we can approximate this as
-         \begin{equation}
-             1.05^3 \approx 1 + \frac{15}{100} = 1 + 0.15 = 1.15.
-         \end{equation}
-         If we want more accuracy we can include more terms.
-         Including all of them gives
-         \begin{equation}
-             1 + 0.15 + 0.0075 + 0.000125 = 1.157625.
-         \end{equation}
-         All of that can be done without a calculator, and actually gave one more decimal place of accuracy than the first calculator I checked it with!
-     \end{exm}
+    \begin{exm}{}{}
+        Suppose you're computing interest.
+        If the interest is paid at a rate of \(5\%\) annually then after \(3\) years the amount is \(1.05^3N\) where \(N\) is the original amount.
+        If you don't have a calculator you can compute \(1.05^n\) using the binomial expansion.
+        First, write \(1.05 = 1 + 0.05\) and note that \(0.05 = 5/100\).
+        Then we have
+        \begin{align}
+            1.05^3 &= \left( 1 + \frac{5}{100} \right)^3\\
+            &= \sum_{k=0}^{3} \binom{3}{k} 1^{3 - k} \frac{5^k}{100^k}\\
+            &= \binom{3}{0} + \binom{3}{1} \frac{5}{100} + \binom{3}{2} \frac{5^2}{100^2} + \binom{3}{3} \frac{5^3}{100^3}\\
+            &= 1 + 3 \cdot \frac{5}{100} + 3 \cdot \frac{25}{10000} + \frac{125}{1000000}\\
+            &= 1 + \frac{15}{100} + \frac{75}{10000} + \frac{125}{1000000}
+        \end{align}
+        If we only care about computing things to the nearest thousandth then we can approximate this as
+        \begin{equation}
+            1.05^3 \approx 1 + \frac{15}{100} = 1 + 0.15 = 1.15.
+        \end{equation}
+        If we want more accuracy we can include more terms.
+        Including all of them gives
+        \begin{equation}
+            1 + 0.15 + 0.0075 + 0.000125 = 1.157625.
+        \end{equation}
+        All of that can be done without a calculator, and actually gave one more decimal place of accuracy than the first calculator I checked it with!
+    \end{exm}
      
-     \begin{remark}{}{}
-         Computing approximations like this, where we are adding smaller and smaller terms, will generalise to the notion of Taylor series.
-         We'll discuss these in Block 4.
-     \end{remark}
+    \begin{remark}{}{}
+        Computing approximations like this, where we are adding smaller and smaller terms, will generalise to the notion of Taylor series.
+        We'll discuss these in Block 4.
+    \end{remark}
      
-     As you practice this you'll likely learn the coefficients for the first few exponents off by heart.
-     In fact, there's a chance you recognise them already.
-     Pascal's triangle (\cref{fig:pascals triangle}) is constructed by starting with \(1\)s on two sides.
-     Then the rule to fill in the triangle is that each element is the sum of the two elements above it to either side.
-     The result is that the rows are exactly the coefficients of the binomial expansion corresponding to that row number, that is, the binomial coefficients!
+    As you practice this you'll likely learn the coefficients for the first few exponents off by heart.
+    In fact, there's a chance you recognise them already.
+    Pascal's triangle (\cref{fig:pascals triangle}) is constructed by starting with \(1\)s on two sides.
+    Then the rule to fill in the triangle is that each element is the sum of the two elements above it to either side.
+    The result is that the rows are exactly the coefficients of the binomial expansion corresponding to that row number, that is, the binomial coefficients!
      
-     \begin{figure}
-         \centering
-         % Code from https://tex.stackexchange.com/a/198941/180184
-         % Released under CC BY-SA 3.0
-         \tikzsetnextfilename{pascals-triangle}
-         \tikz[x=1cm*sin 60, y=1.5cm*cos 60]
-         \foreach \n in {0,...,11}
-         \foreach \k in {0,...,\n}    
-         \node [hexagon] at (-\n/2+\k, -\n) {\directlua{tex.print("" .. nchoosek(\n,\k))}};
-         \caption{Pascal's triangle.}
-         \label{fig:pascals triangle}
-     \end{figure}
+    \begin{figure}
+        \centering
+        % Code from https://tex.stackexchange.com/a/198941/180184
+        % Released under CC BY-SA 3.0
+        \tikzsetnextfilename{pascals-triangle}
+        \tikz[x=1cm*sin 60, y=1.5cm*cos 60]
+        \foreach \n in {0,...,11}
+        \foreach \k in {0,...,\n}    
+        \node [hexagon] at (-\n/2+\k, -\n) {\directlua{tex.print("" .. nchoosek(\n,\k))}};
+        \caption{Pascal's triangle.}
+        \label{fig:pascals triangle}
+    \end{figure}
+     
+    \part{Geometry}
+    \chapter{Coordinates and Conics}
+    \section{Coordinates}
+    Where are you?
+    How would you tell someone your exact location right now?
+    For me, I'm in my office, at my desk.
+    It's the second desk on the right.
+    Can I be more accurate than that?
+    I'm about \qty{3}{\metre} from the wall with the door, and \qty{1}{\metre} from the wall to the right of that.
+     
+    However, that's only useful if you already know where my office is.
+    Maybe a more useful position would be my latitude, \num{55.872480}, and longitude, \num{-4.294590}.
+    These two numbers can pinpoint any place on the surface of Earth.
+    Latitude is measured as an angle above or below the equator, and longitude as an angle East or West of the Prime Meridian (an arbitrary line drawn from pole-to-pole, originally chosen to pass through Greenwhich observatory, now slightly off from this).
+     
+    What I've just done is give you some coordinates to position me in my office.
+    \define{Coordinates}\index{coordinates} are numbers which specify a position relative to something else.
+    In the first case relative to the walls of my office, and in the case of latitude and longitude relative to the equator and \href{https://en.wikipedia.org/wiki/IERS_Reference_Meridian}{IERS Reference Meridian}.
+     
+    There are many more choices I could have made to specify my location, say my grid position in an \href{https://en.wikipedia.org/wiki/Ordnance_Survey}{Ordnance Survey map}.
+    These coordinates are all useful in the real world.
+    We'll look at some more idealised coordinates which are useful for solving both real-world and mathematical problems.
+     
+    \begin{remark}{}{}
+        The study of coordinates generalises to the definition and study of \href{manifolds}{https://en.wikipedia.org/wiki/Manifold}, which intuitively are any objects where we can use coordinates to specify locations.
+        However, the notion of coordinates for manifolds is much more flexible than we have here.
+        We're working with \href{https://en.wikipedia.org/wiki/Euclidean_space}{Euclidean spaces}, which come with a fixed notion of distance.
+        Manifolds don't have this restriction.
+    \end{remark}
+     
+    \subsection{Cartesian Coordinates}
+    Hopefully, you're familiar with coordinates in the plane.
+    To specify a point in the plane you can fix two orthogonal axes, \(x\) and \(y\), and specify any position by how far along each axis you have to go.
+    We call these \defineindex{Cartesian coordinates}, named after \href{https://en.wikipedia.org/wiki/Ren%C3%A9_Descartes}{Ren\'e Descartes}.
+    See \cref{fig:cartesian coords on the plane}.
+     
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{cartesian-plane}
+        \begin{tikzpicture}
+            \fill [glasgowPillarbox] (2, 3) circle [radius = 0.075];
+            \draw [glasgowPillarbox, dashed, thick] (2, 0) -- (2, 3);
+            \draw [glasgowPillarbox, dashed, thick] (0, 3) -- (2, 3);
+            \node [glasgowPillarbox, right] at (2, 3) {\((2, 3)\)};
+            
+            \fill [glasgowLeaf] (-4, -1) circle [radius = 0.075];
+            \draw [glasgowLeaf, dashed, thick] (-4, 0) -- (-4, -1);
+            \draw [glasgowLeaf, dashed, thick] (-0.7, -1) -- (-4, -1);
+            \node [glasgowLeaf, below] at (-4, -1) {\((-4, -1)\)};
+             
+            \fill [glasgowRust] (3.14, -1.41) circle [radius = 0.075];
+            \draw [glasgowRust, dashed, thick] (3.14, 0) -- (3.14, -1.41);
+            \draw [glasgowRust, dashed, thick] (0, -1.41) -- (3.14, -1.41);
+            \node [glasgowRust, below] at (3.14, -1.41) {\((\pi, -\sqrt{2})\)};
+            
+            \fill [glasgowThistle] (-3.6, 3.6) circle [radius = 0.075];
+            \draw [glasgowThistle, dashed, thick] (-3.6, 0) -- (-3.6, 3.6);
+            \draw [glasgowThistle, dashed, thick] (0, 3.6) -- (-3.6, 3.6);
+            \node [glasgowThistle, above] at (-3.6, 3.6) {\((-18/5, 18/5)\)};
+            
+            \draw [thick, ->] (-4.5, 0) -- (4.5, 0) node [right] {\(x\)};
+            \draw [thick, ->] (0, -4.5) -- (0, 4.5) node [above] {\(y\)};
+            \foreach \i in {1, ..., 4} {
+                \draw (\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (\i, -0.3) {\(\i\)};
+                \draw (-\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                \draw (-0.1, \i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, \i) {\(\i\)};
+                \draw (-0.1, -\i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, -\i) {\(\mathllap{-}\i\)};
+            }
+        \end{tikzpicture}
+        \caption{Cartesian Coordinates on the Plane}
+        \label{fig:cartesian coords on the plane}
+    \end{figure}
+     
+    Once we've fixed the axes we call the point they cross the \defineindex{origin}.
+    Any position in the plane can then be given as a pair of numbers, \((x, y)\), giving the distance along the \(x\) and \(y\) axis respectively.
+    The origin has coordinates \((0, 0)\).
+     
+    \begin{ntn}{Tuples}{}
+        Given a set, \(S\), we write \(S^n\) to mean the set of all \(n\)-tuples of \(S\).
+        That is,
+        \begin{equation}
+            S^n = \{(s_1, \dotsc, s_n) \mid s_i \in S\}.
+        \end{equation}
+    \end{ntn}
+     
+    With this notation the Cartesian coordinates of a point on the plane belong to \(\reals^2\), since in theory any real number can appear as a length (although in practice we can only measure rational numbers).
+     
+    Cartesian coordinates work in any number of dimensions.
+    In fact, the number line that we've mentioned several times already is really just the Cartesian coordinates of the line.
+     
+    You need as many coordinates as you have dimensions.
+    In fact, this is pretty much the definition of \defineindex{dimension}, it is the number of (independent) pieces of information that you need to specify to locate a point.
+    So, in three dimensions you need three pieces of information.
+     
+    In Cartesian coordinates the third dimension means adding a third axis, \(z\).
+    Then our coordinates live in \(\reals^3\).
+    An example is given in \cref{fig:cartesian coordinates 3d}.
+     
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{cartesian-3-space}
+        \begin{tikzpicture}
+            \draw [thick, ->] (-4.5, 0, 0) -- (4.5, 0, 0) node [right] {\(x\)};
+            \draw [thick, ->] (0, -4.5, 0) -- (0, 4.5, 0) node [above] {\(z\)};
+            \draw [thick, ->] (0, 0, 4.5) -- (0, 0, -4.5) node [above right] {\(y\)};
+             
+            \fill [glasgowSkyblue] (4, -3, 2) circle [radius = 0.075] node [below] {\((4, -2, 3/2)\)};
+            \draw [glasgowSkyblue, ultra thick, dashed] (0, 0, 0) -- (4, 0, 0) node [midway, above] {\(4\)} -- (4, 0, 2) node [midway, below right] {\(-2\)} -- (4, -3, 2) node [midway, left] {\(3/2\)};
+             
+            \fill [glasgowMoss] (-3, 2, -1) circle [radius = 0.075] node [above] {\((-3, 2, -1)\)};
+            \draw [glasgowMoss, ultra thick, dashed] (0, 0, 0) -- (0, 2, 0) node [midway, left] {\(2\)} -- (0, 2, -1) node [midway, below right] {\(-1\)} -- (-3, 2, -1) node [midway, below] {\(-3\)};
+        \end{tikzpicture}
+        \caption[Cartesian coordinates in three dimensions.]{Cartesian coordinates in three dimensions. To find the coordinates of a point imagine you start at the origin, then move to the point, but you're only allowed to move parallel to the axes. Keep track of how far you go along each axis. Notice that you don't need to start with the \(x\)-axis. In fact, you can walk along the \(x\)-axis for a bit, then the \(y\)-axis, and then the \(x\)-axis again. As long as you keep track of each axis independently you'll always end up with the same coordinates once you reach the point.}
+        \label{fig:cartesian coordinates 3d}
+    \end{figure}
+     
+    \begin{remark}{}{}
+        We will always choose to label our axes in accordance with the \href{https://en.wikipedia.org/wiki/Right-hand_rule#Coordinates}{right hand rule}, this will be important when you learn about the vector cross product.
+        It's also a convention that is followed pretty much universally.
+    \end{remark}
+     
+    It's possible to keep adding axes, however since we live in three dimensional space it becomes hard to plot.
+    Rather than trying to picture what the fourth dimension looks like I find it easier to switch up my mental picture of what coordinates are.
+    They're just separate pieces of data which come together to specify some combined piece of information.
+    For example, if you have a beam then the stresses in the beam are measured by \(9\) numbers, which can be taken as the stress in each direction along three perpendicular faces of the beam.
+    Thus, this information lives in a 9 dimensional space.
+     
+    \begin{remark}{}{}
+        This information about the stresses in a beam is usually packaged up into the \href{https://en.wikipedia.org/wiki/Cauchy_stress_tensor}{Cauchy stress tensor}.
+        In many practical situations these different numbers aren't actually independent, and we can reduce the amount of information needed.
+        For example, in equilibrium only 6 numbers are needed.
+    \end{remark}
+     
+    \subsubsection{Geometry in Cartesian Coordinates}
+    Let's return to the case of the plane again.
+    You should be familiar with the equation\footnote{The conventions used in this equation differ from country to country. I've chosen the convention most commonly used in the UK. Other common conventions are \(y = mx + b\) and \(y = ax + b\).}
+    \begin{equation}
+        y = mx + c.
+    \end{equation}
+    Once we fix values for \(m\) and \(c\) plotting this will give a straight line with gradient \(m\) and \(y\)-intercept \(c\).
+     
+    Recall that the gradient is a measure of how steep the line is.
+    To measure the gradient find two points, \((x_1, y_1)\) and \((x_2, y_2)\), on the line.
+    Then the \defineindex{gradient} is the change in \(y\)-value (known as the \defineindex{rise}) divided by the change in the \(x\)-value (known as the \defineindex{run}):
+    \begin{equation}
+        m = \frac{\Delta y}{\Delta x} = \frac{y_1 - y_2}{x_1 - x_2}.
+    \end{equation}
+    Note that a positive gradient means the line slops up when coming from the right, and a negative gradient means it slopes down.
+    The larger the absolute value of \(m\) is the steeper the slope.
+    A horizontal line has a gradient of \(0\), and a vertical line has, in a sense, an infinite gradient.
+    More properly, it has an \emph{undefined} gradient.
+     
+    \begin{remark}{}{}
+        In block 4 we'll see how this generalises to any curve, defining the gradient more generally using the derivative.
+    \end{remark}
+     
+    The \define{\(\symbf{y}\)-intercept}\index{y-intercept@\(y\)-intercept} is simply the \(y\)-value when the line passes through the \(y\)-axis, which is \(x = 0\), and when \(x = 0\) we have \(y = m \cdot 0 + c = c\).
+     
+    \begin{exm}{}{}
+        Consider \cref{fig:straight line plot}.
+        Here the line plotted passes through the \(y\)-axis at \(x = 1\), so the \(y\)-intercept is \(c = 1\).
+        Making a measurement we see that when we go along by \(2.5\) we have to go up by \(5\) to get back to the line.
+        Thus, the gradient is
+        \begin{equation}
+            m = \frac{5}{2.5} = 2.
+        \end{equation}
+        Hence, the equation of this line is
+        \begin{equation}
+            y = 2x + 1.
+        \end{equation}
+        You can check this by finding the \(x\) and \(y\) coordinates of any point on the line and checking that they satisfy this formula.
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{straight-line}
+        \begin{tikzpicture}
+            \draw [->, thick] (-3.5, 0) -- (3.5, 0) node [right] {\(x\)};
+            \draw [->, thick] (0, -3.5) -- (0, 3.5) node [above] {\(y\)};
+            
+            \foreach \i in {1, ..., 3} {
+                \draw (\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (\i, -0.3) {\(\i\)};
+                \draw (-\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                \draw (-0.1, \i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, \i) {\(\i\)};
+                \draw (-0.1, -\i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, -\i) {\(\mathllap{-}\i\)};
+            }
+            
+            \draw [very thick, glasgowBlue] (-2.25, -3.5) -- (1.25, 3.5);
+            \draw [thick, dashed, glasgowBlue] (-1.5, -2) -- ++ (2.5, 0) node [midway, below, fill=white, inner sep=2pt] {\(2.5\)} -- ++ (0, 5) node [midway, right] {\(5\)};
+        \end{tikzpicture}
+        \caption[Straight line.]{Straight line of gradient \(2\) and \(y\)-intercept \(1\). The equation of this line is \(y = 2x + 1\).}
+        \label{fig:straight line plot}
+    \end{figure}
+    
+    You may be familiar with equations of the form
+    \begin{equation}
+        (y - y_0)^2 + (x - x_0)^2 = r^2.
+    \end{equation}
+    Once we fix values for \(x_0\), \(y_0\), and \(r\) this will give a circle with centre \((x_0, y_0)\) and radius \(r\).
+    The reason for this is simply Pythagoras.
+    Notice that \(x - x_0\) and \(y - y_0\) are the distances along each axis from the centre of the circle, and so we get the triangle shown in \cref{fig:circle plot}, which has the radius of the triangle as its hypotenuse.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{circle}
+        \begin{tikzpicture}
+            \draw [->, thick] (-3.5, 0) -- (3.5, 0) node [right] {\(x\)};
+            \draw [->, thick] (0, -3.5) -- (0, 3.5) node [above] {\(y\)};
+            
+            \foreach \i in {1, ..., 3} {
+                \draw (\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (\i, -0.3) {\(\i\)};
+                \draw (-\i, -0.1) -- ++ (0, 0.2);
+                \node [fill=white, inner sep=1pt] at (-\i, -0.3) {\(\mathllap{-}\i\)};
+                \draw (-0.1, \i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, \i) {\(\i\)};
+                \draw (-0.1, -\i) -- ++ (0.2, 0);
+                \node [fill=white, inner sep=1pt] at (-0.3, -\i) {\(\mathllap{-}\i\)};
+            }
+            
+            \draw [ultra thick, glasgowBurgundy] (1, 0) circle [radius = 2];
+            \fill [glasgowBurgundy] (1, 0) circle [radius = 0.075] node [below left, fill=white, inner sep=1pt, yshift=-0.1cm] {\((1, 0)\)};
+            \draw [ultra thick, dashed, glasgowBurgundy, rounded corners=1] (1, 0) -- ++ (50:2) node [midway, above left] {\(r = 2\)} -- ({2*cos(50) + 1}, 0) node [midway, right, fill=white, inner sep=0pt, xshift=0.05cm] {\(y - y_0\)} -- (1, 0) node [midway, below, fill=white, inner sep=2pt] {\(x - x_0\)};
+        \end{tikzpicture}
+        \caption[Circle]{Circle centre \((1, 0)\) and radius \(2\). The equation of this circle is \((x - 1)^2 + y^2 = 4\).}
+        \label{fig:circle plot}
+    \end{figure}
+    
+    \subsection{Polar Coordinates}
+    While Cartesian coordinates can be used to describe any point in, say, the plane they aren't always the best choice.
+    In particular, if the problem at hand has some degree of rotational symmetry about the origin it is often better to use coordinates which reflect this.
+    For this reason we now introduce polar coordinates.
+    
+    To specify a point in the plane in polar coordinates we start with a choice of origin and a straight line or \defineindex{ray} starting at the origin going in some chosen direction, which usually we take to be horizontally to the right.
+    To specify a point we give two pieces of information:
+    \begin{itemize}
+        \item The distance, \(r\), from the origin.
+        \item The angle, \(\theta\), of a line from the origin to the point, measured from the chosen line in the anticlockwise direction (or negative if measured clockwise).
+    \end{itemize}
+    Then the coordinates of the point are \((r, \theta)\).
+    See \cref{fig:polar coordinates}
+    We have to make a convention choice about the range of values \(\theta\) can take.
+    One common choice is \(\theta \in (\ang{0}, \ang{360})\).
+    Another common choice is \(\theta \in (-\ang{180}, \ang{180})\).
+    Either is fine, but it's important to restrict the range if we want unique coordinates.
+    If we don't mind about unique coordinates then \((r, \theta)\) and \((r, \theta + n \cdot \ang{360})\) both describe the same point for any \(n \in \integers\).
+    
+    \begin{wrn}
+        If you just write \((a, b)\) it's ambiguous what you mean.
+        Is this point in Cartesian coordinates or polar coordinates?
+        Often it's clear from context, but you should always specify.
+    \end{wrn}
+    
+    \begin{wrn}
+        Conventions for what we call polar coordinates aren't as fixed as they are for Cartesian coordinates.
+        You might see \(\rho\) in place of \(r\) and \(\varphi\) in place of \(\theta\).
+        You may also see \((\theta, r)\) instead of \((r, \theta)\), so always check the conventions of any source you use.
+    \end{wrn}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{polar-coordinates}
+        \begin{tikzpicture}
+            \fill [glasgowPillarbox] (45:3) circle [radius = 0.075];
+            \draw [glasgowPillarbox, dashed, thick] (0, 0) -- (45:3) node [midway, above left] {\(3\)};
+            \draw [glasgowPillarbox] (0.4, 0) arc (0:45:0.4);
+            \node [glasgowPillarbox, right] at (45:3) {\((3, \ang{45})\)};
+            
+            \fill [glasgowLeaf] (170:2) circle [radius = 0.075];
+            \draw [glasgowLeaf, dashed, thick] (0, 0) -- (170:2) node [midway, below] {\(2\)};
+            \draw [glasgowLeaf] (0.2, 0) arc (0:170:0.2);
+            \node [glasgowLeaf, left] at (170:2) {\((2, \ang{170})\)};
+            
+            \fill [glasgowSkyblue] (289:3.5) circle [radius = 0.075];
+            \draw [glasgowSkyblue, dashed, thick] (0, 0) -- (289:3.5) node [midway, left] {\(7/2\)};
+            \draw [glasgowSkyblue] (0.6, 0) arc (0:289:0.6);
+            \node [glasgowSkyblue, right] at (289:3.5) {\((7/2, \ang{289}) = (7/2, -\ang{71})\)};
+            
+            \draw [thick, ->] (0, 0) -- (4.5, 0);
+        \end{tikzpicture}
+        \caption[Polar coordinates.]{Polar coordinates. All angles are measured from the horizontal line going anticlockwise. Notice that \(-71 = 289 - 360\). Negative angles are measured clockwise.}
+        \label{fig:polar coordinates}
+    \end{figure}
+    
+    \subsubsection{Geometry in Polar Coordinates}
+    A straight line through the origin has a particularly simple equation in polar coordinates, it's just
+    \begin{equation}
+        \theta = \alpha \text{ or } \theta = \alpha + \angle{180}.
+    \end{equation}
+    Picking all points at a constant angle, \(\alpha\), gives a ray going from the origin, and picking all points at the angle \(\alpha + \angle{180}\) gives the other half of the line.
+    
+    The equation form is simple (despite having to split into two cases) because we have the symmetry that rotating around the origin doesn't change the fact that the line passes through the origin.
+    In general we want to use polar coordinates where there's some sort of symmetry when we rotate around the origin.
+    
+    Another example is a circle centred on the origin, which doesn't change at all when we rotate around the origin.
+    This results in an even simpler equation for a circle centred at the origin in polar coordinates.
+    It's simply
+    \begin{equation}
+        r = R
+    \end{equation}
+    for a circle or radius \(R\).
+    A circle is, by definition, the set of all points a fixed distance from the origin, and in polar coordinates that's specified by fixing \(r\) and letting \(\theta\) vary around the circle.
+    
+    \section{Conic Sections}
+    So far we've seen
+    \begin{itemize}
+        \item straight lines;
+        \item circles;
+        \item parabolas.
+    \end{itemize}
+    It turns out that these, plus a few other types of curves, can all be understood as \define{conic section}\index{conic section}.
+    These are curves that arise when we take a conic (two cones tip-to-tip) like in \cref{fig:conic} and look at how it intersects a plane.
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/conic-sections-cones}
+        \caption[Cones]{Two cones, tip-to-tip, as required to define conic sections.}
+    \end{figure}
+    
+    \Cref{fig:conic sections} shows the curves that we can get this way.
+    The full list is as follows:
+    \begin{itemize}
+        \item point;
+        \item straight line;
+        \item two intersecting straight lines;
+        \item circles;
+        \item ellipses;
+        \item hyperbolas;
+        \item parabolas.
+    \end{itemize}
+    
+    Let's start at the top.
+    There's only one way to get a single point, you have to have the plane pass through the tip of the cones and nothing else.
+    
+    For a straight line have the plane at the same angle as the sides of the cone, and line it up so it \emph{just} touches the cones and goes through the tip of the cones.
+    
+    For two intersecting straight lines take a vertical plane through the tip of the cones.
+    
+    For a circle take a horizontal plane through the cones.
+    
+    For an ellipse take a plane on an angle between horizontal and the angle of the cone walls.
+    An ellipse is just a squashed circle.
+    An ellipse centred on the origin has the equation
+    \begin{equation}
+        \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1.
+    \end{equation}
+    Here \(a\) and \(b\) are the distances from the origin to the ellipse along the \(x\) and \(y\) axis.
+    Notice that if \(a = b = r\) we can multiply through by \(r^2\) and we get the equation of a circle centred on the origin.
+    A circle is just a special case of an ellipse.
+    
+    For a hyperbola take the plane to be at some angle greater than the angle of the sides of the cone and less than vertical.
+    The intersecting straight lines are the special case where the plane is vertical and passes through the tip of the cones.
+    Note that there are two disconnected lines making up the hyperbola, but it's still considered to be one single curve.
+    
+    Finally, for a parabola take the plane on the same angle as the sides of the cone, but not through the tip.
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-point}
+            \caption{Point}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-line}
+            \caption{Line}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-circle}
+            \caption{Circle}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-ellipse}
+            \caption{Ellipse}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-intersecting-lines}
+            \caption{Intersecting lines}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-hyperbola}
+            \caption{Hyperbola}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/conic-sections-parabola}
+            \caption{Parabola}
+        \end{subfigure}
+        
+        \caption{Conic sections}
+        \label{fig:conic sections}
+    \end{figure}
+    
+    \begin{cde}{}{}
+        Here's the code used to create these diagrams.
+        This is modified from code from Sage Stanish, a previous lecturer.
+        
+        \begin{lstlisting}[gobble=12, language=Matlab]
+            a = 0;
+            b = 1;
+            c = 1;
+            
+            [x, y] = deal(linspace(-10, 10, 100));
+            [X, Y] = meshgrid(x, y);
+            
+            p_cone = sqrt(X.^2 + Y.^2);
+            plane = c - a*X - b*Y;
+            
+            p_diff = p_cone - plane;
+            C = contours(X, Y, p_diff, [0, 0]);
+            xL = C(1, 2:end);
+            yL = C(2, 2:end);
+            zL = interp2(X, Y, p_cone, xL, yL);
+            zL2 = interp2(X, Y, -p_cone, xL, yL);
+            
+            clf;
+            surf(X, Y, p_cone, ...
+                "FaceColor", blue, "FaceAlpha", 0.7, ...
+                "EdgeColor", "none");
+            hold on;
+            surf(X, Y, -p_cone, ...
+                "FaceColor", blue, "FaceAlpha", 0.7, ...
+                "EdgeColor", "none");
+            surf(X, Y, plane, ...
+                "FaceColor", green, "FaceAlpha", 0.5, ...
+                "EdgeColor", "none");
+            line(xL, yL, zL, "Color", red, "LineWidth", 3);
+            % For a point the intersection isn't computed
+            % properly, so need to add point manually
+            % line(0, 0, 0, ...
+            %   "Marker", ".", "Color", red, "LineWidth", 3);
+            % Same as above but for a line
+            % line([7, -7], [7, -7], [-10, 10], ...
+            %   "Color", red, "LineWidth", 3);
+            view([1, 1, 1])
+            camlight;
+            axis([-10, 10, -10, 10, 0, 10]);
+            hold off;
+        \end{lstlisting}
+        
+        Try the following values of \((a, b, c)\):
+        \begin{gather*}
+            (0, 0, 0), (0, 0, 5), (0, 1, 1), (0, 0.5, 1),\\
+            (0, 100, -200), (0, 100, 0), (0.7, 0.7. 0).
+        \end{gather*}
+        They should give the point, circle, parabola, ellipse, hyperbola, intersecting lines, and single line respectively.
+    \end{cde}
+    
+    \begin{app}{}{}
+        Consider a jet flying faster than the speed of sound.
+        The speed of sound is closely related to how fast air can respond to movement.
+        When the jet exceeds the speed of sound the air can't get out of the way fast enough, and it gets compressed.
+        This compressed air then sheds off the jet, moving outwards, leaving a cone of high pressure air behind the jet.
+        It is this high pressure air which is hear as a sonic boom.
+        
+        Since this high pressure air forms a cone the intersection of this cone and the ground (which is essentially flat on the scale in question) is a conic section.
+        Assuming that the jet is flying parallel to the ground and above ground level it will be (half of) a hyperbola.
+    \end{app}
+    
+    Any conic section has an equation which can be written in the form
+    \begin{equation}
+        ax^2 + by^2 + 2fx + 2gy + 2hxy + c = 0
+    \end{equation}
+    for some values \(a\), \(b\), \(c\), \(f\), \(g\), and \(h\).
+    In particular, ignoring the edge-cases of a point or straight lines we get
+    \begin{itemize}
+        \item a circle if \(a = b \ne 0\) and \(h = 0\);
+        \item a parabola if \(h^2 = ab\);
+        \item an ellipse if \(h^2 < ab\);
+        \item and a hyperbola if \(h^2 > ab\).
+    \end{itemize}
+    
+    If we're content to have our conics in some sense pinned to the origin we can express the equation in polar coordinates as
+    \begin{equation}
+        r = \frac{\ell}{1 + e \cos \theta}
+    \end{equation}
+    where \(\ell\) (which is just a curly \(l\)) and \(e\) are parameters.
+    This is a particularly nice form because the parameters \(\ell\) and \(e\) tell us quite a lot.
+    The value of \(\ell\) is just a measure of the \enquote{size} of the conic section, for a circle it's just the radius.
+    We call \(e\) the \defineindex{eccentricity}.
+    For a circle \(e = 0\), for a parabola \(e = 1\).
+    For \(e \in [0, 1)\) we have an ellipse, and for \(e > 1\) we have a parabola.
+    This value \(e\) is related to the angle of the plane, with \(e = 0\) being the horizontal plane, and \(e = 1\) being the plane parallel to the edges of the cone.
+    
+    \begin{app}{Orbital Mechanics}{}
+        Gravity provides an attractive force.
+        To a very good approximation this force is given by Newton's law of gravity, which states that the force on an object of mass \(m\) due to an object of mass \(M\) at a distance \(r\) is given by
+        \begin{equation}
+            F = \frac{GMm}{r^2}.
+        \end{equation}
+        Here \(G = \qty{6.67e-11}{\metre\cubed\per\kilogram\per\second\squared}\) is known as the gravitational constant.
+        
+        It turns out that when you have an inverse square law like this, that is, when the force is proportional to \(1/r^2\), the only orbits you can have are conic sections (assuming there are only two objects).
+        For example, the Earth orbits the sun in an ellipse, although it's pretty close to a perfect circle, with an eccentricity of \(e = 0.016\).
+        
+        There are some comets which orbit the sun, but at such a large distance that they enter and leave the solar system.
+        Most famously, Halley's comet has an eccentricity of \(e = 0.967\), and passes Earth approximately once every 80 years (We'll next see it some time in 2061).
+        
+        The orbits of Earth and Halley's comet are both bound, meaning that over enough time the average distance from the Sun isn't changing.
+        This isn't quite true, because the presence of other bodies, like Jupiter, move us away from the ideal situation of two body orbits, but \href{https://en.wikipedia.org/wiki/Three-body_problem}{three body orbits} are famously a hard problem (and excellent \href{https://en.wikipedia.org/wiki/The_Three-Body_Problem_(novel)}{book}).
+        However, the effects of these things are often small enough that if we want to correct for them then we also need to use general relativity instead of Newtonian gravity, so we'll leave those problems alone.
+        
+        There are also unbound orbits.
+        These aren't orbits in the typical sense of going round and round.
+        Instead, they're orbits in the sense that they are objects following paths dictated only by the gravitational force from some much more massive central object (such as the Sun).
+        Unbound orbits include those of things like comets which pass through the solar system never to return again.
+        They will mostly do so on a hyperbolic path (or a parabolic one, although this is just as unlikely as a perfectly circular orbit).
+    \end{app}
+    
+    Here's a method for constructing a parabola without making any measurements.
+    Draw a straight line, \(L\).
+    Fix a point, \(P\), not on the line.
+    The parabola is the shape given by all points which are the same distance from both the point and the line.
+    The line is called the \defineindex{directrix} and \(P\) is called the \defineindex{focus}.
+    See \cref{fig:parabola from focus}.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{parabola-from-focus}
+        \begin{tikzpicture}[font=\footnotesize]
+            \draw [thick] (-3, 0) -- (3, 0);
+            \draw [ultra thick, glasgowBlue, domain=-3:3, samples=500] plot (\x, \x*\x/4 + 1);
+            \node [below right] at (-3, 0) {Directrix};
+            
+            \draw [dashed, thick, glasgowPillarbox] (0, 2) -- (1, 5/4) -- (1, 0);
+            \draw [dashed, thick, glasgowRust] (0, 2) -- (-2, 2) -- (-2, 0);
+            \draw [dashed, thick, glasgowLavender] (0, 2) -- (0, 1) -- (0, 0);
+            \draw [dashed, thick, glasgowSkyblue] (0, 2) -- (2.5, 2.5*2.5/4+1) -- (2.5, 0);
+            \fill (0, 2) circle [radius = 0.075] node [above] {Focus};
+        \end{tikzpicture}
+        \caption[Parabola from focus]{A parabola can be defined in terms of its focus and directrix. All dashed lines are split into two segments of equal length.}
+        \label{fig:parabola from focus}
+    \end{figure}
+    
+    \begin{app}{}{}
+        If you take a parabola and rotate it around its axis of symmetry the shape that you get is a \defineindex{paraboloid}.
+        These have the nice property that if you place a light source at the focus of a mirrored paraboloid then any light which bounces off the paraboloid will leave the paraboloid in parallel.
+        This is useful if you're designing, for example, a torch.
+        You can place the bulb at the focus of the paraboloid and then the light leaving the torch will form a nice beam.
+    \end{app}
+    
+    Here's a method for constructing an ellipse without making any measurements.
+    Fix two points, \(P_1\) and \(P_2\).
+    Take a piece of string and attach one end to each point.
+    Pull the string tight in the middle, and mark a point where the string folds.
+    Do the same pulling the string tight part way along and marking where it folds.
+    Keep doing this, and the points you mark will all be on the same ellipse.
+    Another way to phrase this is that an ellipse consists of all points where the total distance from that point to \(P_1\) plus the total distance from that point to \(P_2\) is constant (the length of the string).
+    Note that if we take \(P_1\) and \(P_2\) to be the same point then we just get a circle with radius half the length of the string.
+    We call \(P_1\) and \(P_2\) the \define{foci}\index{focus}\footnote{the plural focuses is also acceptable} of the ellipse.
+    See \cref{fig:ellipse from foci}.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{ellipse-from-foci}
+        \begin{tikzpicture}[font=\footnotesize]
+            \draw [thick, glasgowPillarbox] (-2, 0) -- (0, {sqrt(3)}) -- (2, 0);
+            \draw [thick, glasgowRust] (-2, 0) -- (-1, {sqrt(3 - 3/5)}) -- (2, 0);
+            \draw [thick, glasgowLavender] (-2, 0) -- (-1.8, {sqrt(3 - 3*1.8*1.8/5)}) -- (2, 0);
+            \draw [thick, glasgowSkyblue] (-2, 0) -- (2.2, {sqrt(3 - 3*2.2*2.2/5)}) -- (2, 0);
+            
+            \fill (-2, 0) circle [radius = 0.075];
+            \fill (2, 0) circle [radius = 0.075];
+            \draw [ultra thick, glasgowBlue, domain={-2.23}:{2.23}, samples=500] (-2.23, 0) -- plot (\x, {sqrt(3 - 3*\x*\x/5)}) -- (2.23, 0);
+            \draw [ultra thick, glasgowBlue, domain={-2.23}:{2.23}, samples=500] (-2.23, 0) -- plot (\x, {-sqrt(3 - 3*\x*\x/5)}) -- (2.23, 0);
+        \end{tikzpicture}
+        \caption[Ellipse from foci]{An ellipse can be defined in terms of its two foci. The total length of any line here is the same.}
+        \label{fig:ellipse from foci}
+    \end{figure}
+    
+    
+    \begin{app}{}{}
+        If you have a mirrored ellipse then any light source placed at one focus will bounce off the ellipse and hit the other focus.
+        This makes for a very \href{https://www.youtube.com/watch?v=4KHCuXN2F3I}{boring pool table}, so long as you start at one focus and the pocket is placed at the other focus (which is admittedly not at the edge of the table) you can't miss!
+    \end{app}
+    
+    % TODO: general equation of hyperbola
+    
 \end{document}
