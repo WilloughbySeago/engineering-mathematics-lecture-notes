@@ -233,7 +233,7 @@ end
         \{a \in A \mid \text{condition on } a\}.
     \end{equation}
     The resulting set is all elements of \(A\) which make the condition true.
-    Note that some texts will use \(:\) in place of \(\mid\).
+    Some texts will use \(:\) in place of \(\mid\).
     
     For example,
     \begin{align}
@@ -252,7 +252,7 @@ end
     \begin{equation}
         \symbb{ABCDEFGHIJKLMNOPQRSTUVWXYZ}.
     \end{equation}
-    Note that this will look slightly different in different fonts.
+    This will look slightly different in different fonts.
     I suggest having a practice writing the black board bold letters used in the following definitions.
     
     \begin{dfn}{Natural Numbers}{}
@@ -287,7 +287,7 @@ end
     \end{dfn}
     
     \begin{remark}{}{}
-        The integers are denoted by \(\integers\), which comes from the German \textit{z\"ahlen}, which means count.
+        The integers are denoted by \(\integers\), which comes from the German \textit{zahlen}, which means numbers.
     \end{remark}
     
     \begin{dfn}{Rational Numbers}{}
@@ -2356,6 +2356,12 @@ end
         They should give the point, circle, parabola, ellipse, hyperbola, intersecting lines, and single line respectively.
     \end{cde}
     
+    The formula for a hyperbola is
+    \begin{equation}
+        \frac{x^2}{a^2} - \frac{y^2}{b^2} = 1.
+    \end{equation}
+    It's just like the formula of an ellipse but with \(-\) instead of \(+\).
+    
     \begin{app}{}{}
         Consider a jet flying faster than the speed of sound.
         The speed of sound is closely related to how fast air can respond to movement.
@@ -2366,6 +2372,27 @@ end
         Since this high pressure air forms a cone the intersection of this cone and the ground (which is essentially flat on the scale in question) is a conic section.
         Assuming that the jet is flying parallel to the ground and above ground level it will be (half of) a hyperbola.
     \end{app}
+    
+    \begin{remark}{}{}
+        You may be familiar with the famous equation
+        \begin{equation}
+            E = mc^2.
+        \end{equation}
+        It relates the energy of an object to its mass.
+        However, this is only true if the object is stationary.
+        If the object is moving instead then it has nonzero momentum, \(p\), and the correct formula for the total energy (kinetic plus the mass-energy equivalence) is
+        \begin{equation}
+            E^2 = m^2c^4 + p^2c^2.
+        \end{equation}
+        A particle on its own has a fixed energy.
+        Rearranging this equation we get
+        \begin{equation}
+            \frac{p^2}{m^2c^2} - \frac{E^2}{m^2c^4} = 1,
+        \end{equation}
+        which relates \(x = p\) and \(y = E\) as plotting a hyperbola.
+        In particle physics this hyperbola is known as the \href{https://en.wikipedia.org/wiki/On_shell_and_off_shell}{mass-shell}, and all (\href{https://en.wikipedia.org/wiki/Virtual_particle}{real}) particles must have their momentum, energy and mass balanced so that they appear somewhere on this hyperbola.
+        Note that in reality momentum actually has components in all three directions, so we get a hyperbeloid.
+    \end{remark}
     
     Any conic section has an equation which can be written in the form
     \begin{equation}
@@ -2379,6 +2406,11 @@ end
         \item an ellipse if \(h^2 < ab\);
         \item and a hyperbola if \(h^2 > ab\).
     \end{itemize}
+    
+    \begin{problem}{}{}
+        Here's a \href{https://www.desmos.com/calculator/0vtj4tzax8}{desmos}\footnote{https://www.desmos.com/calculator/0vtj4tzax8} implementation of this equation.
+        Try to pick values for \(a\), \(b\), \(c\), \(f\), \(g\), and \(h\) which give you each case of a conic section.
+    \end{problem}
     
     If we're content to have our conics in some sense pinned to the origin we can express the equation in polar coordinates as
     \begin{equation}
@@ -2484,6 +2516,171 @@ end
         This makes for a very \href{https://www.youtube.com/watch?v=4KHCuXN2F3I}{boring pool table}, so long as you start at one focus and the pocket is placed at the other focus (which is admittedly not at the edge of the table) you can't miss!
     \end{app}
     
-    % TODO: general equation of hyperbola
+    \chapter{Numbers and Errors}
+    In pure maths we can get away with assuming all of our numbers are known to infinite precision, and the way we represent them doesn't matter.
+    That doesn't really match reality though.
+    In this chapter we'll look at different ways of representing numbers and how things like rounding errors accumulate through a calculation.
     
+    It's important to accept that even with the best computers and measuring devices any measurement we make, and any computation we do with it, is only able to approximate the \enquote{true} value.
+    So we can't avoid rounding errors.
+    
+    \section{Bases}
+    You're familiar with base 10, it's the way we normally represent numbers.
+    You may also have heard of binary, usually in relation to computers.
+    If you've ever seen a hex code for a colour, (for example, \textcolor{glasgowPillarbox}{this red is \texttt{\#B30C00}}), then you've seen hexadecimal.
+    These are all ways of representing numbers.
+    
+    In base 10 if we have a number like 123 then what this really means is we have \(1\) lot of \(100\), \(2\) lots of \(10\), and \(3\) lots of \(1\).
+    In other words,
+    \begin{equation}
+        123 = 1 \cdot 100 + 2 \cdot 10 + 3 \cdot 1.
+    \end{equation}
+    Now notice that \(100 = 10^2\), \(10 = 10^1\), and \(1 = 10^0\).
+    Thus,
+    \begin{equation}
+        123 = 1 \cdot 10^2 + 2 \cdot 10^1 + 3 \cdot 10^0.
+    \end{equation}
+    
+    We can extend this, if we have \(123.45\) then this is
+    \begin{equation}
+        123.45 = 123 + 4 \cdot 0.1 + 5 \cdot 0.01
+    \end{equation}
+    and \(0.1 = 10^{-1}\) and \(0.01 = 10^{-2}\), so
+    \begin{equation}
+        123.45 = 1 \cdot 10^2 + 2 \cdot 10^1 + 3 \cdot 10^0 + 4 \cdot 10^{-1} + 5 \cdot 10^{-2}.
+    \end{equation}
+    
+    In general, if we write \(a_i\) for each digit we have
+    \begin{equation}
+        a_n a_{n-1} \dotso a_1 a_0 . a_{-1} a_{-2} \dotso a_{-m} = \sum_{k = -m}^n a_k \cdot 10^k.
+    \end{equation}
+    
+    A sensible question is then why we choose \(10\).
+    Most arguments for why come down to the simple fact that we (well, most of us anyway) have ten fingers.
+    There are other sensible choices that we could make.
+    The choice of ten is called \defineindex{decimal}.
+    The number we choose is called the \defineindex{base}.
+    
+    A general formula for expressing a number in base \(d\) is then
+    \begin{equation}
+        (a_n a_{n-1} \dotso a_1 a_0 . a_{-1} a_{-2} \dotso a_{-m})_d = \sum_{k = -m}^n a_k \cdot d^k.
+    \end{equation}
+    Here we use the subscript \(d\) to denote that the quantity is expressed in base \(d\).
+    For our example above we could have written \(123.45_{10}\), but when no base is specified we assume base 10.
+    Note that in order for this to make sense we must have \(0 \le a_i < d\).
+    
+    An equally valid choice is base 2, known as \defineindex{binary}.
+    Then we have \(0 \le a_i < 2\), so the only options are the digits \(0\) and \(1\).
+    Suppose we have the binary number \(101.1_2\).
+    Using our general formula we have
+    \begin{equation}
+        101.1_2 = 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 + 1 \cdot 2^{-1} = 4 + 0 + 1 + \frac{1}{2} = 5.5_{10}.
+    \end{equation}
+    
+    If you were to count in binary, starting at 0, the first few numbers, 0 to 16, are
+    \begin{multline}
+        0_2, 1_2, 10_2, 11_2, 100_2, 101_2, 110_2, 111_2, 1000_2, 1001_2, 1010_2,\\
+        1011_2, 1100_2, 1101_2, 1110_2, 1111_2, 10000_2.
+    \end{multline}
+    
+    \begin{problem}{}{}
+        How high can you count in binary?
+        
+        Can you convert the following to decimal\footnote{26, 43, 80, 5.3125, 8.0625}:
+        \begin{itemize}
+            \item \(11010_2\);
+            \item \(101011_2\);
+            \item \(1010000_2\);
+            \item \(101.0101_2\);
+            \item \(1000.0001_2\).
+        \end{itemize}
+        Can you convert the following to binary\footnote{\(1001_2\), \(11011_2\), \(1101000_2\), \(1100.1_2\), \(1000.1001100110011001101_2\)}:
+        \begin{itemize}
+            \item \(9\);
+            \item \(27\);
+            \item \(104\);
+            \item \(12.5\);
+            \item \(8.6\).
+        \end{itemize}
+    \end{problem}
+    
+    \begin{app}{}{}
+        When you really get down to it computers are pretty limited in what they can actually represent.
+        A very crude model of a computer is a bunch of switches, which are all either on or off.
+        Then all of the impressive things a computer can do are just turning these switches on and of very \emph{very} quickly.
+        
+        This makes binary the natural choice for a computer.
+        You can store a \(0\) as an off switch, and a \(1\) as an on switch.
+        
+        For example, C has several data types which can store integer values, such as \lstinline[language=C]|short|, \lstinline[language=C]|int|, \lstinline[language=C]|long int| (or just \lstinline[language=C]|long| for short).
+        The implementation of C which I tried has these storing 16, 32, and 64 bits respectively.
+        That is, a \lstinline[language=C]|short| stores its data using 16 1s and 0s.
+        If we want to use all of these to store the value then we should use \lstinline[language=C]|unsigned short|, otherwise one of the bits is used up storing the sign.
+        When we do this the largest value we can represent is \(1111111111111111_2\) (that's 16 1s), which is \(\num{65535}_{10}\):
+        \begin{equation}
+            1 \cdot 2^{15} + 1 \cdot 2^{14} + \dotsb + 1 \cdot 2^1 + 1 \cdot 2^0 = 2^{16} - 1.
+        \end{equation}
+        Similarly, the largest value that \lstinline[language=C]|unsigned int| can store is \(11111111111111111111111111111111_2\) (32 1s), which is \(\num{4294967295}_{10} = 2^{32} - 1\), and the largest value that \lstinline[language=C]|unsigned long| can store is {\small\(1111111111111111111111111111111111111111111111111111111111111111_2\)} (64 1s), which is \(\num{18446744073709551615}_{10}\).
+        If you want to deal with values larger than this in C you need special data types.
+        
+        We'll see later exactly how computers store these numbers, including signs.
+    \end{app}
+    
+    Binary is a useful choice for computers, but you may have noticed that it makes even fairly small numbers take up a lot of digits.
+    Sometimes it's useful to make a choice where we use fewer digits to store a given number.
+    One common choice for this is hexadecimal, which is base 16.
+    We choose \(16\) because it's larger than \(10\) and is a power of 2, which means it interacts nicely with binary.
+    
+    There's a problem though.
+    We have the digits \(0123456789\), but for base \(16\) our digits are between \(0\) and \(15\), so if we want a single symbol per digit we have to make up some new symbols for \(10\) to \(15\).
+    There's a standard choice, we use \(A = 10\), \(B = 11\), \(C = 12\), \(D = 13\), \(E = 14\), and \(F = 15\).
+    
+    For example, consider the hexadecimal \(7AF_{16}\).
+    We can convert this to decimal as follows:
+    \begin{equation}
+        7AF_{16} = 7 \cdot 16^2 + A \cdot 16^1 + F \cdot 16^0 = 3 \cdot 16^2 + 10 \cdot 16^1 + 15 \cdot 16^0 = 1967_{10}.
+    \end{equation}
+    
+    \begin{app}{}{}
+        If you magnify a computer screen you'll see that a pixel is actually made out of three lights, one red, one green, and one blue.
+        To change the colour we simply turn these lights on to different brightnesses.
+        As discussed computers like to use binary, and a fairly common standard is that the brightness of one of these lights is measured from \(0\) (off) to \(255 = 2^8 - 1\) (fully on).
+        This way each pixel's colour is controlled by three \(8\)-bit numbers, for a total of \(256^3 = \num{16777216}\) colours!
+        
+        However, reading and working with binary as a human isn't great.
+        Fortunately, \(2^8 = 16^2\), so we can neatly represent our \(8\) bits with two hexadecimal digits.
+        For example, if we take \textcolor{glasgowPillarbox}{this red colour} it's represented by \(\#B30C00\) (the \# symbol is commonly used to mean that a number is base 16 in computer science).
+        This isn't actually one number, it's three, \(B3_{16}\), \(0C_{16}\) and \(00_{16}\), representing the amount of red, green, and blue respectively.
+        That is, we have set the red channel to \(B3_{16} = 11 \cdot 16^1 + 3 \cdot 16^0 = 179_{10}\) out of \(255_{10}\), which is about \qty{70}{\percent}.
+        We've set the green channel to \(C_{16} = 12 \cdot 16^0 = 12_{10}\) out of \(255_{10}\), which is about \qty{4}{\percent}.
+        Finally, we've set the blue channel to \(0_{16} = 0_{10}\) out of \(255_{10}\), which is to say, it's off.
+        
+        Note that the brightest we can set any single colour channel is \(FF_{16} = 15 \cdot 16^1 + 15 \cdot 16^0 = 255\).
+    \end{app}
+    
+    \begin{problem}{}{}
+        Consider the colour \(\#23F089\), which of the following do you think this is?
+        \tikzexternaldisable
+        \begin{enumerate}
+            \item 
+            \tikzsetnextfilename{colour-square-1}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \definecolor{col}{HTML}{892F12}
+                \fill [col] (0, 0) rectangle (1, 1);
+            \end{tikzpicture}
+            \item 
+            \tikzsetnextfilename{colour-square-2}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \definecolor{col}{HTML}{23F089}
+                \fill [col] (0, 0) rectangle (1, 1);
+            \end{tikzpicture}
+            \item 
+            \tikzsetnextfilename{colour-square-3}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \definecolor{col}{HTML}{2263BD}
+                \fill [col] (0, 0) rectangle (1, 1);
+            \end{tikzpicture}
+        \end{enumerate}
+        You don't need to do a very accurate calculation, just consider which of the three channels, red, green and blue, will be brightest.
+    \end{problem}
 \end{document}
