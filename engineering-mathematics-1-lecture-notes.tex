@@ -69,6 +69,7 @@ end
         execute at end node={\egroup\pgfmathparse{min(4ex,\wd0)/\wd0}%
             \scalebox{\pgfmathresult}{\box0}}
 }}
+\newcommand{\hexadecimaldigit}[1]{\symrm{#1}}
 
 \begin{document}
     \frontmatter
@@ -183,6 +184,18 @@ end
             \bottomrule
         \end{tabular}
     \end{table}
+    
+    \section{Shorthand}
+    I'm liable to use some shorthand to save writing in the lectures.
+    Here's a list of the most common abbreviations I might use (feel free to ask what I mean in the lecture too).
+    \begin{itemize}
+        \item b/c -- because
+        \item \(\therefore\) -- therefore
+        \item LHS -- left hand side
+        \item RHS -- right hand side
+        \item w/ -- with
+        \item w/o -- without
+    \end{itemize}
     
     \part{Sets and Algebra}
     \chapter{Sets}
@@ -2626,6 +2639,33 @@ end
         We'll see later exactly how computers store these numbers, including signs.
     \end{app}
     
+    \begin{remark}{}{}
+        On most computers the time is stored not as a human readable time, but as \href{https://en.wikipedia.org/wiki/Unix_time}{Unix time}.
+        The computer stores the number of seconds since 00:00:00 UTC on January 1st 1970.
+        For example, at the time of writing the time in Unix time is 1758619784.
+        Here's how to get this in Python and convert it to a human-readable format:
+        \begin{lstlisting}[gobble=12, language=python, basicstyle=\color{black!85}\ttfamily]
+            >>> import time
+            >>> time.time()
+            1758619784
+            >>> time.localtime(1758619784)
+            time.struct_time(tm_year=2025, tm_mon=9, tm_mday=23,
+                tm_hour=10, tm_min=29, tm_sec=44, tm_wday=1,
+                tm_yday=266, tm_isdst=1)
+        \end{lstlisting}
+        So the time is 10:29:44 BST.
+        
+        On many computers this is stored as a 32-bit signed integer.
+        The sign allows computers to understand times before 1970.
+        It takes one bit to store the sign.
+        This leaves 31 bits for storing the number.
+        The largest number that can be stored is then \(2^{31} - 1 = \num{2147483647}\).
+        It turns out that \num{2147483647} seconds after the start of Unix time is \href{https://en.wikipedia.org/wiki/Year_2038_problem}{03:14:07 UTC January 19th 2038}.
+        There is some worry that at this point any computer relying on Unix time with 32-bit signed integers will break, since apart from telling us the time the internal clocks of computers are very important for all sorts of things.
+        Fortunately, almost all modern computers now store the time as a signed 64-bit integer, and the largest value that can be stored is \(2^{63} - 1 = \num{18446744073709551615}\), and \num{18446744073709551615} seconds after the start of Unix time is in about 292 billion years, which is about 21 times the age of the universe.
+        Thus, while the problem of running out of storage for the time isn't really fixed it's definitely not our problem.
+    \end{remark}
+    
     Binary is a useful choice for computers, but you may have noticed that it makes even fairly small numbers take up a lot of digits.
     Sometimes it's useful to make a choice where we use fewer digits to store a given number.
     One common choice for this is hexadecimal, which is base 16.
@@ -2633,12 +2673,12 @@ end
     
     There's a problem though.
     We have the digits \(0123456789\), but for base \(16\) our digits are between \(0\) and \(15\), so if we want a single symbol per digit we have to make up some new symbols for \(10\) to \(15\).
-    There's a standard choice, we use \(A = 10\), \(B = 11\), \(C = 12\), \(D = 13\), \(E = 14\), and \(F = 15\).
+    There's a standard choice, we use \(\hexadecimaldigit{A} = 10\), \(\hexadecimaldigit{B} = 11\), \(\hexadecimaldigit{C} = 12\), \(\hexadecimaldigit{D} = 13\), \(\hexadecimaldigit{E} = 14\), and \(\hexadecimaldigit{F} = 15\).
     
-    For example, consider the hexadecimal \(7AF_{16}\).
+    For example, consider the hexadecimal \(7\hexadecimaldigit{A}\hexadecimaldigit{F}_{16}\).
     We can convert this to decimal as follows:
     \begin{equation}
-        7AF_{16} = 7 \cdot 16^2 + A \cdot 16^1 + F \cdot 16^0 = 3 \cdot 16^2 + 10 \cdot 16^1 + 15 \cdot 16^0 = 1967_{10}.
+        7\hexadecimaldigit{A}\hexadecimaldigit{F}_{16} = 7 \cdot 16^2 + \hexadecimaldigit{A} \cdot 16^1 + \hexadecimaldigit{F} \cdot 16^0 = 3 \cdot 16^2 + 10 \cdot 16^1 + 15 \cdot 16^0 = 1967_{10}.
     \end{equation}
     
     \begin{app}{}{}
@@ -2649,17 +2689,18 @@ end
         
         However, reading and working with binary as a human isn't great.
         Fortunately, \(2^8 = 16^2\), so we can neatly represent our \(8\) bits with two hexadecimal digits.
-        For example, if we take \textcolor{glasgowPillarbox}{this red colour} it's represented by \(\#B30C00\) (the \# symbol is commonly used to mean that a number is base 16 in computer science).
-        This isn't actually one number, it's three, \(B3_{16}\), \(0C_{16}\) and \(00_{16}\), representing the amount of red, green, and blue respectively.
-        That is, we have set the red channel to \(B3_{16} = 11 \cdot 16^1 + 3 \cdot 16^0 = 179_{10}\) out of \(255_{10}\), which is about \qty{70}{\percent}.
-        We've set the green channel to \(C_{16} = 12 \cdot 16^0 = 12_{10}\) out of \(255_{10}\), which is about \qty{4}{\percent}.
+        For example, if we take \textcolor{glasgowPillarbox}{this red colour} it's represented by \(\#\hexadecimaldigit{B}30\hexadecimaldigit{C}00\) (the \(\#\) symbol is commonly used to mean the number is hexadecimal).
+        This isn't actually one number, it's three, \(\hexadecimaldigit{B}3_{16}\), \(0\hexadecimaldigit{C}_{16}\) and \(00_{16}\), representing the amount of red, green, and blue respectively.
+        That is, we have set the red channel to \(\hexadecimaldigit{B}3_{16} = 11 \cdot 16^1 + 3 \cdot 16^0 = 179_{10}\) out of \(255_{10}\), which is about \qty{70}{\percent}.
+        We've set the green channel to \(\hexadecimaldigit{C}_{16} = 12 \cdot 16^0 = 12_{10}\) out of \(255_{10}\), which is about \qty{4}{\percent}.
         Finally, we've set the blue channel to \(0_{16} = 0_{10}\) out of \(255_{10}\), which is to say, it's off.
         
-        Note that the brightest we can set any single colour channel is \(FF_{16} = 15 \cdot 16^1 + 15 \cdot 16^0 = 255\).
+        Note that the brightest we can set any single colour channel is \(\hexadecimaldigit{F}\hexadecimaldigit{F}_{16} = 15 \cdot 16^1 + 15 \cdot 16^0 = 255\).
+        White is then \(\#\hexadecimaldigit{F}\hexadecimaldigit{F}\hexadecimaldigit{F}\hexadecimaldigit{F}\hexadecimaldigit{F}\hexadecimaldigit{F}\), and black is \(\#000000\).
     \end{app}
     
     \begin{problem}{}{}
-        Consider the colour \(\#23F089\), which of the following do you think this is?
+        Consider the colour \(\#23\hexadecimaldigit{F}089\), which of the following do you think this is\footnote{For the colour blind: the three colours are a muddy red, light green, and blue respectively.}?
         \tikzexternaldisable
         \begin{enumerate}
             \item 
@@ -2683,4 +2724,57 @@ end
         \end{enumerate}
         You don't need to do a very accurate calculation, just consider which of the three channels, red, green and blue, will be brightest.
     \end{problem}
+    
+    \begin{cde}{}{}
+        Computers can do a lot of the work of converting bases for you.
+        In Python the built-in function \lstinline[language=python]|int| takes a \lstinline[language=python]|str| as the first argument and a base to interpret the string in in the second argument\footnote{Both \lstinline[language=python]|int| and \lstinline[language=python]|str| are in-built types in python, representing an integer and a string respectively. A string is a string of characters, which we write between quotation marks, something like \lstinline[language=python]|"Hello, World!"|. Through some Python magic \lstinline[language=python]|int| can also be called as a function, so it's playing a double role here, which is a bit confusing.}.
+        The output is an \lstinline[language=python]|int|, which is output in base 10.
+        The base can be any number between \(0\) and \(36\), and when we run out of digits the numbers \(\hexadecimaldigit{A}\) through \(\hexadecimaldigit{Z}\) are used for \(10_{10}\) through \(35_{10}\).
+        Python also has the built-in functions \lstinline[language=python]|bin|, \lstinline[language=python]|oct| and \lstinline[language=python]|hex| which take an \lstinline[language=python]|int| and output a string representing that integer in base 2, 8, and 16 respectively.
+        Note that Python, and a lot of other languages, denote that a number is in base 2, 8, or 16 by prefixing it with \lstinline[language=python]|"0b"|, \lstinline[language=python]|"0o"|, or \lstinline[language=python]|"0x"| respectively.
+        \begin{lstlisting}[gobble=12, language=python]
+            >>> int("111", 2)
+            7
+            >>> int("F3", 16)
+            243
+            >>> int("22", 8)
+            18
+            >>> bin(5)
+            "0b101"
+            >>> oct(32)
+            "0o40"
+            >>> hex(64)
+            "0x40"
+        \end{lstlisting}
+        Matlab has the function \lstinline[language=matlab, keywords={dec2base}]|dec2base|, which takes in an integer (in decimal) and a base, and outputs a string representing that integer in that base.
+        It also has the functions \lstinline[language=matlab]|hex2dec|, \lstinline[language=matlab, keywords={oct2dec}]|oct2dec|, \lstinline[language=matlab, keywords={bin2dec}]|bin2dec|, and \lstinline[language=matlab]|dec2hex|, which take a string and convert it according to the name of the function.
+        Mathematica has the function \lstinline[language=mathematica]|BaseForm|, which takes in an integer and a base, and prints that integer in that base.
+    \end{cde}
+    
+    \begin{app}{}{}
+        Another base that you're probably using all the time without realising it is \href{https://en.wikipedia.org/wiki/Sexagesimal}{base 60}.
+        This was used by the ancient Babylonians, and it's still present today in the fact that there are 60 minutes in an hour and \(360 = 6 \cdot 60\) degrees in a full circle, each of which is divided into 60 (arc)minutes, which is each divided into 60 (arc)seconds.
+        
+        One argument for using base 60 is that 60 has lots of divisors, which makes it much nicer to do maths with base 60.
+        One argument against using base 60 is that you need 60 distinct digits, which is a lot of symbols to learn.
+        
+        The time as I'm writing this is 10:05:43.
+        We can interpret this as the number of seconds since midnight in base 60.
+        It's been \(10 \cdot 60^2 + 5 \cdot 60^1 + 43 \cdot 60^1 = 36343\) seconds since midnight.
+        Here we get around the 60-digit problem by using a base 10 representation of each digit.
+    \end{app}
+    
+    \begin{app}{}{}
+        Youtube video IDs are 11 characters long, and can use any of the following characters:
+        \begin{multline}
+            0123456789\symup{ABCDEFGHIJKLMNOPQRSTUVWXYZ}\\
+            \symup{abcdefghijklmnopqrstuvwxyz}{+}{/}
+        \end{multline}
+        There are 64 characters here, so hopefully at this point it's no surprise that actually the Youtube video ID is a number in base 64.
+        
+        Speaking of Youtube, \href{https://www.youtube.com/watch?v=gocwRvLhDf8}{here's the video I learned this from}.
+        The question posed in the video is if we'll ever run out of video IDs?
+        Have a go at answering this before you watch the video.
+        [Hint: What's the largest number you can make in base 64 with 11 digits?]
+    \end{app}
 \end{document}
