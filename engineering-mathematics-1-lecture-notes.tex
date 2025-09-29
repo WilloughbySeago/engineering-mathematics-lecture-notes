@@ -195,6 +195,8 @@ end
         \item RHS -- right hand side
         \item w/ -- with
         \item w/o -- without
+        \item \(+\)ve -- positive
+        \item \(-\)ve -- negative
     \end{itemize}
     
     \part{Sets and Algebra}
@@ -2777,4 +2779,258 @@ end
         Have a go at answering this before you watch the video.
         [Hint: What's the largest number you can make in base 64 with 11 digits?]
     \end{app}
+    
+    Here's a general formula for writing a number, \(n\), in base \(d\).
+    \begin{enumerate}
+        \item Find the largest power of \(d\) less than \(n\), say \(n = m d^k + r\) where \(0 \le r < d^k\).
+        Your first digit is then in position \(k\) (with the units being position \(0\)), and it is whatever digit represents \(m\).
+        \item If \(r \ne 0\) then set \(n = r\) and repeat.
+        \item If \(r = 0\) stop.
+    \end{enumerate}
+    
+    \begin{exm}{}
+        Suppose we want to write \(1310_{10}\) in hexadecimal.
+        Then \(n = 1310_{10}\) and \(d = 16\).
+        The first few powers of \(16\) are \(16\), \(16^2 = 256\), and \(16^3 = 4096\), which is larger than \(1310\), so we can stop there.
+        Then we look to write
+        \begin{equation}
+            1310 = m \cdot 256 + r
+        \end{equation}
+        with \(0 \le r < 256\).
+        Rearranging we have \(r = 1310 - m \cdot 256\).
+        For \(m = 1\) we get \(r = 1054\), for \(m = 2\) we get \(r = 798\), for \(m = 3\) we get \(r = 542\), for \(m = 4\) we get \(r = 286\), and for \(m = 5\) we get \(r = 30\), which is in the required range.
+        Thus, our first digit goes in the \(k = 2\) position (remembering that units is position \(0\)).
+        This digit should be \(m = 5\).
+        Thus, our number is \(5xy_{16}\), where we still have to determine \(x\) and \(y\).
+        
+        Since \(r = 30 \ne 0\) we repeat with \(d = 30\).
+        The largest power of \(16\) less than this is just \(16^1 = 16\).
+        Then \(d = 1 \cdot 16^1 + 14\), so our next digit is \(1\), and it goes in position 1 (remembering that the units is position \(0\)).
+        Thus, our number is \(51y_{16}\), with \(y\) still to be determined.
+        
+        Since \(r = 14 \ne 0\) we repeat with \(d = 14\).
+        The largest power of \(16\) less than this is just \(16^0 = 1\).
+        Then \(d = 14 \cdot 16^0 + 0\), so our next digit is \(14\), which in base 16 is \(\hexadecimaldigit{E}\).
+        This goes in position \(0\), which is the units position.
+        Thus, our final number is \(51\hexadecimaldigit{E}_{16} = 1310_{10}\).
+    \end{exm}
+    
+    \begin{remark}{}{}
+        Notice that this algorithm is very similar to a couple of other algorithms you may know, such as the long division algorithm and polynomial division algorithm, or Euclid's algorithm for finding a greatest common divisor.
+        
+        The reason all of these are so similar is that they're all exploiting the same maths of divisibility.
+        This leads to the idea of a \href{https://en.wikipedia.org/wiki/Euclidean_domain}{Euclidean domain}, being any set of numbers where a Euclidean-like algorithm applies.
+        These are important in many areas of mathematics, such as number theory.
+    \end{remark}
+    
+    \section{Error Propagation}
+    Suppose you have an exact value, say \(\pi\).
+    Whenever we use this in practice we only use it to finite precision, say \(3.14\).
+    The question is how much of a difference does that extra \(0.0015926\dots\) make to our final calculation?
+    The answer depends on exactly what calculation we're doing.
+    
+    When a value is stated we should always state the error, unless it's implied.
+    For example, if we know our measurement of \(\pi\) is accurate to within \(0.002\) then we might write it as \(3.14 \pm 0.002\), which means the true value is somewhere between \(3.138\) and \(3.142\).
+    
+    The implied error on any quantity is plus or minus half a unit of the smallest significant figure.
+    For example, if we just write \(3.14\) then the smallest significant figure is the \(0.04\), and one unit in this position is \(0.01\), and half of this is \(0.005\).
+    Thus, our value is \(3.14 \pm 0.005\).
+    By which we mean that the true value is between \(3.14 - 0.005 = 3.135\) and \(3.14 + 0.05 = 3.145\).
+    
+    Suppose we have a value, \(a\), for which we only know the approximate value, \(a_0\).
+    This may be due to rounding, or maybe \(a_0\) is the output of some experiment (which can never give us a value to complete accuracy).
+    The \defineindex{error}, \(\varepsilon_a\), in \(a_0\) is the difference from the true value, that is
+    \begin{equation}
+        \text{error} = \coloneq a - a_0.
+    \end{equation}
+    We can rewrite this as
+    \begin{equation}
+        a = a_0 + \text{error}.
+    \end{equation}
+    The \defineindex{absolute error} or \defineindex{error modulus} is \(\varepsilon_a = \abs{\text{error}}\).
+    Then
+    \begin{equation}
+        a = a_0 \pm \varepsilon_a.
+    \end{equation}
+    The \(\pm\) reflects the fact that we don't know if the value \(a\) is an overestimate or underestimate of the true value.
+    
+    If we have another value, \(b\), and approximant, \(b_0\), such that \(b = b_0 \pm \varepsilon_b\) then what is the error in the quantity \(c = a + b\)?
+    
+    We always think worse-case-scenario in these cases.
+    This is important when engineering, we want to assume the worst case scenario because if we get this wrong then things can go horribly wrong.
+    It's almost always better (but usually more expensive) to over-engineer things so that if the universe conspires against us and all of the errors combine to the largest possible error then whatever we've designed should still be safe.
+    To save money then we want to know what is the absolute minimum we can over-engineer things so that we are always safe from the maximum error, but not more.
+    
+    The worst case scenario is that both the error of \(a\) and the error of \(b\) have the same sign.
+    When computing \(c\) we have
+    \begin{equation}
+        c = a + b = a_0 + \varepsilon_a + b_0 + \varepsilon_b = (a + b) + (\varepsilon_a + \varepsilon_b) = c_0 + \varepsilon_c
+    \end{equation}
+    where \(c_0 = a_0 + b_0\) is our approximate value of \(c\) and \(\varepsilon_c = \varepsilon_a + \varepsilon_b\) is the error.
+    
+    We can compute the error in calculating \(d = a - b\) in a similar way.
+    Here the worst case scenario is that the errors have opposite signs, and then
+    \begin{equation}
+        d = a - b = a_0 + \varepsilon_a - (b_0 - \varepsilon_b) = (a_0 - b_0) + (\varepsilon_a + \varepsilon_b) = d_0 + \varepsilon_d
+    \end{equation}
+    where \(d_0 = a_0 - b_0\) is our approximate value of \(d\) and \(\varepsilon_d = \varepsilon_a + \varepsilon_b\) is the error.
+    
+    Combining these two results we get the following.
+    
+    \begin{prp}{}{}
+        The absolute error of the sum or difference of two values is the \emph{sum} of the absolute errors of the two values.
+    \end{prp}
+    
+    The next obvious question is what is the approximate error in \(p = ab\)?
+    Well, we have
+    \begin{equation}
+        p = ab = (a_0 \pm \varepsilon_a)(b_0 \pm \varepsilon_b) = a_0 b_0 \pm a_0 \varepsilon_b \pm b_0 \varepsilon_a \pm \varepsilon_a \varepsilon_b.
+    \end{equation}
+    We can't use this in the same way as above because we have terms, such as \(a_0\varepsilon_b\), which mix the measured value and the error.
+    
+    If we assume\footnote{If this isn't a valid assumption then our errors are too large, if an error is similar in value to the measured result then the measured result is incredibly inaccurate.} that \(\varepsilon_a\) and \(\varepsilon_b\) are small relative to \(a_0\) and \(b_0\) then \(\varepsilon_a \varepsilon_b\) is \emph{very} small compared to \(a_0 b_0\).
+    Under this assumption we can drop the \(\varepsilon_a \varepsilon_b\) term, giving
+    \begin{equation}
+        p \approx a_0 b_0 \pm a_0\varepsilon_b \pm b_0\varepsilon_a.
+    \end{equation}
+    From this we see that the error in \(p\) is approximately
+    \begin{equation}
+        \varepsilon_p \approx a_0 \varepsilon_b + b_0 \varepsilon_a,
+    \end{equation}
+    where we've assumed the worst case scenario in which all the signs are the same.
+    Dividing this quantity by \(a_0b_0\) we get
+    \begin{equation}
+        \frac{\varepsilon_p}{a_0b_0} = \frac{\varepsilon_p}{p_0} \approx \frac{\varepsilon_b}{b_0} + \frac{\varepsilon_a}{a_0}.
+    \end{equation}
+    
+    We define the \defineindex{relative error} in \(a\) to be
+    \begin{equation}
+        r_a = \frac{\varepsilon_a}{a_0},
+    \end{equation}
+    and similar for \(b\) and \(p\).
+    Then we have
+    \begin{equation}
+        r_p = r_a + r_b.
+    \end{equation}
+    A similar calculation shows that the relative error in \(q = a/b\) is
+    \begin{equation}
+        r_q = r_a + r_b.
+    \end{equation}
+    
+    \begin{prp}{}{}
+        The relative error of the product or difference of two values is the \emph{sum} of the relative errors of the two values.
+    \end{prp}
+    
+    Note that relative error is defined as a ratio of \(\varepsilon_a\) and \(a_0\), both of which have the same units.
+    Therefore the relative error is dimensionless.
+    
+    The \defineindex{percentage error} in \(a\) is
+    \begin{equation}
+        100 \cdot r_a = 100 \cdot \frac{\varepsilon_a}{a_0}.
+    \end{equation}
+    The percentage error also adds when we multiply or divide two quantities, it's just that percentage errors are larger numbers, and therefore usually nicer to work with.
+    
+    \begin{exm}{}{}
+        Consider a simple electric circuit consisting of a \qty{150}{\ohm} resistor in parallel with a volt meter.
+        The current through such a circuit is given by Ohm's law, \(V = IR\).
+        
+        The resistor has a silver band, marking it as accurate to within \qty{10}{\percent}.
+        The volt metre measures to the nearest \qty{0.1}{\volt}.
+        
+        When a voltage of \qty{1.5}{\volt} is measured what is the smallest value the voltage could actually be?
+        
+        The current is computed by \(I = V/R\), so we need to add the relative or percentage errors.
+        
+        The relative error of the resistance is \(0.1\), which is just \qty{10}{\percent} as a decimal.
+        
+        Since the voltmeter doesn't come with a specified error it's assumed that it is \(\pm \qty{0.05}{\volt}\).
+        The relative error in the measured voltage is therefore
+        \begin{equation}
+            \frac{\qty{0.05}{\volt}}{\qty{1.5}{\volt}} = 0.0333\dots.
+        \end{equation}
+        
+        Thus, the total relative error is
+        \begin{equation}
+            r_I = r_V + r_R = 0.0333\dots + 0.1 = 0.1333\dots.
+        \end{equation}
+        The computed current is
+        \begin{equation}
+            I_0 = \frac{V_0}{R_0} = \frac{\qty{1.5}{\volt}}{\qty{150}{\ohm}} = \qty{0.01}{\ampere}
+        \end{equation}
+        The absolute error is then
+        \begin{equation}
+            \varepsilon_I = r_I \cdot I_0 = 0.1333\dots \cdot \qty{0.01}{\ampere} = 0.001333\dots.
+        \end{equation}
+        Thus, the final value of the current should be stated as
+        \begin{equation}
+            I = (0.01 \pm 0.001) \unit{\ampere}.
+        \end{equation}
+        Notice that we've rounded the error.
+        
+        The smallest that the current could be expected to actually be is then \((0.01 - 0.001) \unit{\ampere} = \qty{0.009}{\ampere}\).
+    \end{exm}
+    
+    \section{Computer Arithmetic}
+    Choose your favourite piece of software which implements a \lstinline[]|float| type (such as Python).
+    Type in \(0.1 + 0.1 + 0.1\), and evaluate.
+    There's a good chance that the answer you get isn't the expected \(0.3\), but instead \(0.30000000000000004\).
+    The reason for this is something known as \defineindex{floating point error}.
+    This is a result of how computers store numbers.
+    
+    An arbitrary real number takes up an infinite amount of space.
+    We have to store every single decimal digit.
+    This is, of course, impractical.
+    The solution, as is often the case in engineering, is that we all agree to follow a standard way of dealing with the problem.
+    The standard in question is IEEE 754.
+    The IEEE stands for the Institute of Electrical and Electronics Engineers.
+    It sets out a method for approximating real numbers, with the goal of being able to represent a large range of values to a reasonable degree of accuracy.
+    
+    Suppose that you want to store a real number, \(x\).
+    First, decide how many bits you want to use.
+    The standard choice is \(32\).
+    Next, we assign one of these bits to track the sign.
+    This leaves us with \(31\) bits.
+    Then we write the number as
+    \begin{equation}
+        x = (-1)^{\text{sign}} \cdot m \cdot b^e
+    \end{equation}
+    where \(m\) is called the mantissa or significand, \(b\) is the base, usually \(2\), and \(e\) is the exponent.
+    Typically we limit the mantissa to 23 bits, leaving 8 bits for the exponent.
+    
+    The exact numbers here may differ between implementations, the standard just fixes the form of the expression above and gives some common choices for how many bits to assign to each number, and also what bases to use.
+    
+    \begin{exm}{}{}
+        Suppose we want to express \(\pi\) in this standard.
+        For simplicity we'll use \(b = 10\) as the base, and we'll limit the mantissa to \(4\) decimal places.
+        Then we write this as
+        \begin{equation}
+            (-1)^0 \cdot 0.3142 \cdot 10^1.
+        \end{equation}
+        Here the sign bit is \(0\) because the value is positive, the mantissa is \(0.3142\) (having rounded to 4 decimal places) and the exponent is \(1\).
+    \end{exm}
+    
+    \begin{remark}{}{}
+        The IEEE 754 standard also states the existence of a few things which aren't real numbers.
+        In particular, it's possible to represent \(\pm\infty\), \lstinline|NaN| (which stands for not a number, and usually signifies an error or missing data), and \(-0\), which is distinct from \(0\).
+        
+        \begin{lstlisting}[gobble=12, basicstyle=\color{black!85}\ttfamily]
+            >>> 0.0 is -0.0
+            False
+            >>> 0.0 == -0.0
+            True
+        \end{lstlisting}
+        
+        To represent these set all exponent bits to \(0\).
+        Then if all mantissa bits are set to \(0\) it's \((-1)^{\text{sign}}\infty\), and otherwise it's \lstinline|NaN|.
+    \end{remark}
+    
+    This format is great, it lets us represent a lot of numbers.
+    For example, if we take the choices above then the largest value we can represent is very large, approximately \num{3e38}.
+    
+    This complicated format is chosen because it gives us more precision for smaller values, where small differences matter, and less precision for larger values, where the percentage error of the same absolute error is much smaller.
+    
+    However, this format isn't perfect.
+    Some numbers cannot be represented exactly, and these errors can propagate.
+    
+    % TODO: example of errors adding
 \end{document}
