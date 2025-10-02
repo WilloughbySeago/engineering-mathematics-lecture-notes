@@ -474,19 +474,19 @@ crefname={Notation}{Notation}]%
 %% End notation environment --------------------------------------------------
 
 % Problem environment -------------------------------------------------------
-\newcounter{problem}
-\counterwithin{problem}{section}
+%\newcounter{problem}
+%\counterwithin{problem}{section}
 
 \BeforeBeginEnvironment{problem}{%
     \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
-    \refstepcounter{problem}%
+    \refstepcounter{equation}%
 }
 
 \AfterEndEnvironment{problem}{%
     \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
 }
 
-\newtcbtheorem[number freestyle={\noexpand\theproblem},%
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
 crefname={Problem}{Problems}]%
 {problem}{Problem}%
 {enhanced jigsaw,%

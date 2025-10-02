@@ -8,6 +8,7 @@
 \usepackage{placeins}
 \usepackage{siunitx}
 \usepackage{subcaption}
+\usepackage{multicol}
 
 \usepackage{tikz}
 \usetikzlibrary{external}
@@ -188,16 +189,23 @@ end
     \section{Shorthand}
     I'm liable to use some shorthand to save writing in the lectures.
     Here's a list of the most common abbreviations I might use (feel free to ask what I mean in the lecture too).
-    \begin{itemize}
-        \item b/c -- because
-        \item \(\therefore\) -- therefore
-        \item LHS -- left hand side
-        \item RHS -- right hand side
-        \item w/ -- with
-        \item w/o -- without
-        \item \(+\)ve -- positive
-        \item \(-\)ve -- negative
-    \end{itemize}
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item b/c -- because
+            \item \(\therefore\) -- therefore
+            \item LHS -- left hand side
+            \item RHS -- right hand side
+            \item w/ -- with
+            \item w/o -- without
+            \item \(+\)ve -- positive
+            \item \(-\)ve -- negative
+            \item \# -- number
+            \item num -- number
+            \item pt(s) -- point(s)
+            \item eqn -- equation
+            \item st -- such that
+        \end{itemize}
+    \end{multicols}
     
     \part{Sets and Algebra}
     \chapter{Sets}
@@ -1224,7 +1232,8 @@ end
         \end{equation}
         We consider cases, \(3x + 6 \ge 0\) and \(3x + 6 < 0\):
         \begin{enumerate}
-            \item If \(3x + 6 \ge 0\) then \(\abs{3x + 6} = 3x + 6\), and so we have
+            \item If \(3x + 6 \ge 0\) then \(3x \ge -6\) and \(x \ge -2\).
+            In this case we have \(\abs{3x + 6} = 3x + 6\), and so we have
             \begin{equation}
                 3x + 6 + x < 4
             \end{equation}
@@ -1232,18 +1241,22 @@ end
             \begin{equation}
                 x < -\frac{1}{2}.
             \end{equation}
-            As a set, \(x \in (-\infty, -1/2)\).
-            \item If \(3x + 6 < 0\) then \(\abs{3x + 6} = -(3x + 6)\), and so we have
+            Combining these we have that \(-2 \le x < -1/2\).
+            As a set, \(x \in [-2, -1/2)\).
+            \item If \(3x + 6 < 0\) then \(3x < -6\) and \(x < -1/2\).
+            In this case we have \(\abs{3x + 6} = -(3x + 6)\), and so we have
             \begin{equation}
                 -3x - 6 + x < 4
             \end{equation}
             which we can solve (remembering to flip the inequality when we divide by a negative) to find
             \begin{equation}
-                x > -1/2
+                x > -5.
             \end{equation}
-            As a set, \(x \in (-1/2, \infty)\).
+            Combining these we have that \(-5 < x < -1/2\).
+            As a set, \(x \in (-5, -1/2)\).
         \end{enumerate}
-        The solution set is then \((-\infty, -5) \cap (-1/2, \infty) = (-5, -1/2)\), so \(-5 < x < -1/2\).
+        Since either case is acceptable we want \(x \in [-2, -1/2)\) or \(x \in (-5, -1/2)\).
+        The solution set is therefore the union \([-2, -1/2) \cup (-5, -1/2) = (-5, -1/2)\).
     \end{exm}
     
     \begin{cde}{}{cde:mathematica inequalities plot}
@@ -1432,13 +1445,13 @@ end
         \begin{equation}
             x + \frac{1}{6} = \pm \frac{5}{6}.
         \end{equation}
-        Finally, we can add \(1/6\) to both sides giving the solution
+        Finally, we can subtract \(1/6\) from both sides giving the solution
         \begin{equation}
-            x = \frac{1}{6} \pm \frac{5}{6},
+            x = -\frac{1}{6} \pm \frac{5}{6},
         \end{equation}
         which gives the solutions
         \begin{equation}
-            x = \frac{1}{6} - \frac{5}{6} = -\frac{2}{3}, \qqor x = \frac{1}{6} + \frac{5}{6} = 1.
+            x = -\frac{1}{6} - \frac{5}{6} = -1, \qqor x = -\frac{1}{6} + \frac{5}{6} = \frac{2}{3}.
         \end{equation}
     \end{exm}
     
@@ -1793,7 +1806,7 @@ end
     The reason for the name \enquote{binomial coefficient} will become clear in the next section.
      
     \begin{problem}{}{}
-        Compute the following binomial coefficients\footnote{Ans: 10, 6, 10, 20, 252}.
+        Compute the following binomial coefficients\footnote{Ans: 10, 20, 6, 10, 252}.
         For the first three try using the formula and counting the number of subsets.
         For the others you can just use the formula
         \begin{equation}
