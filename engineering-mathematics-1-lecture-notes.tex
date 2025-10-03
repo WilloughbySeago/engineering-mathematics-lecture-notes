@@ -3044,6 +3044,152 @@ end
     
     However, this format isn't perfect.
     Some numbers cannot be represented exactly, and these errors can propagate.
+    This is exactly what happens with the example of
+    \begin{equation}
+        0.1 + 0.1 + 0.1 = 0.30000000000000004.
+    \end{equation}
+    There's a small error in the approximate value of \(0.1\) which is stored by the computer, which is why the computer can output \(0.1 + 0.1 = 0.2\) correctly.
+    However, when we add the third \(0.1\) the combined error is large enough that it isn't rounded away.
     
-    % TODO: example of errors adding
+    If you're just using the computer as a calculator this is fine.
+    Just be aware that errors like this arise and ignore the clearly incorrect extra \(\num{4e-16}\).
+    This is more of a problem in, for example, a simulation, in which you might repeat the same calculations millions of times over.
+    Then these small errors can compound and in the worst case scenarios they completely swamp the real output and your simulation produces nonsense.
+    
+    \chapter{Functions}
+    \section{Definition}
+    A function is a mapping of inputs to outputs.
+    If the function is called \(f\) and the input is \(x\) then we call the corresponding output \(f(x)\).
+    The allowed inputs and possible outputs are part of the data of the function.
+    If we change the allowed inputs then it changes the function.
+    
+    \begin{dfn}{Function}{}
+        Let \(A\) and \(B\) be sets.
+        A \defineindex{function}, \(f \colon A \to B\) (or \(A \xrightarrow{f} B\)) sends elements of \(A\), the \defineindex{domain}, to elements of \(B\), the \defineindex{codomain}.
+    \end{dfn}
+    
+    \begin{wrn}
+        Sometimes the word \enquote{range} is used for the codomain.
+        This should be avoided as the word range is \emph{also} used for a specific subset of the codomain.
+    \end{wrn}
+    
+    \begin{exm}{}{}
+        We can define a function between finite sets by specifying the output for all possible inputs.
+        For example, if we have a function
+        \begin{equation}
+            f \colon \{1, 2, 3\} \to \{a, b, c, d\}
+        \end{equation}
+        we can specify that \(f(1) = a\), \(f(2) = c\), and \(f(3) = a\).
+        
+        We can draw this as follows:
+        \begin{equation}
+            \tikzsetnextfilename{functions-finite-set-function}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1) {\(2\)};
+                \node (n3) at (0, 0) {\(3\)};
+                \node (a) at (3, 2) {\(a\)};
+                \node (b) at (3, 1.33) {\(b\)};
+                \node (c) at (3, 0.66) {\(c\)};
+                \node (d) at (3, 0) {\(d\)};
+                \draw [->] (n1) -- (a);
+                \draw [->] (n2) -- (c);
+                \draw [->] (n3) -- (a);
+            \end{tikzpicture}
+        \end{equation}
+        Notice that every input has exactly one arrow coming out of it.
+        It must have at least one arrow, otherwise the function isn't defined at that point\footnote{Sometimes people talk of \href{https://en.wikipedia.org/wiki/Partial_function}{partially defined functions}. These are \emph{not} functions according to this definition.}, and it can only have one because a function can't take on multiple values for the same input\footnote{Sometimes people talk of \href{https://en.wikipedia.org/wiki/Multivalued_function}{multi-valued functions}, particularly with complex numbers. These are \emph{not} functions according to this definition.}.
+        
+        However, it is fine that there are outputs with no arrows going to them, and outputs with multiple arrows going to them.
+        Later we'll introduce the concepts of surjective and injective functions which don't allow this.
+    \end{exm}
+    
+    \begin{exm}{Non-Functions}{}
+        The following pictures \emph{do not} define functions.
+        Can you see why?
+        \begin{equation}
+            \tikzsetnextfilename{functions-not-functions}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1) {\(2\)};
+                \node (n3) at (0, 0) {\(3\)};
+                \node (a) at (3, 2) {\(a\)};
+                \node (b) at (3, 1.33) {\(b\)};
+                \node (c) at (3, 0.66) {\(c\)};
+                \node (d) at (3, 0) {\(d\)};
+                \draw [->] (n1) -- (a);
+                \draw [->] (n3) -- (a);
+                
+                \begin{scope}[xshift=5cm]
+                    \node (n1) at (0, 2) {\(1\)};
+                    \node (n2) at (0, 1) {\(2\)};
+                    \node (n3) at (0, 0) {\(3\)};
+                    \node (a) at (3, 2) {\(a\)};
+                    \node (b) at (3, 1.33) {\(b\)};
+                    \node (c) at (3, 0.66) {\(c\)};
+                    \node (d) at (3, 0) {\(d\)};
+                    \draw [->] (n1) -- (a);
+                    \draw [->] (n2) -- (c);
+                    \draw [->] (n3) -- (d);
+                    \draw [->] (n3) -- (a);
+                \end{scope}
+            \end{tikzpicture}
+        \end{equation}
+    \end{exm}
+    
+    \begin{exm}{}{}
+        Consider the set \(\{y\}\).
+        There is exactly one function \(f \colon A \to \{y\}\) for any set \(A\).
+        We always have to define \(f(x) = y\) for any \(x \in A\), there's no other choice\footnote{This property is called being \href{https://en.wikipedia.org/wiki/Initial_and_terminal_objects}{initial}.}.
+    \end{exm}
+    
+    \begin{exm}{}{}
+        We can define a function
+        \begin{equation}
+            T \colon \{\text{positions in the room}\} \to \reals
+        \end{equation}
+        by defining \(T(p)\) (for \(p\) a position) to be the temperature in the room at position \(p\).
+        This defines \(T(p)\) for all possible inputs, and it does so uniquely (although perhaps in a way that changes over time), so it defines a function.
+        
+        Physicists would call a function of position a \href{https://en.wikipedia.org/wiki/Field_(physics)}{field}.
+        Another example is the gravitational field, which measures how strong gravity is at a given position.
+    \end{exm}
+    
+    \begin{remark}{}{}
+        Many programming languages have a notion of a function.
+        These are often similar to the notion of a function in mathematics.
+        
+        For example, in Python we might define a function which takes in a list and returns its length:
+        \begin{lstlisting}[gobble=12, language=python, basicstyle=\color{black!85}\ttfamily]
+            def length(l: list) -> int:
+               # I'm cheating, len is a built in function
+               # which returns the length
+                return len(l)
+        \end{lstlisting}
+        This defines a function, \lstinline[language=python, basicstyle=\color{black!85}\ttfamily]|length|, from the set of all lists to \(\integers_{\ge 0}\).
+        In Python you can give the allowed inputs and outputs with \href{https://docs.python.org/3/library/typing.html}{type hints}.
+        
+        However, these functions can often have side-effects, such as changing the value of some global variable.
+        \begin{lstlisting}[gobble=12, language=python, basicstyle=\color{black!85}\ttfamily]
+            x = 3
+            def length(l: list) ->:
+                # the global keyword lets us change
+                # exitthe value of x out of the scope
+                global x
+                x = 4
+                return len(l)
+        \end{lstlisting}
+        Running this function changes the value of \lstinline[language=python, basicstyle=\color{black!85}\ttfamily]|x| from \(3\) to \(4\).
+        For this reason we call them \href{https://en.wikipedia.org/wiki/Pure_function}{impure functions}.
+        This is \emph{not} a function as mathematicians would define it.
+        Some languages, like Haskell, don't allow this, and so in Haskell functions are functions as mathematicians would define them.
+        In Haskell the notation for defining a function is very similar to the notation for defining a function in maths.
+        For example, the factorial function may be defined as
+        \begin{lstlisting}[gobble=12, language=haskell, basicstyle=\color{black!85}\ttfamily]
+            fac :: Int -> Int
+            fac 0 = 1
+            fac n = n * fac (n - 1)
+        \end{lstlisting}
+        The main difference is that Haskell doesn't use as many brackets, so we write \lstinline[language=haskell, basicstyle=\color{black!85}\ttfamily]|fac x| instead of \lstinline[language=haskell, basicstyle=\color{black!85}\ttfamily]|fac(x)|.
+    \end{remark}
 \end{document}
