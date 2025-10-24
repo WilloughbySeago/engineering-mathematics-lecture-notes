@@ -3192,4 +3192,57 @@ end
         \end{lstlisting}
         The main difference is that Haskell doesn't use as many brackets, so we write \lstinline[language=haskell, basicstyle=\color{black!85}\ttfamily]|fac x| instead of \lstinline[language=haskell, basicstyle=\color{black!85}\ttfamily]|fac(x)|.
     \end{remark}
+    
+    Often the inputs and outputs of our function are some type of number.
+    Then we can often specify the output of our function via a formula.
+    For example, we might define a function, \(f \colon \reals \to \reals\), by declaring that \(f(x) = 3x + 1\).
+    That is, whatever the input of our function is the output is the result of multiplying the input by \(3\) and then adding \(1\).
+    Another example might be to define a function
+    \begin{align}
+        g \colon \integers \setminus \{0\} &\to \rationals\\
+        n &\mapsto \frac{1}{n}.
+    \end{align}
+    Here we use the arrow \enquote{\(\mapsto\)} with a bar at one end to mean that if the input is \(n\) the output is \(1/n\).
+    This is exactly the same as writing \(g(n) = 1/n\), but sometimes the arrow notation is clearer.
+    
+    I cannot stress enough that a formula defining a function and the function itself are \emph{not the same thing}.
+    First, not all functions are defined by a formula.
+    Second, the formula doesn't carry as much information as the function does.
+    In particular, the formula doesn't know about the domain and codomain of the function (with the possible exception that from the formula you can often exclude some values from the inputs, such as how we exclude \(0\) above).
+    For example, we can make the definitions
+    \begin{alignat}{3}
+        f \colon \reals &\to \reals &\qquad g \colon \integers &\to \integers\\
+        x &\mapsto 3x + 1, & x &\mapsto 3x + 1.
+    \end{alignat}
+    These are defined by the same formula, but they have different (co)domains, and so are different functions.
+    It doesn't make sense to try to compute, say, \(g(1/2)\), since \(1/2 \notin \integers\), even though \(3(1/2) + 1\) makes perfect sense.
+    On the other hand we can compute \(f(1/2)\), and we find that it is \(3(1/2) + 1 = 5/2\).
+    
+    When you define a function by a formula you should always check two thins:
+    \begin{enumerate}
+        \item That allowed inputs of the function make sense in the formula (check for things like division by zero or square rooting a negative);
+        \item That the possible outputs of the formula given the allowed inputs of the formula are in the codomain.
+    \end{enumerate}
+    Here are examples failing each of these.
+    First, if we try to define \(f \colon \reals \to \reals\) by \(f(x) = 1/x\) then this isn't valid, since \(0\) is an allowed input and \(f(0) = 1/0\) is not defined, and certainly isn't a real number.
+    Second, if we try to define \(g \colon \integers \to \integers\) by \(g(n) = \sqrt{n}\) then this isn't allowed because, for example, \(2\) is a valid input but \(\sqrt{2} \notin \integers\).
+    
+    \section{Injective Functions}
+    Consider the function \(f \colon \reals \to \reals\) given by \(f(x) = x^2\).
+    We have \(f(-2) = (-2)^2 = 4\) and \(f(2) = 2^2 = 4\).
+    So multiple inputs map to the same output.
+    Sometimes we want to avoid this, and we give functions where this doesn't happen a special name.
+    
+    \begin{dfn}{Injective}{}
+        A function, \(f \colon A \to B\), is \defineindex{injective} or \defineindex{one-to-one} if two different inputs have different outputs.
+        
+        In symbols, if \(a, a' \in A\) are such that \(a \ne a'\) then \(f(a) \ne f(a')\).
+    \end{dfn}
+    
+    The terminology \enquote{injective} is preferred by mathematicians, but the term one-to-one is still common, particularly informally.
+    Do not confuse \enquote{one-to-one} with \enquote{one-to-one correspondence}, which we'll define later to mean injective and surjective (also defined later).
+    I will use injective, not one-to-one, but one-to-one does have the advantage of being more descriptive, one input goes to one output.
+    
+    You may also hear people using two-to-one or many-to-one to describe functions which \emph{aren't} injective.
+    For example, \(f \colon \reals \setminus \{0\} \to \reals\) is two-to-one because two inputs, such as \(\pm 2\), map to each output, here \(4\).
 \end{document}
