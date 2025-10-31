@@ -3868,6 +3868,11 @@ end
         So \(f^{-1} \circ f = \id_A\) and \(f \circ f^{-1} = \id_B\).
     \end{ntn}
     
+    \begin{wrn}
+        We use the notation \(f^{-1}\) because if we think of \(\circ\) as multiplication then \(f^{-1}\) is like \(1/f\).
+        However, \(\circ\) \emph{is not multiplication} and so this notation is suggestive only, not literal: \(f^{-1} \ne 1/f\).
+    \end{wrn}
+    
     Perhaps the following pictures help demonstrate what the inverse does:
     \begin{equation}
         \begin{tikzcd}
@@ -3903,7 +3908,7 @@ end
             First, suppose that \(f \colon A \to B\) is a bijection.
             Then for each \(b \in B\) there exists a unique \(a \in A\) with \(f(a) = b\) (by the pairing interpretation).
             Then we can define \(f^{-1} \colon B \to A\) by sending this \(b\) to the unique such \(a\).
-            This defines an inverse since by construction we have \(f^-1(f(a)) = f^{-1}(b) = a\) for all \(a \in A\) and \(f(f^{-1}(b)) = f(a) = b\) for all \(b \in B\).
+            This defines an inverse since by construction we have \(f^{-1}(f(a)) = f^{-1}(b) = a\) for all \(a \in A\) and \(f(f^{-1}(b)) = f(a) = b\) for all \(b \in B\).
             
             Second, suppose that \(f \colon A \to B\) is invertible.
             We have to show that it is bijective.
@@ -3915,4 +3920,145 @@ end
             Thus, \(f\) is bijective.
         \end{proof}
     \end{thm}
+    
+    For example, we know that the function \(f \colon \reals \to \reals\), \(f(x) = 3x + 1\), has an inverse, and so we now know that this is a bijection!
+    Similarly, we know that the map \(\{1, 2, 3\} \to \{a, b, c\}\) sending \(1\) to \(a\), \(2\) to \(c\) and \(3\) to \(n\) is a bijection, so it must have an inverse, and it does, we send \(a\) to \(1\), \(b\) to \(3\), and \(c\) to \(2\).
+    
+    Sometimes it's easier to find an inverse, sometimes it's easier to check if something is a bijection.
+    This theorem tells us that we only need to do one of these.
+    Note that being bijective only tells us that an inverse exists, sometimes we still have to put in the work to figure out what it already is.
+    
+    \section{Computing Inverses}
+    In this section we'll look at a method for computing the inverse of a function when we know one exists.
+    Suppose we have a function, \(f \colon \reals \to \reals\), which has an inverse.
+    We can (sometimes) find the inverse function, \(f^{-1} \colon \reals \to \reals\), by the following procedure.
+    \begin{enumerate}
+        \item Write \(y = f(x)\).
+        \item Solve for \(x\).
+        \item When you have \(x = \text{something}\) that something is exactly \(f^{-1}(y)\).
+    \end{enumerate}
+    This method can also be used (with some care) for functions between subsets of \(\reals\).
+    You need to pick \(y\) in the codomain of \(f\), and at some point you may need to consider the domain to discard some solutions.
+    
+    \begin{exm}{}{}
+        Consider the function \(f \colon \reals \to \reals\) given by \(f(x) = 3x + 1\).
+        We start with
+        \begin{equation}
+            y = f(x) = 3x + 1.
+        \end{equation}
+        Subtracting \(1\) from both sides we get
+        \begin{equation}
+            y - 1 = 3x.
+        \end{equation}
+        Dividing by \(3\) we get
+        \begin{equation}
+            x = \frac{y - 1}{3}.
+        \end{equation}
+        So, we have that
+        \begin{equation}
+            f^{-1}(y) = \frac{y - 1}{3}.
+        \end{equation}
+        Often we want to use \(x\) as our variable, so we just take the above and replace \(y\) with \(x\):
+        \begin{equation}
+            f^{-1}(x) = \frac{x - 1}{3}.
+        \end{equation}
+    \end{exm}
+    
+    If we start with a function which is not invertible then we can often restrict the domain and codomain until it is.
+    We have to be careful then about what the inverse is, because it will depend on how we restrict the (co)domain.
+    
+    \begin{exm}{}{}
+        Consider the function \(f \colon \reals_{\ge 0} \to \reals_{\ge 1}\) given by \(f(x) = x^2 + 1\).
+        This is a bijection, which you can check with the horizontal line test, or you can just believe me.
+        We can find the inverse.
+        Start with
+        \begin{equation}
+            y = f(x) = x^2 + 1
+        \end{equation}
+        where \(y \in \reals_{\ge 1}\).
+        We can subtract \(1\) to get
+        \begin{equation}
+            y - 1 = x^2.
+        \end{equation}
+        Then we can take square roots to get
+        \begin{equation}
+            x = \pm \sqrt{y - 1}.
+        \end{equation}
+        However, we know that \(x \in \reals_{\ge 0}\), since \(x\) is a valid input for \(f\), so it must be that \(x \ge 0\), and so we throw away the \(-\sqrt{y - 1}\) root.
+        Then we have
+        \begin{equation}
+            x = \sqrt{y - 1} = f^{-1}(y).
+        \end{equation}
+        
+        We should check that this is really an inverse:
+        \begin{align}
+            f(f^{-1}(y)) &= f(\sqrt{y - 1}) = (\sqrt{y - 1})^2 + 1 = y - 1 + 1 = y;\\
+            f^{-1}(f(x)) &= f^{-1}(x^2 + 1) = \sqrt{x^2 + 1 - 1} = \sqrt{x^2} = x.
+        \end{align}
+        Note that \(x\) is positive so we're not accidentally throwing away a negative solution.
+        
+        If instead we had started with the function \(g \colon \reals_{\le 0} \to \reals_{\ge 1}\) defined by \(g(x) = x^2 + 1\), which is also a bijection, then the process would go as follows.
+        We start with
+        \begin{equation}
+            y = g(x) = x^2 + 1,
+        \end{equation}
+        then we solve this for \(x\), giving
+        \begin{equation}
+            x = -\sqrt{y - 1},
+        \end{equation}
+        where we've used the fact that \(x \le 0\) to throw away \(+\sqrt{y - 1}\).
+        Then \(g^{-1}(y) = -\sqrt{y - 1}\).
+        
+        We can assume that both \(f\) and \(g\) arose as a result of restricting the function \(h \colon \reals \to \reals_{\ge 1}\), \(h(x) = x^2 + 1\), to a (co)domain on which it is bijective (it is already surjective, so we just need to make it injective).
+        
+        Then the question is what is \(h^{-1}\)?
+        The answer is it doesn't really exist, since \(h\) is not bijective it is not invertible.
+        However, we can think of \(f^{-1}\) and \(g^{-1}\), as being inverses of \(h\) on some subset of the domain.
+        
+        That is, if we want the output, \(y \in \reals_{\ge 1}\), \emph{and} we want the input corresponding to this to be positive then we can take \(x = f(y)\).
+        If instead we still want \(y\) but we want the input to be negative we can take \(\tilde{x} = g(y) = -x\).
+        This isn't a real inverse because we don't have a unique choice for the input that gives us \(y\), but sometimes this is good enough.
+        We'll see this more when we talk about inverting trigonometric functions.
+    \end{exm}
+    
+    Another way to compute inverses of functions from (subsets of) \(\reals\) to (subsets of) \(\reals\) is by plotting.
+    This isn't quite as rigorous as the process above, but it can give us an idea of what the inverses is, and if we have a good guess it's often easier to check it's correct rather than go through the process of computing it from scratch.
+    
+    The trick is that if we plot \(y = f(x)\) it is always the mirror image of \(y = f^{-1}(x)\) in the line \(y = x\).
+    The reason for this is that plotting \(y = f^{-1}(x)\) is the same as plotting \(f(y) = x\) with the roles of \(x\) and \(y\) flipped.
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{functions-inverse-xsquared}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [glasgowBlue, very thick, <->] (0, 3) -- (0, 0) -- (3, 0);
+                \draw [glasgowPillarbox, thick, domain=0:1.73] plot (\x*\x, \x);
+                \draw [glasgowSkyblue, thick, domain=0:1.73] plot (\x, \x*\x);
+                \draw [glasgowSlate, thick, dashed] (0, 0) -- (3, 3);
+            \end{tikzpicture}
+            \caption{Plotting \(y = x^2\) and \(y = \sqrt{x}\) we see they are mirror images in \(y = x\).}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{functions-inverse-linear}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [glasgowBlue, very thick, <->] (0, 3) -- (0, 0) -- (3, 0);
+                \clip (0, 0) rectangle (3, 3);
+                \draw [glasgowPillarbox, thick, domain=0:1.73] plot (\x, 3*\x+1);
+                \draw [glasgowSkyblue, thick, domain=0:1.73] plot (3*\x+1, \x);
+                \draw [glasgowSlate, thick, dashed] (0, 0) -- (3, 3);
+            \end{tikzpicture}
+            \caption{Plotting \(y = 3x + 1\) and \(y = (x - 1)/3\) we see they are mirror images in \(y = x\).}
+        \end{subfigure}
+        \caption{Inverse functions have mirror image graphs in the line \(y = x\).}
+    \end{figure}
+    
+    \chapter{Symmetries of Functions}
+    In this section we'll look at two particular symmetries that a function can have.
+    We'll start with functions being (anti)symmetric when we reflect them in the \(y\)-axis.
+    Then we'll look at functions where you can shift the whole thing sideways without changing anything.
+    
+    \section{Even and Odd Functions}
 \end{document}
