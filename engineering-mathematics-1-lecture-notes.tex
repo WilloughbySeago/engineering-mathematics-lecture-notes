@@ -14,7 +14,11 @@
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz-external/]
 
-\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.geometric, calc}
+
+\usepackage{tikz-cd}
+\AtBeginEnvironment{tikzcd}{\tikzexternaldisable}
+\AtEndEnvironment{tikzcd}{\tikzexternalenable}
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -71,6 +75,9 @@ end
             \scalebox{\pgfmathresult}{\box0}}
 }}
 \newcommand{\hexadecimaldigit}[1]{\symrm{#1}}
+\DeclareMathOperator{\im}{im}
+\AtBeginDocument{\undef{\Im}\DeclareMathOperator{\Im}{Im}}
+\newcommand{\id}{\symrm{id}}
 
 \begin{document}
     \frontmatter
@@ -153,6 +160,26 @@ end
         You are under no obligation to look at any of these links.
         I'd be happy to discuss this content with you if you want, but not during lectures, and not if it gets in the way of other students discussing examinable material.
     \end{remark}
+    
+    \begin{thm}{}{}
+        A theorem is an important result.
+        \begin{proof}
+            Often a theorem is accompanied by a proof, showing that it is true.
+            The details of a proof will not be examinable, in the sense that you won't be expected to recreate the proof.
+            However, understanding the proof can bring insight to how things work and why the result is true.
+            
+            We usually end a proof with some sort of mark, here the mark is an empty square.
+            Other common marks are filled in squares, or the letters \href{https://en.wikipedia.org/wiki/Q.E.D.}{QED}, meaning quod erat demonstrandum, Latin for \enquote{that which was to be demonstrated}, meaning we've shown the thing we set out to show.
+        \end{proof}
+    \end{thm}
+    
+    \begin{lma}{}{}
+        A lemma is a result which is true, but probably only relevant in that it helps us prove other results, rather than being interesting on its own, but there are still some very interesting lemmas!
+    \end{lma}
+    
+    \begin{prp}{}{}
+        A proposition is a result which is less important than a theorem (where exactly the line is between theorem and proposition is up to the author).
+    \end{prp}
     
     \section{Symbols and Alphabets}
     Maths is full of lots of symbols.
@@ -3057,6 +3084,48 @@ end
     Then these small errors can compound and in the worst case scenarios they completely swamp the real output and your simulation produces nonsense.
     
     \chapter{Functions}
+    \section{Function Machines}
+    You may be familiar with the idea of a \enquote{function machine}.
+    This is a picture for working with functions, which we'll define shortly.
+    The idea is that a function is a piece of machinery which takes in an input and puts out an output.
+    We draw the function machine as follows, where \(f\) is the name of the function\footnote{We typically call functions \(f\), then \(g\), \(h\), and so on. When a function represents a particular quantity it's more common to give it a name that reflects this. For example, the function which takes in a time and outputs the acceleration of a ball at that time might be called \(a\) for acceleration.}.
+    \begin{equation}
+        \tikzsetnextfilename{function-machine-generic}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [very thick, glasgowBlue] (-1.5, 0) node [left] {Input} -- ++ (1.5, 0);
+            \draw [ultra thick, glasgowBlue, fill=glasgowBlue!30, rounded corners] (0, -0.5) rectangle (1, 0.5) node [midway] {\(f\)};
+            \draw [very thick, glasgowBlue, ->] (1, 0) -- ++ (1.5, 0) node [right] {Output}; 
+        \end{tikzpicture}
+    \end{equation}
+    We have to specify what inputs and outputs are allowed.
+    Most commonly we'll take our sets of allowed inputs and outputs to be some subsets of \(\reals\), but they can be any sets.
+    
+    For example, if our allowed inputs and outputs are integers it might be that when we give \(f\) the input \(3\) it always outputs \(7\).
+    Then we could write
+    \begin{equation}
+        \tikzsetnextfilename{function-machine-example}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [very thick, glasgowBlue] (-1.5, 0) node [left] {\(3\)} -- ++ (1.5, 0);
+            \draw [ultra thick, glasgowBlue, fill=glasgowBlue!30, rounded corners] (0, -0.5) rectangle (1, 0.5) node [midway] {\(f\)};
+            \draw [very thick, glasgowBlue, ->] (1, 0) -- ++ (1.5, 0) node [right] {\(7\)}; 
+        \end{tikzpicture}
+    \end{equation}
+    
+    There are two important things to keep in mind:
+    \begin{enumerate}
+        \item For a given input the output of a function is always the same, there's no way the input \(3\) will be sent to the output \(7\) and then later to the output \(42\)\footnote{It is possible to have time dependent functions, but then the time is part of the input, so the input changes if we consider it at some later time.}.
+        \item A function is determined by where it sends \emph{all} allowed inputs. For example, consider two functions which have integers as possible inputs and outputs.
+        Say both functions send \(3\) to \(7\), this \emph{does not} mean they are the same function.
+        For example, the first could be the function which sends any input to \(4\) plus that input, and the second could be the constant function which sends any input to \(7\).
+        These are not the same.
+        It is not enough to consider the function at one value, we have to consider it at all inputs.
+    \end{enumerate}
+    
+    \begin{remark}{}{}
+        The notation of \enquote{function machines} can actually be made rigorous using \href{https://academic.oup.com/book/43710/chapter/367235318}{graphical calculus}.
+        This also allows this notation to be far more general than just describing functions between sets.
+    \end{remark}
+    
     \section{Definition}
     A function is a mapping of inputs to outputs.
     If the function is called \(f\) and the input is \(x\) then we call the corresponding output \(f(x)\).
@@ -3105,9 +3174,10 @@ end
     \end{exm}
     
     \begin{exm}{Non-Functions}{}
-        The following pictures \emph{do not} define functions.
+        The following pictures \emph{do not} define functions from \(\{1, 2, 3\}\) to \(\{a, b, c, d\}\).
         Can you see why?
         \begin{equation}
+            \label{eqn:function example not injective}
             \tikzsetnextfilename{functions-not-functions}
             \begin{tikzpicture}[baseline=(current bounding box)]
                 \node (n1) at (0, 2) {\(1\)};
@@ -3135,6 +3205,8 @@ end
                 \end{scope}
             \end{tikzpicture}
         \end{equation}
+        In the first the output for \(2\) isn't defined, and for the second \(3\) is mapped to two different outputs.
+        Neither of these things is allowed.
     \end{exm}
     
     \begin{exm}{}{}
@@ -3166,7 +3238,7 @@ end
                # which returns the length
                 return len(l)
         \end{lstlisting}
-        This defines a function, \lstinline[language=python, basicstyle=\color{black!85}\ttfamily]|length|, from the set of all lists to \(\integers_{\ge 0}\).
+        This defines a function, \lstinline[language=python, basicstyle=\color{black!85}\ttfamily]|length|, from the set of all lists to \(\integers\) (although of course it's not possible to get a negative output, but the \lstinline[language=python, basicstyle=\color{black!85}\ttfamily]|int| type does allow for it).
         In Python you can give the allowed inputs and outputs with \href{https://docs.python.org/3/library/typing.html}{type hints}.
         
         However, these functions can often have side-effects, such as changing the value of some global variable.
@@ -3174,7 +3246,7 @@ end
             x = 3
             def length(l: list) ->:
                 # the global keyword lets us change
-                # exitthe value of x out of the scope
+                # the value of x out of the scope
                 global x
                 x = 4
                 return len(l)
@@ -3239,10 +3311,608 @@ end
         In symbols, if \(a, a' \in A\) are such that \(a \ne a'\) then \(f(a) \ne f(a')\).
     \end{dfn}
     
-    The terminology \enquote{injective} is preferred by mathematicians, but the term one-to-one is still common, particularly informally.
+    The terminology \enquote{injective} is preferred by mathematicians, but the term \enquote{one-to-one} is still common, particularly informally.
     Do not confuse \enquote{one-to-one} with \enquote{one-to-one correspondence}, which we'll define later to mean injective and surjective (also defined later).
     I will use injective, not one-to-one, but one-to-one does have the advantage of being more descriptive, one input goes to one output.
     
     You may also hear people using two-to-one or many-to-one to describe functions which \emph{aren't} injective.
     For example, \(f \colon \reals \setminus \{0\} \to \reals\) is two-to-one because two inputs, such as \(\pm 2\), map to each output, here \(4\).
+    
+    \begin{exm}{}{}
+        The function \(f \colon \{1, 2, 3\} \to \{a, b, c, d\}\) defined as follows is injective:
+        \begin{equation}
+            \tikzsetnextfilename{functions-injective}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1) {\(2\)};
+                \node (n3) at (0, 0) {\(3\)};
+                \node (a) at (3, 2) {\(a\)};
+                \node (b) at (3, 1.33) {\(b\)};
+                \node (c) at (3, 0.66) {\(c\)};
+                \node (d) at (3, 0) {\(d\)};
+                \draw [->] (n1) -- (a);
+                \draw [->] (n2) -- (c);
+                \draw [->] (n3) -- (d);
+            \end{tikzpicture}
+        \end{equation}
+        No two inputs go to the same output.
+        That is, there's no output with two arrows going into it.
+        Compare this to \cref{eqn:function example not injective}, which defines a function which \emph{isn't } injective.
+    \end{exm}
+    
+    For functions between intervals if we can plot them there's a nice test for injectivity, called the \defineindex{horizontal line test} for injectivity.
+    This states that the function is injective if any horizontal line we draw on the plot crosses the graph at most once.
+    
+    \begin{wrn}
+        This is the horizontal line test for \emph{injectivity}. Do not confuse it with the horizontal line test for \emph{surjectivity} or \emph{bijectivity}.
+    \end{wrn}
+    
+    For example, the function \(f \colon \reals_{\ge0} \to \reals\) given by \(f(x) = \sqrt{x}\) is injective, since it passes the horizontal line test (\cref{fig:sqrt x injective}).
+    The function \(g \colon \reals \to \reals\) given by \(g(x) = x^2\) is not injective, since it fails the horizontal line test (\cref{fig:x squared not injective}).
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.9 \textwidth}
+            \centering
+            \tikzsetnextfilename{functions-sqrt-passes-horizontal-line-inj}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [very thick, <->] (0, 2.5) node [left] {\(y\)} -- (0, 0) -- (5, 0) node [below] {\(x\)};
+                \draw [very thick, glasgowBlue, domain=0:5, samples=300] plot (\x, {sqrt(\x)}) node [below] {\(y = \sqrt{x}\)};
+                \draw [very thick, glasgowPillarbox] (0, 1) -- ++ (5, 0);
+                \fill [glasgowPillarbox] (1, 1) circle [radius=0.06cm];
+            \end{tikzpicture}
+            \caption[\(y = \sqrt{x}\) passes the injective horizontal line test.]{The function \(f \colon \reals_{\ge0} \to \reals\) defined by \(f(x) = \sqrt{x}\) passes the horizontal line test for injectivity, demonstrated here by the horizontal line crossing the graph only once. Note that you have to check \emph{all} horizontal lines (at a height in the codomain), it's not enough to show that there's one horizontal line which passes.}
+            \label{fig:sqrt x injective}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.9\textwidth}
+            \centering
+            \tikzsetnextfilename{functions-x-squared-fails-horizontal-line-inj}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [very thick, ->] (0, -1) -- (0, 3) node [left] {\(y\)};
+                \draw [very thick, glasgowBlue, domain=-3:3, samples=200] plot (\x, \x*\x/3) node [left] {\(y = x^2\)};
+                \draw [very thick, glasgowPillarbox] (-3, 1) -- (3, 1);
+                \fill [glasgowPillarbox] (1.73, 1) circle [radius=0.06cm];
+                \fill [glasgowPillarbox] (-1.73, 1) circle [radius=0.06cm];
+            \end{tikzpicture}
+            \caption[\(y = x^2\) fails the injective horizontal line test.]{The function \(g \colon \reals \to \reals\) defined by \(g(x) = x^2\) fails the horizontal line test for injectivity, demonstrated here by the horizontal line crossing the graph twice. Note that a horizontal line at height \(0\) (so along the \(x\)-axis) would pass the horizontal line test, crossing the graph only at \((0, 0)\). However, we need \emph{all} horizontal lines (at a height in the codomain) to pass the test for the function to be injective.}
+            \label{fig:x squared not injective}
+        \end{subfigure}
+        \caption{Horizontal line test for injectivity.}
+    \end{figure}
+    
+    Note that it's not enough to just look at the function rule to determine if a function is injective.
+    We also need to look at the domain and codomain.
+    For example, the function \(h \colon \reals_{\ge0} \to \reals\) given by \(h(x) = x^2\) \emph{is} injective, because we've restricted to only consider positive inputs, which means that the \(h(-2) = h(2)\) problem we had earlier doesn't arise, because it doesn't even make sense to consider \(h(-2)\).
+    This function passes the horizontal line test because in \cref{fig:x squared not injective} we've just chopped off the left-hand-side of the graph, which means we no longer have problems with the horizontal line crossing the graph twice.
+    
+    Often it's possible to take a function which is not injective, and restrict the domain to get an injective function.
+    For the example above we've restricted the domain from \(\reals\) to \(\reals_{\ge 0}\).
+    This allows us to use the properties of an injective function, but we do lose some information in this restriction, here what happens to the negative numbers.
+    There's also some choice to be made.
+    It would be just as valid to restrict to \(\reals_{\le 0}\) instead, but typically we want to work with positive numbers where possible, which is why I chose \(\reals_{\ge 0}\).
+        
+    \begin{problem}{}{}
+        Which of the following functions are injective\footnote{Ans: \(g\), \(h\), and \(k\) are injective.}?
+        If one of the functions isn't injective give an example of two elements which map to the same value.
+        \begin{enumerate}
+            \item \(f \colon \{1, 2, 3\} \to \{a, b, c\}\) defined by \(f(1) = a\), \(f(2) = b\), \(f(3) = a\);
+            \item \(g \colon \{1, 2, 3\} \to \{a, b, c\}\) defined by \(g(1) = a\), \(g(2) = c\), \(g(3) = b\);
+            \item \(h \colon \integers \to \integers\) defined by \(n \mapsto 2^n\);
+            \item \(k \colon \reals \to \reals\) defined by \(k(x) = 3x + 1\);
+            \item \(y \colon \reals \to \reals\) defined by \(y(x) = 3x^3 + 2x^2\).
+        \end{enumerate}
+    \end{problem}
+    
+    \section{Surjective Functions}
+    Consider the function \(f \colon \reals \to \reals\) given by \(f(x) = x^2\).
+    For any positive output, \(y \in \reals_{\ge0}\), we can get this value by \(f(\sqrt{y}) = (\sqrt{y})^2 = y\).
+    However, there's no way to get a negative output\footnote{In Block 2 you'll see that you can get negative numbers by squaring, if the thing you start with is imaginary. However, our function explicitly only allows \emph{real} inputs, so that doesn't help us here.}.
+    Some functions don't hit every possible output.
+    Sometimes we want to avoid this, and we give functions where this doesn't happen a special name.
+    
+    \begin{dfn}{Surjective}{}
+        A function, \(f \colon A \to B\), is \defineindex{surjective} or \defineindex{onto} if all possible outputs are achieved by the function.
+        
+        In symbols, if \(b \in B\) then there exists some \(a \in A\) with \(f(a) = b\).
+    \end{dfn}
+    
+    The terminology \enquote{surjective} is preferred by mathematicians, but the term \enquote{onto} is still common, particularly as a shorthand, people will say \enquote{\(f\) is a function from \(A\) \emph{onto} \(B\)} to mean that \(f \colon A \to B\) is a function and \(f\) is surjective (note if \(f\) wasn't surjective we'd say \enquote{\(f\) is a function from \(A\) \emph{to} \(B\)}).
+    
+    \begin{exm}{}{}
+        The function \(f \colon \{1, 2, 3, 4\} \to \{a, b, c\}\) defined as follows is surjective
+        \begin{equation}
+            \tikzsetnextfilename{functions-surjective}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (a) at (3, 2) {\(a\)};
+                \node (b) at (3, 1) {\(b\)};
+                \node (c) at (3, 0) {\(c\)};
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1.33) {\(2\)};
+                \node (n3) at (0, 0.66) {\(3\)};
+                \node (n4) at (0, 0) {\(4\)};
+                \draw [->] (n1) -- (a);
+                \draw [->] (n2) -- (c);
+                \draw [->] (n3) -- (c);
+                \draw [->] (n4) -- (b);
+            \end{tikzpicture}
+        \end{equation}
+        There is no output that we don't hit.
+        That is, there is no output without an arrow going into it.
+        Compare this to \cref{eqn:function example not injective}, which defines a function which \emph{isn't} surjective.
+    \end{exm}
+    
+    For functions between intervals if we can plot them there's a nice test for surjectivity, called the \defineindex{horizontal line test} for surjectivity.
+    This states that the function is surjective if any horizontal line we draw, at a height in the codomain, crosses the graph at most once.
+    
+    \begin{wrn}
+        This is the horizontal line test for surjectivity.
+        Do not confuse it with the horizontal line test for injectivity or bijectivity.
+    \end{wrn}
+    
+    For example, the function \(f \colon \reals_{>0} \to \reals_{>0}\) given by \(f(x) = 1/x\) is surjective.
+    If we have the output \(y \in (0, \infty)\) then we can hit this with \(f(1/y) = 1/(1/y) = y\) and if \(y \in (0, \infty)\) then \(y \in (0, \infty)\), so this is really in the domain.
+    \Cref{fig:1 over x surjective} shows that this passes the horizontal line test for surjectivity.
+    On the other hand, \(g \colon \reals \to \reals\) isn't surjective, as can be seen by it failing the horizontal line test (\cref{fig:x squared not surjective}).
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.9 \textwidth}
+            \centering
+            \tikzexternaldisable
+            \tikzsetnextfilename{functions-1-over-passes-horizontal-line-surj}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [very thick, <->] (0, 4) node [left] {\(y\)} -- (0, 0) -- (5, 0) node [below] {\(x\)};
+                \draw [very thick, glasgowBlue, domain=0.25:5, samples=300] plot (\x, 1/\x) node [above] {\(y = 1/x\)};
+                \draw [very thick, glasgowPillarbox] (0, 1) -- ++ (5, 0);
+                \fill [glasgowPillarbox] (1, 1) circle [radius=0.06cm];
+            \end{tikzpicture}
+            \caption[\(y = 1/x\) passes the surjective horizontal line test.]{The function \(f \colon \reals_{>0} \to \reals_{>0}\) defined by \(f(x) = 1/x\) passes the horizontal line test for surjectivity, demonstrated here by the horizontal line crossing the graph only once. Note that you have to check \emph{all} horizontal lines at a height in the codomain, it's not enough to show that there's one horizontal line which passes.}
+            \label{fig:1 over x surjective}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.9\textwidth}
+            \centering
+            \tikzsetnextfilename{functions-x-squared-fails-horizontal-line-surj}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \draw [very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [very thick, ->] (0, -1) -- (0, 3) node [left] {\(y\)};
+                \draw [very thick, glasgowBlue, domain=-3:3, samples=200] plot (\x, \x*\x/3) node [left] {\(y = x^2\)};
+                \draw [very thick, glasgowPillarbox] (-3, -0.5) -- (3, -0.5);
+            \end{tikzpicture}
+            \caption[\(y = x^2\) fails the surjective horizontal line test.]{The function \(g \colon \reals \to \reals\) defined by \(g(x) = x^2\) fails the horizontal line test for surjectivity, demonstrated here by the horizontal line which doesn't cross the graph. Note that some horizontal lines do pass the horizontal line test, but, we need \emph{all} horizontal lines at a height in the codomain to pass the test for the function to be surjective.}
+            \label{fig:x squared not surjective}
+        \end{subfigure}
+        \caption{Horizontal line test for surjectivity.}
+    \end{figure}
+    
+    Note that it's not enough to just look at the function rule to determine if a function is surjective.
+    We also need to look at the domain and codomain.
+    For example, the function \(h \colon \reals \to \reals_{\ge 0}\) given by \(h(x) = x^2\) \emph{is} surjective, because we've restricted to only consider positive outputs, so the horizontal line at a negative value in \cref{fig:x squared not surjective} is not a line we need to consider for the horizontal line test.
+    Any positive output, \(y \in \reals_{\ge 0}\), can be hit by \(h(\sqrt{y}) = y\).
+    
+    \begin{problem}{}{}
+        Which of the following functions are surjective\footnote{Ans: \(g\), \(h\), and \(k\) are surjective.}?
+        If one of the functions isn't surjective give an example of an element of the codomain which the function never achieves.
+        \begin{enumerate}
+            \item \(f \colon \{1, 2, 3\} \to \{a, b, c\}\) defined by \(f(1) = a\), \(f(2) = b\), \(f(3) = a\);
+            \item \(g \colon \{1, 2, 3\} \to \{a, b, c\}\) defined by \(g(1) = a\), \(g(2) = c\), \(g(3) = b\);
+            \item \(h \colon \reals \to [-1, 1]\) defined by \(h(x) = \sin x\);
+            \item \(k \colon \reals \to \reals\) defined by \(k(x) = 3x + 1\);
+            \item \(y \colon \reals \to \reals\) defined by \(y(x) = 3x^4 - 2x^2\).
+        \end{enumerate}
+    \end{problem}
+    
+    Often it's possible to take a function which is not surjective, and restrict the codomain to get a surjective function.
+    For the example above we've restricted the codomain from \(\reals\) to \(\reals_{\ge 0}\).
+    This allows us to use the properties of a surjective function.
+    Usually, when we do this we want to restrict to the largest possible subset of the codomain where everything is hit.
+    We give this set a name.
+    
+    \begin{dfn}{Image}{}
+        The \defineindex{image} of a function, \(f \colon A \to B\), is the set, \(\im f\), of all values that \(f\) hits.
+        In symbols,
+        \begin{align}
+            \im f &= \{y \in B \mid \text{there exists some }x \in A \text{ with } f(x) = y\}\\
+            &= \{f(x) \mid x \in A\}.
+        \end{align}
+    \end{dfn}
+    
+    \begin{wrn}
+        Do not confuse \(\im f\) (the image of a function) with \(\Im z\) (the imaginary part of a complex number) which you'll see in Block 2.
+    \end{wrn}
+    
+    Some authors write \(f(A)\) instead of \(\im f\).
+    This is slightly an abuse of notation, since \(A\) is not a valid input for \(f\), but it's supposed to be shorthand for \(\{f(a) \mid a \in A\}\).
+    
+    The image is the largest subset of \(B\) where everything is hit by \(f\).
+    Thus, if we have a non-surjective function, \(f \colon A \to B\), we can define a new function, \(\tilde{f} \colon A \to \im f\), by \(\tilde{f}(a) = f(a)\) which will be surjective.
+    This is a \emph{different} function to the original one, since the codomain is different, but it is so similar that it's common to still call it \(f\), rather than \(\tilde{f}\)\footnote{Note that \(\tilde{f}\) isn't standard notation, I just made this notation up here.}.
+    
+    If \(f \colon A \to B\) is surjective then every output is hit, and so \(\im f = B\).
+    In fact, we can take \(\im f = B\) as the definition of surjectivity.
+    
+    \begin{thm}{}{}
+        A function is surjective if and only if its image is equal to its codomain.
+    \end{thm}
+    
+    \section{Bijective Functions}
+    Injective functions and surjective functions are both very special cases of functions.
+    Do you know what's even more special?
+    Functions which are injective \emph{and} surjective.
+    We give these a special name too.
+    
+    \begin{dfn}{Bijective}{}
+        A function, \(f \colon A \to B\), is \defineindex{bijective} or a \defineindex{one-to-one correspondence} if it is injective and surjective.
+    \end{dfn}
+    
+    The terminology \enquote{bijective} is preferred by mathematicians, but the term \enquote{one-to-one correspondence} is sometimes used when we want to interpret a bijective function as a pairing of elements in the following sense.
+    
+    \begin{ntn}{}{}
+        We say \enquote{\(f \colon A \to B\) is a bijection} as shorthand for \enquote{\(f \colon A \to B\) is a function and is bijective}.
+        We use injection and surjection similarly.
+    \end{ntn}
+    
+    \begin{exm}{}{}
+        The function \(f \colon \{1, 2, 3, 4\} \to \{a, b, c, d\}\) defined as follows is surjective
+        \begin{equation}
+            \tikzsetnextfilename{function-bijective}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (a) at (3, 2) {\(a\)};
+                \node (b) at (3, 1.33) {\(b\)};
+                \node (c) at (3, 0.66) {\(c\)};
+                \node (d) at (3, 0) {\(d\)};
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1.33) {\(2\)};
+                \node (n3) at (0, 0.66) {\(3\)};
+                \node (n4) at (0, 0) {\(4\)};
+                \draw [->] (n1) -- (a);
+                \draw [->] (n2) -- (c);
+                \draw [->] (n3) -- (d);
+                \draw [->] (n4) -- (b);
+            \end{tikzpicture}
+        \end{equation}
+        It is injective as we don't hit any output more than once, and it is surjective because every output is hit at least once.
+        That is, it is bijective because every output is hit exactly once.
+        There is exactly one arrow going to every output.
+        
+        Generally, if we have two sets, \(A\) and \(B\), and a bijection, \(f \colon A \to B\), we get a \enquote{pairing}, or one-to-one correspondence, between these sets where we pair up \(a \in A\) with \(f(a) \in B\).
+        The definition of a function is exactly such that for each \(a\) there is a unique \(b \in B\) with \(f(a) = b\) and the definition of a bijection turns this uniqueness around, for each \(b \in B\) there is a unique \(a \in A\) such that \(f(a) = b\). 
+    \end{exm}
+    
+    Notice that the definition of a bijection adds some symmetry to the definition of a function.
+    With a function we can go from \(A\) to \(B\).
+    A bijection allows us to go back from \(B\) to \(A\).
+    
+    \begin{remark}{}{}
+        A bijection between two finite sets exists if and only if the two sets have the same number of elements.
+        This is required if we're going to construct a pairing between the sets.
+        
+        Similarly, an injection, \(A \to B\), exists if and only if \(\abs{A} \le \abs{B}\).
+        The intuition is that there has to be enough \enquote{stuff} in \(B\) for our map to hit a different thing for each input.
+        Conversely, a surjection, \(A \to B\), exists if and only if \(\abs{A} \ge \abs{B}\).
+        The intuition is that there has to be enough \enquote{stuff} in \(A\) to cover all of \(B\).
+        Then of course if we want a bijection, \(A \to B\), we need \(\abs{A} \le \abs{B}\) for an injection, and \(\abs{A} \ge \abs{B}\) for a surjection, so \(\abs{A} = \abs{B}\).
+        
+        We actually use the existence of a bijection between \(A\) and \(B\) to define what it means for sets to have the same size (\href{https://en.wikipedia.org/wiki/Cardinality}{cardinality}) in the infinite case.
+        Two sets have the same cardinality if and only if there exists a bijection between them.
+        This is a sensible definition, but nevertheless leads to some facts which can be counter intuitive, infinity is weird:
+        \begin{itemize}
+            \item \(\abs{\naturals} = \abs{\integers} = \abs{\rationals}\) (we call these \href{https://en.wikipedia.org/wiki/Cardinality#Countable_sets}{countably infinite} because the natural numbers are the counting numbers);
+            \item \(\abs{\reals} > \abs{\rationals}\) (we say the real numbers are \href{https://en.wikipedia.org/wiki/Cardinality#Uncountable_sets}{uncountably infinite});
+            \item \(\abs{[0, 1]} = \abs{\reals}\) \enquote{there are as many numbers between 0 and 1 as there are numbers (including those numbers between 0 and 1!)}.
+        \end{itemize}
+        
+        Fun fact: There may or may not be a set larger than \(\integers\) but smaller than \(\reals\), whether there is or not is \enquote{independent of ZFC} (this is known as the \href{https://en.wikipedia.org/wiki/Continuum_hypothesis}{continuum hypothesis}).
+        \href{https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory}{ZFC} is the standard theory of how sets work (it's complicated, we've ignored many details).
+        Independence means that whether we assume such an in-between set exists or not maths works just as well, so we can't say either way!
+    \end{remark}
+    
+    Just as for injective and surjective functions if we can plot our function there is a \defineindex{horizontal line test} for bijectivity.
+    We just combine the horizontal line tests for injectivity and surjectivity.
+    A function is bijective if any horizontal line we draw, at a height in the codomain, crosses the graph exactly once.
+    
+    \begin{wrn}
+        This is the horizontal line test for bijectivity.
+        Do not confuse it with the horizontal line test for injectivity or surjectivity.
+    \end{wrn}
+    
+    We'll come back to bijections later, particularly to the idea of them providing a pairing between the domain and codomain.
+    
+    \section{Composition}
+    Suppose we have functions \(f \colon \reals \to \reals\) and \(g \colon \reals \to \reals\), say \(f(x) = x^2\) and \(g(x) = 3x + 1\).
+    Then it makes sense to apply one of these functions and then the other.
+    For example, if we start with \(3\) we can apply \(f\) to get \(f(3) = 3^2 = 9\), then we can apply \(g\) to get \(g(9) = 3 \cdot 9 + 1 = 29\).
+    More compactly, we can write \(g(f(3)) = 29\).
+    We could instead start with \(g\), \(g(3) = 3 \cdot 3 + 1 = 10\), then apply \(f\), \(f(10) = 10^2 = 100\).
+    More compactly, we can write \(f(g(3)) = 100\).
+    
+    This chaining together of functions is an important operation.
+    However, it doesn't always make sense.
+    We need the output of the first function we apply to be a valid input of the second function.
+    This leads to the following definition.
+    
+    \begin{dfn}{Composition}{}
+        Let \(f \colon A \to B\) and \(g \colon B \to C\) be functions.
+        Their \defineindex{composite} is the function
+        \begin{equation}
+            g \circ f \colon A \to C
+        \end{equation}
+        defined by
+        \begin{equation}
+            (g \circ f) (x) = g(f(x)).
+        \end{equation}
+    \end{dfn}
+    
+    It is very important that the codomain of \(f\) is the domain of \(g\), otherwise the composite doesn't make sense.
+    I like to think of composition in terms of the following picture:
+    \begin{equation}
+        \begin{tikzcd}
+            A \arrow[r, "f"] \arrow[rr, bend right, "g \circ f"'] & B \arrow[r, "g"] & C
+        \end{tikzcd}
+    \end{equation}
+    The idea is that we're defining a new function from \(A\) to \(C\) by going through \(B\).
+    If we don't have a common set, \(B\), in the middle we can't make this definition.
+    
+    Notice that the order is important, if \(A \ne C\) then we can't define \(f \circ g\), even though \(g \circ f\) is defined.
+    Even if \(A = C\) we saw at the start of the section that \(f \circ g\) and \(g \circ f\) aren't necessarily the same.
+    
+    There are several ways to read \enquote{\(g \circ f\)}.
+    One is \enquote{\(g\) composed (with) \(f\)}.
+    Another is \enquote{\(g\) after \(f\)}, which reminds us of the order, \(g \circ f\) is the result of applying \(g\) after we apply \(f\).
+    Note that we read the order backwards, applying the rightmost function first.
+    This makes sense when we evaluate because in \((g \circ f)(x)\) the \(f\) is closest to the input, so we apply that first.
+    Another way that people may read this is \enquote{\(g\) circ \(f\)}, the reason being that in \href{https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes}{\LaTeX}\footnote{Pronounced lay-tek} (the typesetting software used to typeset these notes, and most of maths) the symbol \(\circ\) is given by the command \lstinline[basicstyle=\color{black!85}\ttfamily]|\circ|.
+    
+    \begin{exm}{}{}
+        Consider the functions \(f \colon \{1, 2, 3\} \to \{a, b\}\) and \(g \colon \{a, b\} \to \{\alpha, \beta, \gamma\}\) defined by \(f(1) = f(3) = a\), \(f(2) = b\), \(g(a) = \alpha\) and \(g(b) = \gamma\).
+        We can form the composite \(g \circ f\).
+        We can just compute what the output should be for each input:
+        \begin{itemize}
+            \item \((g \circ f)(1) = g(f(1)) = g(a) = \alpha\);
+            \item \((g \circ f)(2) = g(f(2)) = g(b) = \gamma\);
+            \item \((g \circ f)(3) = g(f(3)) = g(a) = \alpha\).
+        \end{itemize}
+        We can draw the original functions as follows:
+        \begin{equation}
+            \tikzsetnextfilename{functions-composite-original}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1) {\(2\)};
+                \node (n3) at (0, 0) {\(3\)};
+                \node (a) at (3, 1.5) {\(a\)};
+                \node (b) at (3, 0.5) {\(b\)};
+                \node (alpha) at (6, 2) {\(\alpha\)};
+                \node (beta) at (6, 1) {\(\beta\)};
+                \node (gamma) at (6, 0) {\(\gamma\)};
+                \draw [thick, glasgowSkyblue, ->] (n1) -- (a);
+                \draw [thick, glasgowSkyblue, ->] (n2) -- (b);
+                \draw [thick, glasgowSkyblue, ->] (n3) -- (a);
+                \draw [thick, glasgowThistle, ->] (a) -- (alpha);
+                \draw [thick, glasgowThistle, ->] (b) -- (gamma);
+            \end{tikzpicture}
+        \end{equation}
+        Then the composite is the function which follows each of these arrows from the first set to the last skipping past the middle:
+        \begin{equation}
+            \tikzsetnextfilename{functions-composite-composed}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \node (n1) at (0, 2) {\(1\)};
+                \node (n2) at (0, 1) {\(2\)};
+                \node (n3) at (0, 0) {\(3\)};
+                \node (a) at (3, 1.5) {\(a\)};
+                \node (b) at (3, 0.5) {\(b\)};
+                \node (alpha) at (6, 2) {\(\alpha\)};
+                \node (beta) at (6, 1) {\(\beta\)};
+                \node (gamma) at (6, 0) {\(\gamma\)};
+                \draw [thick, glasgowSkyblue, ->] (n1) -- (a);
+                \draw [thick, glasgowSkyblue, ->] (n2) -- (b);
+                \draw [thick, glasgowSkyblue, ->] (n3) -- (a);
+                \draw [thick, glasgowLavender, ->] (a) -- (alpha);
+                \draw [thick, glasgowLavender, ->] (b) -- (gamma);
+                \draw [very thick, glasgowPillarbox, ->] (n1) .. controls ($(a) + (0, 0.2)$) .. (alpha);
+                \draw [very thick, glasgowPillarbox, ->] (n2) .. controls ($(b) + (-0.2, -0.3)$) and ($(b) + (0.2, -0.3)$) .. (gamma);
+                \draw [very thick, glasgowPillarbox, ->] (n3) .. controls ($(a) + (0, -0.2)$) .. (alpha);
+            \end{tikzpicture}
+        \end{equation}
+    \end{exm}
+    
+    The fact that order is important means that \(\circ\) is not commutative.
+    It is, however, associative.
+    
+    \begin{lma}{}{}
+        Composition of functions is associative.
+        \begin{proof}
+            Let \(f \colon A \to B\), \(g \colon B \to C\), and \(h \colon C \to D\) be functions.
+            Then \(g \circ f \colon A \to C\) is a function, and we can define \(h \circ (g \circ f) \colon A \to D\).
+            Similarly, \(h \circ g \colon B \to D\) is a function, and we can define \((h \circ g) \circ f \colon A \to D\).
+            We now show that actually these are the same functions.
+            
+            Let \(x \in A\), then
+            \begin{equation}
+                (h \circ (g \circ f))(x) = h((g \circ f)(x)) = h(g(f(x)))
+            \end{equation}
+            and
+            \begin{equation}
+                ((h \circ g) \circ f)(x) = (h \circ g)(f(x)) = h(g(f(x))).
+            \end{equation}
+            Since these are the same for all \(x \in A\) we know that
+            \begin{equation*}
+                h \circ (g \circ f) = (h \circ g) \circ f. \qedhere
+            \end{equation*}
+        \end{proof}
+    \end{lma}
+    
+    \section{Identity Functions}
+    Given an arbitrary set, \(A\), we really can't define any interesting functions from \(A\) to itself.
+    For example, the function rule \(x \mapsto 3x + 1\) only makes sense if we have a notion of adding and multiplying in \(A\), but what if \(A = \{\text{apple}, \text{blue}, \diamondsuit\}\)?
+    Then what does \(3 \cdot \text{apple} + 1\) mean?
+    Nothing.
+    
+    In fact, there's only one function we can define without knowing anything, the \enquote{do nothing} function, \(x \mapsto x\).
+    
+    \begin{dfn}{Identity Function}{}
+        The \defineindex{identity function} on a set, \(A\), is the function
+        \begin{equation}
+            \begin{aligned}
+                \id_A \colon A &\to A\\
+                x &\mapsto x
+            \end{aligned}
+        \end{equation}
+        That is, \(\id_A(x) = x\).
+    \end{dfn}
+    
+    This function is also sometimes called \(1_A\).
+    When \(A\) is clear from context it's common to just write \(\id\).
+    Note that if \(A\) and \(B\) are different sets then \(\id_A\) and \(\id_B\) are different functions, having different domains and codomains, even though they have the same function rule.
+    
+    While the identity function is very boring on its own it's interaction with other functions, via composition, is what makes it important.
+    Let \(f \colon A \to B\) be an arbitrary function.
+    Then we can form the composite \(f \circ \id_A \colon A \to B\).
+    We can work out what this function does to \(x \in A\):
+    \begin{equation}
+        (f \circ \id_A)(x) = f(\id_A(x)) = f(x).
+    \end{equation}
+    Since this is true for all \(x \in A\) we have that
+    \begin{equation}
+        f \circ \id_A = f.
+    \end{equation}
+    Similarly, we can form the composite \(\id_B \circ f \colon A \to B\), and for \(y \in B\) this acts as follows:
+    \begin{equation}
+        (\id_B \circ f)(y) = \id_B(f(y)) = f(y).
+    \end{equation}
+    Since this is true for all \(y \in B\) we have that
+    \begin{equation}
+        \id_B \circ f = f.
+    \end{equation}
+    
+    In fact, this property characterises the identity function.
+    By this we mean that if \(f \colon A \to B\) and \(g \colon B \to A\) are some functions and \(h \colon A \to A\) is a function such that
+    \begin{equation}
+        f \circ h = f, \qqand h \circ g = g
+    \end{equation}
+    then it must be that \(h = \id_A\).
+    
+    The idea here is that the identity function plays the role of \(0\) or \(1\) when it comes to composition.
+    We have \(x + 0 = x\) and \(x \cdot 1 = x\), similarly we have \(f \circ \id_A = f\).
+    We call elements which don't really do anything in a binary operation, like these examples, identities, and this is why \(\id_A\) is the identity function.
+    
+    \section{Invertible Functions}
+    A common question we will sometimes want to ask is if we can undo a function.
+    For example, if \(f \colon A \to B\) for \(a \in A\) we can always find \(b \in B\) with \(f(a) = b\), we just apply \(f\) to \(a\) and choose this value to \(b\).
+    Is there a way to get from \(b \in B\) and find some \(a \in A\) with \(f(a) = b\)?
+    Sometimes yes, sometimes no.
+    
+    Let's be clear about what we want to do.
+    We want to apply a function and then undo it, which should be the same as doing nothing.
+    The question we're asking is is there something I can compose with my function to get back the identity?
+    This leads to the following definition.
+    
+    \begin{dfn}{Invertible Function}{}
+        A function, \(f \colon A \to B\), is called \defineindex{invertible} if there exists some function \(g \colon B \to A\) such that
+        \begin{equation}
+            g \circ f = \id_A, \qqand f \circ g = \id_B.
+        \end{equation}
+    \end{dfn}
+    
+    Evaluating these defining properties, \(f\) is invertible if and only if for all \(x \in A\) and all \(y \in B\) we have
+    \begin{equation}
+        g(f(x)) = \id_A(x) = x, \qqand f(g(y)) = \id_B(y) = y.
+    \end{equation}
+    
+    \begin{exm}{}{}
+        Consider the function \(f \colon \reals \to \reals\) given by \(f(x) = 3x + 1\).
+        I claim that this is invertible, with inverse \(g\colon \reals \to \reals\) given by \(g(x) = (x - 1)/3\).
+        To see this is true we just need to check that \(f(g(x)) = x\) and \(g(f(x)) = x\).
+        Starting with the first one we have
+        \begin{align}
+            f(g(x)) &= 3g(x) + 1\\
+            &= 3 \frac{x - 1}{3} + 1\\
+            &= x.
+        \end{align}
+        I computed this starting by applying the definition of \(f\), but we could have started with \(g\) instead, for the computation
+        \begin{align}
+            f(g(x)) &= f\left( \frac{x - 1}{3} \right)\\
+            &= 3\frac{x - 1}{3} + 1\\
+            &= x.
+        \end{align}
+        For the second calculation we have
+        \begin{align}
+            g(f(x)) &= \frac{f(x) - 1}{3}\\
+            &= \frac{3x + 1 - 1}{3}\\
+            &= x.
+        \end{align}
+        Similarly, we could have started with the definition of \(f\):
+        \begin{align}
+            g(f(x)) &= g(3x + 1)\\
+            &= \frac{3x + 1 - 1}{3}\\
+            &= x.
+        \end{align}
+    \end{exm}
+    
+    \begin{lma}{}{}
+        The inverse of a function, if it exists, is unique.
+        \begin{proof}
+            Suppose that \(f \colon A \to B\) is a function with inverses \(g \colon B \to A\) and \(h \colon B \to A\).
+            Then in particular we know that \(h \circ f = \id_A\) and \(f \circ g = \id_B\).
+            Then we have
+            \begin{equation*}
+                g = \id_A \circ g = (h \circ f) \circ g = h \circ (f \circ g) = h \circ \id_B = h. \qedhere
+            \end{equation*}
+        \end{proof}
+    \end{lma}
+    
+    \begin{ntn}{}{}
+        If \(f \colon A \to B\) is invertible its inverse is unique, and so we can give it a special name.
+        We write \(f^{-1} \colon B \to A\) for the inverse.
+        So \(f^{-1} \circ f = \id_A\) and \(f \circ f^{-1} = \id_B\).
+    \end{ntn}
+    
+    Perhaps the following pictures help demonstrate what the inverse does:
+    \begin{equation}
+        \begin{tikzcd}
+            A \arrow[r, "f"] \arrow[dr, "\id_A"'] & B \arrow[d, "f^{-1}"]\\
+            & A
+        \end{tikzcd}
+        \qqand
+        \begin{tikzcd}
+            B \arrow[r, "f^{-1}"] \arrow[dr, "\id_B"'] & A \arrow[d, "f"]\\
+            & B
+        \end{tikzcd}
+    \end{equation}
+    In terms of elements here's what these triangles mean:
+    \begin{equation}
+        \begin{tikzcd}
+            x \arrow[r, mapsto, "f"] \arrow[dr, mapsto, "\id_A"'] & f(x) \arrow[d, mapsto, "f^{-1}"]\\
+            & x = f^{-1}(f(x))
+        \end{tikzcd}
+        \qqand
+        \begin{tikzcd}
+            y \arrow[r, mapsto, "f^{-1}"] \arrow[dr, mapsto, "\id_B"'] & f(x) \arrow[d, mapsto, "f"]\\
+            & y = f(f^{-1}(x))
+        \end{tikzcd}
+    \end{equation}
+    
+    A very important result is that a function has an inverse exactly when it is bijective!
+    The key is that we can use the pairing that the bijection gives us to form an inverse function, and vice versa the existence of the inverse let's us set up a pairing.
+    This is made formal in the proof of the following.
+    
+    \begin{thm}{}{}
+        A function is invertible if and only if it is bijective.
+        \begin{proof}
+            First, suppose that \(f \colon A \to B\) is a bijection.
+            Then for each \(b \in B\) there exists a unique \(a \in A\) with \(f(a) = b\) (by the pairing interpretation).
+            Then we can define \(f^{-1} \colon B \to A\) by sending this \(b\) to the unique such \(a\).
+            This defines an inverse since by construction we have \(f^-1(f(a)) = f^{-1}(b) = a\) for all \(a \in A\) and \(f(f^{-1}(b)) = f(a) = b\) for all \(b \in B\).
+            
+            Second, suppose that \(f \colon A \to B\) is invertible.
+            We have to show that it is bijective.
+            To do so we show it is injective and surjective.
+            For injectivity, suppose that \(x, x' \in A\) are such that \(f(x) = f(x')\), then we can apply \(f^{-1}\) to either side of this equality giving \(f^{-1}(f(x)) = f^{-1}(f(x'))\), which then reduces to \(x = x'\).
+            So, if \(x\) and \(x'\) map to the same point then they must have been the same to start with, so \(f\) is injective.
+            For surjectivity, suppose that \(y \in B\).
+            Then we can take \(x = f^{-1}(y) \in A\), which has the property that \(f(x) = f(f^{-1}(y)) = y\), and so \(f\) is surjective.
+            Thus, \(f\) is bijective.
+        \end{proof}
+    \end{thm}
 \end{document}
