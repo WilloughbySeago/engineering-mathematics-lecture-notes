@@ -78,6 +78,8 @@ end
 \DeclareMathOperator{\im}{im}
 \AtBeginDocument{\undef{\Im}\DeclareMathOperator{\Im}{Im}}
 \newcommand{\id}{\symrm{id}}
+\newcommand{\trans}{\top}
+\newcommand{\emf}{\symcal{E}}
 
 \begin{document}
     \frontmatter
@@ -4061,4 +4063,760 @@ end
     Then we'll look at functions where you can shift the whole thing sideways without changing anything.
     
     \section{Even and Odd Functions}
+    \subsection{Even Functions}
+    Consider the function \(f \colon \reals \to \reals\) given by \(f(x) = x^2\).
+    If we plot this () we can see that it has a line of mirror symmetry in the \(y\)-axis.
+    Recall that reflecting a function across an axis can be done with a minus sign.
+    In particular, if we plot \(y = f(-x)\) then this is the same as reflecting \(y = f(x)\) across the \(y\)-axis.
+    The reason for this is that by swapping \(x\) with \(-x\) we've reflected our input through \(0\), and so the outputs are also reflected across the \(y\)-axis, which is the line \(x = 0\).
+    
+    So, in the case where our reflected plot is the same as the plot of the original function, like for \(f(x) = x^2\), we must have that \(f(-x) = f(x)\).
+    This leads us to the following definition.
+    
+    \begin{dfn}{Even Function}{}
+        A function\footnote{More generally, we can consider \(f \colon [-a, a] \to \reals\) or \(f \colon (-a, a) \to \reals\) for \(a \in \reals_{\ge 0}\). Even more generally we can make this definition for \(f \colon A \to B\) for any sets \(A\) and \(B\) so long as \(-x\) makes sense in \(A\) and if \(x \in A\) then \(-x \in A\).}, \(f \colon \reals \to \reals\), is \define{even}\index{even function} if \(f(-x) = f(x)\) for all \(x \in \reals\).
+    \end{dfn}
+    
+    \begin{wrn}
+        It is important that \(f(-x) = f(x)\) \emph{for all} \(x \in \reals\).
+        For example, if we take \(f(x) = x^3\) then \(f(0) = 0\) and \(f(-0) = 0\) but \(f\) is not even since, for example, \(f(-1) = (-1)^3 = -1\) and \(f(1) = 1^3 = 1\).
+        You must always check every value in the domain (which you can usually do all at once by just checking for \(x \in \reals\) without specifying what \(x\) is).
+    \end{wrn}
+    
+    \begin{remark}{}{rmk:even function integral}
+        This property is particularly useful when we're looking at properties like the area under a function, which you'll learn in block 5 we can find by integrating.
+        Then if we want the area under \(y = f(x)\) between \(-a\) and \(a\) for \(a \in \reals_{>0}\) we can simply compute the area between \(0\) and \(a\) and double it.
+        In terms of integrals we have
+        \begin{equation}
+            \int_{-a}^a f(x) \dd x = 2 \int_0^a f(x) \dd x
+        \end{equation}
+        whenever \(f\) is an even function.
+    \end{remark}
+    
+    \begin{exm}{}{}
+        The following functions, \(f \colon \reals \to \reals\), are all even
+        \begin{enumerate}
+            \item \(f(x) = x^2\) because \(f(-x) = (-x)^2 = x^2 = f(x)\);
+            \item \(f(x) = x^{2n}\) for \(n \in \integers\) because \(f(-x) = (-x)^{2n} = ((-x)^2)^n = (x^2)^n = x^{2n} = f(x)\);
+            \item \(f(x) = \abs{x}\) because \(f(-x) = \abs{-x} = \abs{x} = f(x)\);
+            \item \(f(x) = \cos x\);
+            \item \(f(x) = \cosh x\);
+            \item \(f(x) = \e^{-x^2}\).
+        \end{enumerate}
+        Don't worry if any of these functions aren't familiar, we'll talk about \(\cos\), \(\cosh\), and \(\e\) later.
+        These are all plotted in \cref{fig:even functions}.
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-x-squared}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x, \x*\x/3);
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = x^2\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-x-to-the-4}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x, \x*\x*\x*\x/27);
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = x^4\)}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-abs}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x, {abs(\x)});
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = \abs{x}\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-cos}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {cos(4*\x r)});
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = \cos x\)}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-cosh}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {cosh(\x/2)});
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = \cosh x\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{even-function-gaussian}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {2.5*exp(-\x*\x)});
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption{\(y = \e^{-x^2}\)}
+        \end{subfigure}
+        \caption{Plots of some even functions.}
+        \label{fig:even functions}
+    \end{figure}
+    
+    \begin{problem}{}{}
+        Which of the following functions, \(f \colon \reals \to \reals\), are even\footnote{Ans: 1, 3, 7, 8}?
+        You can check this by plotting the function or by checking the definition, that \(f(-x) = f(x)\).
+        \begin{enumerate}
+            \item \(f(x) = x^6\);
+            \item \(f(x) = x^5\);
+            \item \(f(x) = x^2 + x^4\);
+            \item \(f(x) = x^3 + 2x^2\);
+            \item \(f(x) = x\);
+            \item \(f(x) = \sin x\);
+            \item \(f(x) = 7\);
+            \item \(f(x) = \abs{x^3}\).
+        \end{enumerate}
+    \end{problem}
+    
+    When we combine even functions we \emph{usually} get an even function back.
+    The following results show some of the cases where this is true.
+    
+    \begin{lma}{}{lma:sum of evens is even}
+        Let \(f, g \colon \reals \to \reals\) be even functions.
+        Then the function \(f + g \colon \reals \to \reals\) defined by
+        \begin{equation}
+            (f + g)(x) = f(x) + g(x)
+        \end{equation}
+        is also even.
+        \begin{proof}
+            Since \(f\) and \(g\) are even we know that \(f(-x) = f(x)\) and \(g(-x) = g(x)\).
+            Then for all \(x \in \reals\) we have
+            \begin{align}
+                (f + g)(-x) &= f(-x) + g(-x)\\
+                &= f(x) + g(x)\\
+                &= (f + g)(x)
+            \end{align}
+            where to go from line 1 to 2 we've used the fact that \(f(-x) = f(x)\) and \(g(-x) = g(x)\).
+        \end{proof}
+    \end{lma}
+    
+    \begin{lma}{}{lma:product of evens is even}
+        Let \(f, g \colon \reals \to \reals\) be even functions.
+        Then the function \(f \cdot g \colon \reals \to \reals\) (not \(f \circ g\)) defined by
+        \begin{equation}
+            (f \cdot g)(x) = f(x)g(x)
+        \end{equation}
+        is also even.
+        \begin{proof}
+            For all \(x \in \reals\) we have \((f \cdot g)(-x) = f(-x)g(-x) = f(x)g(x) = (f \cdot g)(x)\).
+        \end{proof}
+    \end{lma}
+    
+    \begin{lma}{}{}
+        Let \(f \colon \reals \to \reals\) be an even function and let \(g \colon \reals \to \reals\) be any function.
+        Then \(g \circ f \colon \reals \to \reals\) is even.
+        \begin{proof}
+            For \(x \in \reals\) we have \((g \circ f)(-x) = g(f(-x)) = g(f(x)) = (g \circ f)(x)\).
+        \end{proof}
+    \end{lma}
+    
+    \subsection{Odd Functions}
+    Sometimes when we plot a function and its mirror image in the \(y\)-axis we see that they aren't exactly the same.
+    Instead, another common occurrence is that the reflection of \(y = f(x)\) in the \(y\)-axis is the same as the reflection of \(y = f(x)\) in the \(x\)-axis.
+    Recall that to reflect a plot in the \(x\)-axis we plot \(y = -f(x)\), since this takes whatever value above (or below) the \(x\)-axis to a point below (or above) the \(x\)-axis, while maintaining the distance from the \(x\)-axis.
+    This leads to the following definition.
+    
+    \begin{dfn}{Odd Function}{}
+        A function\footnote{More generally, we can consider \(f \colon [-a, a] \to \reals\) or \(f \colon (-a, a) \to \reals\) for \(a \in \reals_{\ge 0}\). Even more generally we can make this definition for \(f \colon A \to B\) for any sets \(A\) and \(B\) so long as \(-x\) makes sense in \(A\), if \(x \in A\) then \(-x \in A\), and \(-b\) makes sense for \(b \in \im f\).}, \(f \colon \reals \to \reals\), is \define{odd}\index{odd function} if \(f(-x) = -f(x)\) for all \(x \in \reals\).
+    \end{dfn}
+    
+    \begin{remark}{}{rmk:odd function integral}
+        When it comes to integrals this property is perhaps even more useful than being even.
+        It means that a large class of integrals simply vanish!
+        If \(f \colon \reals \to \reals\) is an odd function and we integrate over an even range, that is a range like \([-a, a]\) for \(a \in \reals_{\ge 0}\), then the function vanishes.
+        The reason for this is that between \(0\) and \(a\) the area is, say, \(A\), above the \(x\)-axis.
+        Then between \(0\) and \(-a\) we have the same area, but now below the \(x\)-axis, which means that the integral is \(-A\).
+        Thus, we have that the total area is \(A + (-A) = 0\).
+        In terms of integrals, if \(f\) is an odd function then
+        \begin{equation}
+            \int_{-a}^a f(x) \dd x = \int_0^a f(x) \dd x + \int_{-a}^0 f(x) \dd x = A + (-A) = 0,
+        \end{equation}
+        
+        This is very nice.
+        If you have to integrate, say, \(x^2 \sin x\) (an odd function) explicitly then you get
+        \begin{equation}
+            \int x^2 \sin x \dd x = (2 - x^2)\cos x + 2x \sin x + C,
+        \end{equation}
+        which requires that you integrate by parts twice, which is a lot of work.
+        However, if you just want to know the integral
+        \begin{equation}
+            \int_{-1}^1 x^2 \sin x \dd x
+        \end{equation}
+        you can immediately say that this is zero (you can also check this with the formula above).
+        Often you'll hear people say things like \enquote{this integral is zero by symmetry} when they use tricks like this.
+    \end{remark}
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.8\textwidth}
+            \centering
+            \tikzsetnextfilename{area-under-even-function}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \begin{scope}
+                    \clip (-2, 0) rectangle (2, 1.32);
+                    \fill [glasgowSkyblue!50] (2, 4/3) -- (2, 0) -- (-2, 0) -- (-2, 4/3) plot (\x, \x*\x/3);
+                \end{scope}
+                \node [glasgowPillarbox] at (-1.6, 0.4) {\(A\)};
+                \node [glasgowPillarbox] at (1.6, 0.4) {\(A\)};
+                \draw [glasgowSkyblue, dashed, thick] (-2, 0) node [below, font=\small] {\(\mathllap{-}a\)} -- (-2, 4/3);
+                \draw [glasgowSkyblue, dashed, thick] (2, 0) node [below, font=\small] {\(a\)} -- (2, 4/3);
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=100] plot (\x, \x*\x/3);
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, 0) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption[The area under an even function.]{The area under an even function, here \(f(x) = x^2\), between \(-a\) and \(a\). Notice that it splits into two parts of equal area, \(A\), on the left and right of the \(y\)-axis.}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.8\textwidth}
+            \centering
+            \tikzsetnextfilename{area-under-odd-function}
+            \begin{tikzpicture}[baseline=(current bounding box)]
+                \begin{scope}
+                    \clip (-2, 0) rectangle (0, -8/9);
+                    \fill [glasgowSkyblue!50] (-2, 0) -- (-2, -8/9) -- plot (\x, \x*\x*\x/9);
+                \end{scope}
+                \begin{scope}
+                    \clip (2, 8/9) rectangle (0, 0);
+                    \fill [glasgowSkyblue!50] (2, 8/9) -- (2, 0) -- (0, 0) -- plot (\x, \x*\x*\x/9);
+                \end{scope}
+                \node [glasgowPillarbox] at (-1.7, -0.2) {\(A\)};
+                \node [glasgowPillarbox] at (1.7, 0.25) {\(A\)};
+                \draw [glasgowSkyblue, dashed, thick] (-2, 0) node [above, font=\small] {\(\mathllap{-}a\)} -- (-2, -8/9);
+                \draw [glasgowSkyblue, dashed, thick] (2, 0) node [below, font=\small] {\(a\)} -- (2, 8/9);
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, \x*\x*\x/9);
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+            \end{tikzpicture}
+            \caption[The area under an odd function.]{The area under an odd function, here \(f(x) = x^3\), between \(-a\) and \(a\). Notice that it splits into two parts of equal area, \(A\), on the left and right of the \(y\)-axis. Then because of how integrals work the area below the \(x\)-axis counts as negative, so the total integral is \(A + (-A) = 0\).}
+        \end{subfigure}
+        \caption[Area under even and odd functions.]{The area under even and odd functions. These properties can make it easier to compute these quantities, particular in the odd case, where often the (signed) area vanishes. This is a useful trick when it comes to computing integrals.}
+    \end{figure}
+    
+    \begin{exm}{}{}
+        The following functions, \(f \colon \reals \to \reals\), are all odd
+        \begin{enumerate}
+            \item \(f(x) = x\) because \(f(-x) = -x = -f(x)\);
+            \item \(f(x) = x^{2n + 1}\) for \(n \in \integers\) because \(f(-x) = (-x)^{2n+1} = ((-x)^2)^n (-x) = (x^2)^n(-x) = x^{2n}(-x) = -x^{2n + 1} = -f(x)\);
+            \item \(f(x) = \sqrt[3]{x}\)
+            \item \(f(x) = \sin x\);
+            \item \(f(x) = \tan x\);
+            \item \(f(x) = \sinh x\);
+            \item \(f(x) = \tanh x\);
+            \item \(f(x) = \sgn x\) where \(\sgn x = 1\) if \(x > 0\), \(\sgn x = -1\) if \(x < 0\) and \(\sgn x = 0\) if \(x = 0\).
+        \end{enumerate}
+        Don't worry if any of these functions aren't familiar, we'll talk about \(\cos\), \(\cosh\), and \(\e\) later.
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-x}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x, \x);
+            \end{tikzpicture}
+            \caption{\(y = x\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-x-cubed}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x, \x*\x*\x/9);
+            \end{tikzpicture}
+            \caption{\(y = x^3\)}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-cube-root}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3] plot (\x*\x*\x/9, \x);
+            \end{tikzpicture}
+            \caption{\(y = \sqrt[3]{x}\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-sin}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {sin(4*\x r)});
+            \end{tikzpicture}
+            \caption{\(y = \sin x\)}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-tan}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \clip (-3, -3) rectangle (3, 3);
+                \foreach \i in {-3, ..., 3} {
+                    \draw [glasgowSkyblue, thick, domain=-0.38:0.38, samples=200] plot (\x + pi*\i/4, {tan(4*\x r)});
+                }
+            \end{tikzpicture}
+            \caption{\(y = \tan x\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-sinh}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {sinh(\x)/4});
+            \end{tikzpicture}
+            \caption{\(y = \sinh x\)}
+        \end{subfigure}
+        
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-tanh}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick, domain=-3:3, samples=200] plot (\x, {2*tanh(\x)});
+            \end{tikzpicture}
+            \caption{\(y = \tanh x\)}
+        \end{subfigure}
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \tikzsetnextfilename{odd-function-sgn}
+            \begin{tikzpicture}[baseline=(current bounding box), scale=0.8]
+                \draw [glasgowBlue, very thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+                \draw [glasgowBlue, very thick, ->] (0, -3) -- (0, 3) node [left] {\(y\)};
+                \draw [glasgowSkyblue, thick] (-3, -1.5) -- (-0.1, -1.5);
+                \draw [glasgowSkyblue, thick] (0, -1.5) circle [radius = 0.1];
+                \fill [glasgowSkyblue, draw, thick] (0, 0) circle [radius = 0.1];
+                \draw [glasgowSkyblue, thick] (0.1, 1.5) -- (3, 1.5);
+                \draw [glasgowSkyblue, thick] (0, 1.5) circle [radius = 0.1];
+            \end{tikzpicture}
+            \caption{\(y = \sgn x\)}
+        \end{subfigure}
+        \caption{Plots of some odd functions.}
+    \end{figure}
+    
+    \begin{problem}{}{}
+        Which of the following functions, \(f \colon \reals \to \reals\), are odd\footnote{Ans: 2, 3, 5, 6, 8}?
+        You can check this by plotting the function or by checking the definition, that \(f(-x) = f(x)\).
+        \begin{enumerate}
+            \item \(f(x) = x^6\);
+            \item \(f(x) = x^5\);
+            \item \(f(x) = x^3 + x^5\);
+            \item \(f(x) = x^3 + 2x^2\);
+            \item \(f(x) = x\);
+            \item \(f(x) = \sin x + \tan x\);
+            \item \(f(x) = 7\);
+            \item \(f(x) = 0\);
+            \item \(f(x) = \abs{x^3}\).
+        \end{enumerate}
+    \end{problem}
+    
+    Again, if we combine odd functions we often get an odd function back, but sometimes we get an even function.
+    
+    \begin{lma}{}{}
+        Let \(f, g \colon \reals \to \reals\) be odd functions.
+        Then the function \(f + g \colon \reals \to \reals\) defined by
+        \begin{equation}
+            (f + g)(x) = f(x) + g(x)
+        \end{equation}
+        is also odd.
+        \begin{proof}
+            ~\\[-3ex]
+            \begin{nbproblem}{}{}
+                Modify the proof of \cref{lma:sum of evens is even} to the odd case.
+            \end{nbproblem}
+        \end{proof}
+    \end{lma}
+    
+    \begin{lma}{}{}
+        Let \(f, g \colon \reals \to \reals\) be odd functions.
+        Then the function \(f \cdot g \colon \reals \to \reals\) (not \(f \circ g\)) defined by
+        \begin{equation}
+            (f \cdot g)(x) = f(x)g(x)
+        \end{equation}
+        is \emph{even}.
+        \begin{proof}
+            For all \(x \in \reals\) we have
+            \begin{multline*}
+                (f \cdot g)(-x) = f(-x)g(-x) = [-f(x)][-g(x)]\\
+                = f(x)g(x) = (f \cdot g)(x). \qedhere
+            \end{multline*}
+        \end{proof}
+    \end{lma}
+    
+    \subsection{Odd and Even}
+    It is important to note that many\footnote{In fact, the chance that a randomly picked function is either odd or even is 0\% (see \href{https://en.wikipedia.org/wiki/Almost_surely}{probability zero}, which doesn't mean something is impossible).} functions are neither even nor odd.
+    They do not possess the required form of mirror symmetry.
+    
+    However, particularly when dealing with integrals, it's useful to have even and odd functions, for the reasons set forth in \cref{rmk:even function integral,rmk:odd function integral}.
+    Fortunately, the next result saves us here.
+    We can always write any function as a sum of an even and odd function.
+    
+    \begin{thm}{}{}
+        Any function, \(f \colon \reals \to \reals\), can be written as a sum of an even and odd function.
+        \begin{proof}
+            Define two new functions, \(\reals \to \reals\), by
+            \begin{align}
+                f_{\symrm{e}}(x) &= \frac{1}{2}[f(x) + f(-x)];\\
+                f_{\symrm{o}}(x) &= \frac{1}{2}[f(x) - f(-x)].\\
+            \end{align}
+            Notice that
+            \begin{multline}
+                f_{\symrm{e}}(x) + f_{\symrm{o}}(x) = \frac{1}{2}[f(x) + \cancel{f(-x)}] + \frac{1}{2}[f(x) - \cancel{f(-x)}]\\
+                = \frac{1}{2}f(x) + \frac{1}{2}f(x) = f(x).
+            \end{multline}
+            So, \(f_{\symrm{e}} + f_{\symrm{o}} = f\).
+            We now only need to check that \(f_{\symrm{e}}\) and \(f_{\symrm{o}}\) are even and odd.
+            
+            We start with \(f_{\symrm{o}}\).
+            For all \(x \in \reals\) we have
+            \begin{align}
+                f_{\symrm{o}}(-x) &= \frac{1}{2}[f(-x) - f(-(-x))]\\
+                &= \frac{1}{2}[f(-x) - f(x)]\\
+                &= -\frac{1}{2}[f(x) - f(-x)]\\
+                &= -f_{\symrm{o}}(x).
+            \end{align}
+            Thus, \(f_{\symrm{o}}\) is even.
+            \begin{nbproblem}{}{}
+                Show that \(f_{\symrm{e}}\) is even to finish the proof.
+            \end{nbproblem}
+        \end{proof}
+    \end{thm}
+    
+    \begin{wrn}
+        Note that the notation \(f_{\symrm{e}}\) and \(f_{\symrm{o}}\) is not standard, I've just made it up.
+        You can use it, but you have to define it.
+        We usually call \(f_{\symrm{e}}\) (\(f_{\symrm{o}}\)) the even (odd) part of \(f\).
+    \end{wrn}
+    
+    \begin{exm}{}{}
+        \begin{enumerate}
+            \item \(f(x) = x^2 + x^3\) is neither even nor odd, since \(f(-x) = (-x)^2 + (-x)^3 = x^2 - x^3 \ne \pm f(x)\).
+            However, \(x^2\) is even and \(x^3\) is odd.
+            Note that if we use the formulae computed in the proof above we get that \(f_{\symrm{e}}(x) = [f(x) + f(-x)]/2 = [x^2 + x^3 + x^2 - x^3]/2 = x^2\), and similarly \(f_{\symrm{o}}(x) = x^3\).
+            \item \(f(x) = (1 + x)\cos(x)\) has even part \(\cos x\) and odd part \(x \cos x\).
+        \end{enumerate}
+    \end{exm}
+    
+    \begin{remark}{}{}
+        A similar result is true for matrices: every matrix, \(A\), can be written as a sum of a symmetric matrix and an antisymmetric matrix,
+        \begin{equation}
+            A_{\symrm{s}} = \frac{1}{2}(A + A^{\trans}), \qqand A_{\symrm{a}} = \frac{1}{2}(A - A^{\trans}).
+        \end{equation}
+    \end{remark}
+    
+    \section{Periodic Functions}
+    Consider the function \(f \colon \reals_{\ge 0} \to \reals\) given by taking \(f(x)\) to be the fractional part of \(x\).
+    That is, we ignore anything in front of the decimal place.
+    For example, \(f(3.14) = 0.14\), \(f(1) = 0\), \(f(2.7) = 0.7\), and so on.
+    Notice that there is some repeating to the outputs, we have \(f(0.14) = 0.14\), \(f(1.14) = 0.14\), \(f(2.14) = 0.14\), and so on.
+    In fact, every time we add \(1\) to the input we don't change the output at all, \(f(x + 1) = f(x)\) for all \(x \in \reals_{\ge 0}\).
+    This function is plotted in \cref{fig:sawtooth}.
+    This periodic repetition leads to the following definition.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{sawtooth}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [very thick, glasgowBlue, <->] (0, 2) node [left] {\(y\)} -- (0, 0) -- (6, 0) node [below] {\(x\)};
+            \foreach \i in {0, ..., 3} {
+                \draw [thick, glasgowSkyblue] (1.5*\i, 0) -- ++ (1.5, 1.5);
+            }
+            \draw [thick, <->, glasgowPillarbox] (3.44, 0.3*1.5) -- ++ (1.5, 0) node [midway, above] {\(\lambda\)}; 
+        \end{tikzpicture}
+        \caption[Sawtooth function]{The sawtooth function, also known as the fractional part function. Notice that if you pick any point on the function, then move a distance \(\lambda = 1\) to the right you end up back on the function.}
+    \end{figure}
+    
+    \begin{dfn}{Periodic Function}{}
+        A function\footnote{We could also consider any subset of \(\reals\) for the domain, or any set, so long as it makes sense to add things, and when \(t\) is in the domain so is \(t + kT\) for \(k \in \integers\) and \(T\) the period.} \(f \colon \reals \to B\) (for any set \(B\)) is \define{periodic}\index{periodic function} if there exists some \(T \in \reals\) such that
+        \begin{equation}
+            f(t + T) = f(t)
+        \end{equation}
+        for all \(t \in \reals\).
+        
+        We call the smallest such \(T\) the \defineindex{period} of \(f\).
+    \end{dfn}
+    
+    \begin{ntn}{}{}
+        Typically we think of periodic things as happening in time, as some sort of repeating process.
+        This is why we swapped to calling our input variable \(t\), and the period \(T\).
+        When we want to talk about things which are periodic in space we use \(x\) and \(\lambda\) (lambda) for the period.
+    \end{ntn}
+    
+    \begin{dfn}{Frequency}{}
+        The \defineindex{frequency} of a periodic function is how many times it repeats per unit time.
+        The formula for computing this is
+        \begin{equation}
+            \nu = \frac{1}{T}.
+        \end{equation}
+    \end{dfn}
+    
+    \begin{ntn}{}{}
+        Here we use the Greek letter, \(\nu\) (nu, pronounced new) for frequency.
+        It's also common to use \(f\), but we want to save that for functions.
+        
+        When we have trigonometry or circles (such as oscillations in \href{https://en.wikipedia.org/wiki/Simple_harmonic_motion}{simple harmonic motion}) it's common to instead use the angular frequency, \(\omega = 2\pi \nu\).
+        When we're thinking about these circles in space we tend to use \(k = 2\pi/\lambda\), which we call the wavenumber as the spatial equivalence of the angular frequency.
+        This just saves us writing a bunch of \(2\pi\)s everywhere, it's instead part of \(\omega\) or \(k\).
+    \end{ntn}
+    
+    \begin{exm}{}{exm:clock hands}
+        Consider the function \(f \colon \reals \to \reals\) which takes in a time, \(t\) (in hours since midnight), and outputs the angle of the hour hand at time \(t\) (as an angle in radians measured clockwise from the vertical).
+        At time \(t = 0\) the angle is \(f(0) = 0\).
+        At time \(t = \qty{3}{\hour}\) the time is 3 o'clock and the angle is \(f(3) = \pi/4\).
+        At time \(t = \qty{11}{\hour}\) the time is 11 o'clock and the angle is \(f(11) = 13\pi/12\).
+        At time \(t = \qty{12}{\hour}\) the time is 12 o'clock and the angle is, again, \(f(12) = 0\).
+        
+        This function is periodic, and since the position of the hand repeats every 12 hours (and no sooner) the period is \(\qty{12}{\hour}\).
+        
+        Similarly, we could define functions \(g\) and \(h\) where \(g(t)\) is the angle of the minute hand at time \(t\) and \(h(t)\) is the angle of the second hand.
+        These are also periodic with periods \(\qty{60}{\minute}\) and \(\qty{60}{\second}\) respectively.
+    \end{exm}
+    
+    \begin{exm}{}{exm:pendulum period}
+        Consider a pendulum.
+        We can define a function, \(\theta \colon \reals \to \reals\), which takes in the time, \(t\), since the pendulum was released, and outputs the angle of the pendulum to the vertical (see \cref{fig:pendulum}).
+        The pendulum swings back and forth, so this angle repeats.
+        
+        If you set up and solve the corresponding second order differential equation (or just believe me) the period is \(T = 2\pi\sqrt{L/g}\) where \(L\) is the length of the pendulum and \(g\) is the acceleration due to gravity (notice that this doesn't depend on the mass of the pendulum!).
+        
+        This result is only valid for small values of \(\theta\) (say up to about \qty{0.2}{\radian}).
+        The reason for this is that at some point we used a small angle approximation, \(\sin \theta \approx \theta\) which is only valid if we work with small values of \(\theta\) (for \(\theta\) in radians).
+        This is actually a special case of a Taylor series, which we'll learn about in block 4.
+        We also assume that the mass of the pendulum is concentrated at the bottom of the pendulum, so the rod should be massless (or close to it).
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{pendulum}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [thick, glasgowBlue] (-3, 0) -- (3, 0);
+            \foreach \i in {-3, -2.6, ..., 3} {
+                \draw [thick, glasgowBlue] (\i, 0) -- ++ (0.2, 0.4);
+            }
+            \draw [very thick, glasgowMoss] (0, 0) -- ++ (240:5) coordinate (a);
+            \fill [glasgowMoss] (a) circle [radius=0.3];
+            \draw [glasgowLeaf, very thick, dashed] (0, 0) -- (0, -3);
+            \draw [glasgowLeaf, very thick] (240:0.9) arc (240:270:0.9);
+            \node [glasgowLeaf] at (250:1.2) {\(\theta\)};
+        \end{tikzpicture}
+        \caption{A pendulum.}
+        \label{fig:pendulum}
+    \end{figure}
+    
+    Notice that if a function has period \(T\) then \(f(t) = f(t + kT)\) for all \(k \in \integers\).
+    So a periodic function is one which repeats over and over again.
+    This means a periodic function is fully determined by what happens in the space of one period.
+    After that it's just repeating what we've already seen.
+    This is useful when doing Fourier analysis, which you'll see in Engineering Mathematics 2.
+    
+    \begin{exm}{}{}
+        The most common periodic functions are trigonometric.
+        For example, \(\sin\) and \(\cos\) are periodic with period \(2\pi\) (or \ang{360}).
+        In fact, both \cref{exm:clock hands,exm:pendulum period} are secretly periodic because they can be rewritten in terms of \(\sin\) or \(\cos\).
+        
+        Similarly, \(\tan\) is periodic with period \(\pi\) (or \ang{180}).
+        This is half the period of \(\sin\) and \(\cos\) because it turns out that \(\sin(x + \pi) = \sin(x)\) and \(\cos(x + \pi) = -\cos(x)\), so \(\tan(x + \pi) = \sin(x + \pi)/\cos(x + \pi) = [-\sin x]/[-\cos x] = \sin x/\cos x = \tan x\).
+    \end{exm}
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{sin-periodic}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [very thick, glasgowBlue, ->] (-5, 0) -- (5, 0) node [below] {\(x\)};
+            \draw [very thick, glasgowBlue, ->] (0, -2) -- (0, 2) node [left] {\(y\)};
+            \draw [thick, glasgowSkyblue, samples=200, domain=-5:5] plot (\x, {1.5*sin(3*\x r)});
+            \fill [glasgowPillarbox] (0.8, {1.5*sin(3*0.8 r)}) coordinate (a) circle [radius=0.05];
+            \draw [glasgowPillarbox, thick, dashed, font=\tiny] (0.8, 0)  node [below] {\(x_2\)} -| (a);
+            \fill [glasgowPillarbox] (0.8+2*pi/3, {1.5*sin(3*(0.8+2*pi/3) r)}) coordinate (b) circle [radius=0.05];
+            \draw [glasgowPillarbox, thick, dashed, font=\tiny] (0.8+2*pi/3, 0)  node [below] {\(x_2 + 2\pi\)} -| (b);
+            \draw [glasgowPillarbox, thick, <->] (a) -- (b) node [midway, above] {\(2\pi\)};
+            \fill [glasgowLavender] (-3.5*pi/3, {-1.5*sin(3.5*pi r)}) coordinate (a) circle [radius=0.05];
+            \draw [glasgowLavender, thick, dashed, font=\tiny] (-3.5*pi/3, 0)  node [below] {\(x_1\)} -| (a);
+            \fill [glasgowLavender] (-1.5*pi/3, {-1.5*sin(-1.5*pi/3 r)}) coordinate (b) circle [radius=0.05];
+            \draw [glasgowLavender, thick, dashed, font=\tiny] (-1.5*pi/3, 0)  node [below] {\(x_1 + 2\pi\)} -| (b);
+            \draw [glasgowLavender, thick, <->] (a) -- (b) node [midway, above] {\(2\pi\)};
+        \end{tikzpicture}
+        \caption{The function \(\sin\) is periodic with period \(2\pi\).}
+    \end{figure}
+    
+    \chapter{Least Squares Regression}
+    \section{Overview}
+    Suppose we have some data where each data point has two values, say current, \(I\), and voltage, \(V\).
+    We can plot this data to see what it looks like.
+    If this is real world data it will be noisy, it won't perfectly align.
+    
+    If we suspect that the relationship is linear (in the absence of noise) then a sensible thing to do is to plot a line of best fit.
+    In school you probably just did this by eye, you look at the data and draw your best guess at the \enquote{correct} line.
+    This isn't very rigorous.
+    In this chapter we'll look at a method which gives you (under some mild assumptions) the best line of best fit for the data.
+    Best here having a technical meaning of giving the \enquote{maximum likelihood estimate}, which you can think of as meaning that if I give you one piece of the data then picking the corresponding point on the line gives you the best chance of being close to the other piece of the data (in the absence of other information).
+    
+    The formulae that we use to find this line are pretty horrible looking sums, which I'll show you in the next section.
+    Don't get too scared, after that we'll do an example of how we use these formulae.
+    
+    \section{The Formal Statement}
+    Suppose that we are given the following data:
+    \begin{equation}
+        \text{data} = \{(x_i, y_i) \mid i = 1, \dotsc, n\}
+    \end{equation}
+    where \(x_i, y_i \in \reals\).
+    We assume that this data has a linear relationship, that is, that there's some values \(m\) and \(c\) so that this data satisfies
+    \begin{equation}
+        y = mx + c
+    \end{equation}
+    \emph{except} that because this is real world data the points won't be exactly on the line, just near it.
+    
+    Then we can use the following formulae to compute \(m\) and \(c\):
+    \begin{align}
+        m &= \frac{\displaystyle \sum_{i=1}^n (x_i - \overline{x})(y_i - \overline{y})}{\displaystyle \sum_{i=1}^n (x_i - \overline{x})^2},\\
+        \overline{x} &= \frac{1}{n} \sum_{i=1}^n x_i,\\
+        \overline{y} &= \frac{1}{n} \sum_{i=1}^n y_i,\\
+        c &= \overline{y} - m\overline{x}.
+    \end{align}
+    
+    Start by computing \(\overline{x}\) and \(\overline{y}\), which are just the average \(x\) and \(y\) values of the data.
+    I recommend that you compute the numerator and denominator of \(m\) separately, then compute their ratio.
+    
+    This method is called \enquote{linear least squares regression}:
+    \begin{itemize}
+        \item linear: we're fitting a straight line,
+        \item least squares: the maths used to derive these involves looking to minimise the square of the error,
+        \item regression: a general term for methods which try to come up with equations to fit a bunch of data.
+    \end{itemize}
+    
+    \begin{remark}{}{}
+        To find these formulae you need multivariable calculus, and slightly more statistics knowledge than we currently have.
+        Calculations for doing this can be found online, such as \href{https://pages.stat.wisc.edu/~kdlevin/teaching/Fall2022/STAT340/lecs/OLS_derivation.html}{here}, but they aren't very informative.
+        It's really an optimisation problem (which we'll see in block 4), we're looking to minimise the \enquote{loss} which is similar to the total error.
+        There are different ways to measure loss, which lead to different formulae, and the key thing here is that the loss is chosen to be the sum of the squares of the errors in each term.
+        These are the squares we wish to make \enquote{least}.
+    \end{remark}
+    
+    \section{Application}
+    A student is doing an experiment relating the current, \(I\), and voltage, \(V\), measured in a circuit to the EMF, \(\emf\), of the battery and the resistance of the circuit, \(R\).
+    Consider the following data:
+    \begin{equation}
+        \begin{array}{r|ccccc}
+            \text{Current } (\unit{\milli\ampere}) & 1.49 & 1.25 & 3.62 & 4.55 & 5.12 \\ \hline
+            \text{Voltage }(\unit{\volt}) & 1.28 & 1.36 & 0.91 & 0.79 & 0.63
+        \end{array}
+    \end{equation}
+    The student wishes to find the resistance and EMF from this data with a straight line of best fit.
+    They know that the expected relationship is
+    \begin{equation}
+        \emf = V + IR.
+    \end{equation}
+    We want to use our data, \(V\) and \(I\), as our \(y\) and \(x\) variables (we could do it either way, but the algebra's slightly easier if we choose \(V\) as our \(y\) variable).
+    To do so we need to rearrange this into the form \(y = mx + c\):
+    \begin{equation}
+        V = -RI + \emf.
+    \end{equation}
+    From this we see that the relationship should be a straight line with gradient \(-R\) and \(y\)-intercept \(\emf\).
+    
+    We can now jump into computing these quantities using the formulae from the previous section.
+    We'll start with \(\overline{x}\) and \(\overline{y}\), which are \(\overline{I}\) and \(\overline{V}\) for us.
+    We have \(5\) pieces of data, so \(n = 5\).
+    Then
+    \begin{align}
+        \overline{I} &= \frac{1}{n} \sum_{i=1}^n I_i\\
+        &= \frac{1}{5} (1.49 + 1.25 + 3.62 + 4.55 + 5.12)\\
+        &= \qty{3.206}{\milli\ampere},
+    \end{align}
+    and
+    \begin{align}
+       \overline{V} &= \frac{1}{n} \sum_{i=1}^n V_i\\
+       &= \frac{1}{5} (1.28 + 1.36 + 0.91 + 0.79 + 0.63)\\
+       &= \qty{0.994}{\volt}.
+    \end{align}
+    Next, we need to compute \(R\), which is \(m\) in the formulae above.
+    Let's start with the numerator:
+    \begin{align}
+        \sum_{i=1}^n (I_i - \overline{I})(V_i - \overline{V}) &= (1.49 - 3.206)(1.28 - 0.994)\\
+        &{}+ (1.25 - 3.206)(1.36 - 0.994) \notag\\
+        &{}+ (3.62 - 3.206)(0.91 - 0.994) \notag\\
+        &{}+ (4.55 - 3.206)(0.79 - 0.994) \notag\\
+        &{}+ (5.12 - 3.206)(0.63 - 0.994) \notag\\
+        &= \qty{-2.212}{\milli\ampere\volt},
+    \end{align}
+    and then the denominator:
+    \begin{align}
+        \sum_{i=1}^n (I_i - \overline{I})^2 &= (1.49 - 3.206)^2 + (1.25 - 3.206)^2 + (3.62 - 3.206)^2\\
+        &{}+ (4.55 - 3.206)^2 + (5.12 - 3.206)^2 \notag\\
+        &= \qty{12.412}{\milli\ampere\squared}.
+    \end{align}
+    Then we have
+    \begin{equation}
+        -R = \frac{\qty{-2.212}{\milli\ampere\volt}}{\qty{12.412}{\milli\ampere\squared}} = \qty{-0.172}{\volt\per\milli\ampere} =  \qty{-0.172}{\kilo\ohm}.
+    \end{equation}
+    This tells us the resistance of the circuit, \(R = \qty{0.172}{\kilo\ohm} = \qty{172}{\ohm}\) (note \(\qty{1}{\ohm} = \qty{1}{\volt\per\ampere}\)).
+    Finally, we can compute the EMF, which is \(c\) in the equations:
+    \begin{equation}
+        \emf = \overline{V} - R\overline{I} = \qty{0.994}{\volt} - \qty{0.172}{\ohm} \cdot \qty{3.206}{\ampere} = \qty{1.57}{\volt}.
+    \end{equation}
+    
+    This data and the line of best fit,
+    \begin{equation}
+        V = -0.172 I + 1.57,
+    \end{equation}
+    are plotted in \cref{fig:line of best fit}.
+    
+    \begin{figure}
+        \centering
+        \tikzsetnextfilename{line-of-best-fit}
+        \begin{tikzpicture}[baseline=(current bounding box)]
+            \draw [very thick, glasgowBlue, <->] (0, 3.3) node [left] {\(V\ (\unit{\volt})\)} -- (0, 0) -- ++ (6, 0) node [below] {\(I\ (\unit{\milli\ampere})\)};
+            \draw [thick, glasgowSkyblue, domain=0:5.5] plot (\x, -2*0.172*\x + 2*1.57);
+            \foreach \i/\v in {1.49/1.28, 1.25/1.36, 3.62/0.91, 4.55/0.79, 5.12/0.63} {
+                \fill [glasgowPillarbox] (\i, 2*\v) circle [radius=0.05];
+            }
+        \end{tikzpicture}
+        \caption{Line of best fit.}
+        \label{fig:line of best fit}
+    \end{figure}
+    
+    \begin{remark}{Fake Data!}{}
+        I didn't really do an experiment to get this data.
+        Instead I assumed this relationship and added some noise to the data\footnote{What I did was assume normally distributed errors of a reasonable standard deviation and add randomly sampled errors to each term.} (this is cheating, never do this with real data!).
+        The values I started with were \(\emf = \qty{1.5}{\volt}\) and \(R = \qty{200}{\ohm}\).
+        You can see that these are quite close, but not equal, to the values computed by least squares.
+        In general least squares doesn't give you the \enquote{true} values, but the best estimate given the data.
+        Here it just so happens that the slope of the data is slightly different to the \enquote{true} slope.
+        If we had more data they wouldn't be so different, five isn't very many data points.
+        
+        That said, this is actually a very close fit, as can be seen from the picture.
+        A more technical way to evaluate the fit is to compute something called the \enquote{\(r^2\) value} (see \href{https://en.wikipedia.org/wiki/Coefficient_of_determination}{here}).
+        The closer this is to \(1\) the better the fit.
+        In this case it's \(r^2 = 0.993\), which makes this a very good fit.
+        Mostly this is a result of me making up the data for the purposes of the question.
+    \end{remark}
 \end{document}

@@ -511,6 +511,43 @@ crefname={Problem}{Problems}]%
 }{}
 % End problem environment ---------------------------------------------------
 
+% Nonbreaking Problem environment -------------------------------------------------------
+%\newcounter{problem}
+%\counterwithin{problem}{section}
+
+\BeforeBeginEnvironment{nbproblem}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+    \refstepcounter{equation}%
+}
+
+\AfterEndEnvironment{nbproblem}{%
+    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
+}
+
+\newtcbtheorem[number freestyle={\noexpand\theequation},%
+crefname={Problem}{Problems}]%
+{nbproblem}{Problem}%
+{enhanced jigsaw,%
+    shrink break goal=0.5\baselineskip,%
+    segmentation style=solid,%
+    theorem style=plain,%
+    %    before title app={{\tiny\ensuremath{\blacksquare}}\nobreakspace},%
+    fonttitle=\sffamily\upshape\bfseries\small,%
+    coltitle=black,%
+    description font=\sffamily\upshape\bfseries\small,%
+    description color=black,%
+    colframe=highlight,%
+    colback=azure(web)(azuremist)!45,%
+    boxrule=0pt,%
+    leftrule=4pt,%
+    sharp corners,%
+    description delimiters={}{},%
+    separator sign={\nobreakspace {\color{black}---}},%
+    terminator sign={\ },%
+    label separator=,
+}{}
+% End problem environment ---------------------------------------------------
+
 %% Notation environment ------------------------------------------------------
 %\BeforeBeginEnvironment{ntn}{%
 %    \vspace*{0pt plus 3pt} % To help with underfull vbox warnings
