@@ -183,6 +183,10 @@ end
         A proposition is a result which is less important than a theorem (where exactly the line is between theorem and proposition is up to the author).
     \end{prp}
     
+    Occasionally, I'll say something about the complex numbers, which you'll learn about in the next block.
+    If you aren't already familiar with the complex numbers you can ignore this, but it might be interesting to come back to later.
+    When I do this I'll either make it as a remark or write \textcolor{gray}{in grey}.
+    
     \section{Symbols and Alphabets}
     Maths is full of lots of symbols.
     Any important ones will be defined in the notes.
@@ -4985,4 +4989,131 @@ end
         Here I've used \(x\) as the variable in the polynomial and \(t\) as the variable in the function.
         We typically use \(x\) for both (or \(t\) for both).
     \end{exm}
+    
+    \section{Factorising}
+    You should be familiar with the notion of factorising polynomials from when you learned about solving quadratic equations.
+    In this section we define what we mean by factorising a polynomial.
+    We'll look at how to actually do this in the next section.
+    It turns out that factorisation is actually quite a lot of work.
+    It's much easier to \emph{check} a factorisation, just expand it and check that you get back the original polynomial.
+    The important thing to emphasise here is that whether we can factorise a polynomial depends on what coefficients we allow.
+    
+    \begin{dfn}{Factorisation}{}
+        A \defineindex{factorisation} of a polynomial over \(A\) is a way of writing it as a product of polynomials (other than the constant polynomials) all of which are also in \(A[x]\).
+    \end{dfn}
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(x^2 + x - 2\) factorises in \(\integers[x]\) to give \((x - 2)(x + 1)\).
+            \item \(6x^4 - 15x^3 - 25x^2 + 10x + 14\) factorises in \(\integers[x]\) to give \((3x^2 - 2)(x + 1)(2x - 7)\), \((3x^3 + 3x^2 - 2x - 2)(2x - 7)\), \((3x^2 - 2)(2x^2 - 5x - 7)\) or \((6x^3 - 21x^2 - 4x + 14)(x + 1)\).
+            Notice that all of these factorisations are related, in particular, \(3x^3 + 3x^2 - 2x - 2 = (3x^2 - 2)(x + 1)\), \(2z^2 - 5x - 7 = (x + 1)(2x - 7)\) and \(6x^3 - 21x^2 - 4x + 14 = (3x^2 - 2)(2x - 7)\).
+            In a sense, the first factorisation into 3 brackets is \enquote{the most} factorised, in fact, it cannot be factorised further over \(\integers\), this leads to the next definition.
+            \item \(x^2 - 2\) doesn't factorise over \(\integers\), or over \(\rationals\).
+            That is, we can't write \(x^2 - 2\) as a product of two or more polynomials with integer or rational coefficients.
+            However, we do have \(x^2 - 2 = (x - \sqrt{2})(x + \sqrt{2})\), so \(x^2 - 2\) does factorise over \(\reals\).
+            So, whether we can factorise depends on the coefficients we consider.
+            \item \textcolor{gray}{Only read this bit if you know about complex numbers. \(x^2 + 1\) doesn't factorise over \(\reals\), we can't write it as a product of polynomials with real coefficients, but we do have \(x^2 + 1 = (x - j)(x + j)\) where \(j = \sqrt{-1}\). So again, whether a polynomial factorises depends on what coefficients we allow.}
+        \end{itemize}
+    \end{exm}
+    
+    \begin{dfn}{Irreducible}{}
+        A polynomial which cannot be further factorised over \(A\) is called \defineindex{irreducible} over \(A\).
+        A polynomial which is not irreducible is \defineindex{reducible}
+    \end{dfn}
+    
+    You should think of irreducible polynomials like prime numbers.
+    Recall that a prime number, \(p\), is a positive integer other than \(1\) with exactly two factors.
+    Any positive integer can be written as a product of prime numbers, for example
+    \begin{equation}
+        10 = 2 \cdot 5, \quad 36 = 2^2 \cdot 3^2, \quad 84 = 2^2 \cdot 3 \cdot 7 \qand 123 = 3 \cdot 41.
+    \end{equation}
+    Any prime cannot be further factorised, they are irreducible, so the best we can do is write, say \(17 = 17\), it doesn't factorise further.
+    As with the case of polynomials we don't want to consider \(1 \cdot 17\) to be a factorisation of \(17\), which is why we don't call \(1\) a prime number.
+    If \(1\) is prime then \(1 \cdot 17\) and \(1 \cdot 1 \cdot 17\) are two different factorisations of \(17\), but they really shouldn't be.
+    
+    \begin{exm}{}{}
+        Looking at the previous example we have that
+        \begin{itemize}
+            \item \(x^2 + x - 2\) is reducible over \(\integers\).
+            \item \(6x^4 - 15x^3 - 25x^2 + 10x + 14\) is reducible over \(\integers\).
+            \item \(x^2 - 2\) is irreducible over \(\integers\), irreducible over \(\rationals\), but reducible over \(\reals\).
+            \item \textcolor{gray}{\(x^2 - 1\) is irreducible over \(\reals\) and reducible over \(\complex\).}
+        \end{itemize}
+    \end{exm}
+    
+    We know that a quadratic (that is, a degree \(2\) polynomial) can be factorised only when it has roots, \(\alpha\) and \(\beta\), in which case it factorises as \((x - \alpha)(x - \beta)\).
+    This means that over \(\reals\) a quadratic factorises if and only if it has real roots, that is, if and only if it has a non-negative discriminant (\(\Delta = b^2 - 4ac\)).
+    However, if \(a \ne 1\) we can always factorise out \(a\) over \(\reals\) to get
+    \begin{equation}
+        ax^2 + bx + c = a\left( x^2 + \frac{b}{a}x + \frac{c}{a} \right)
+    \end{equation}
+    so any quadratic is either reducible, or can be written as a constant, \(a\), times a quadratic where the leading term\footnote{The \defineindex{leading term} of a polynomial is the coefficient of the highest degree term, in this case, the coefficient of \(x^2\).} is \(1\).
+    
+    In fact, the only other polynomials over \(\reals\) which are irreducible are constants (degree \(0\)) and linear terms (degree \(1\)), again with leading term \(1\).
+    Anything else will factor leaving us only with these terms.
+    This gives the following result.
+    
+    \begin{thm}{}{thm:factorisation of poly over R}
+        Any polynomial with coefficients in \(\reals\) can be factored as a product of
+        \begin{enumerate}
+            \item constants;
+            \item linear terms with leading coefficient \(1\); and
+            \item irreducible quadratics with leading coefficient \(1\).
+        \end{enumerate}
+    \end{thm}
+    
+    \begin{exm}{}{}
+        The polynomial
+        \begin{equation}
+            7x^4 + 7x^3 - 21x^2 - 7x - 14
+        \end{equation}
+        factorises as
+        \begin{equation}
+            7(x - 1)(x + 2)(x^2 - 1).
+        \end{equation}
+        We have a constant, \(7\), two linear terms, \(x - 1\) and \(x + 2\), and an irreducible quadratic, \(x^2 - 1\).
+        Note that you don't always get each of these appearing, I've just chosen this example so that all three possible cases occur.
+    \end{exm}
+    
+    \begin{remark}{}{rmk:factorsiation of poly over C}
+        If we work over \(\complex\) things are simpler.
+        The \emph{\href{https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra}{Fundamental Theorem of Algebra}} tells us that every non-constant polynomial over \(\complex\) has roots in \(\complex\).
+        In particular, this means every quadratic has roots.
+        So there are no irreducible quadratics over \(\complex\), and every polynomial over \(\complex\) factorises as a product of
+        \begin{enumerate}
+            \item constants; and
+            \item linear terms with leading coefficient 1.
+        \end{enumerate}
+        That is, any polynomial always factorises as
+        \begin{equation}
+            C(x - \alpha_1) (x - \alpha_2) \dotsm (x - \alpha_n)
+        \end{equation}
+        where \(C \in \complex\) is a constant, \(\alpha_i \in \complex\) are the \(n\) roots of our degree \(n\).
+        
+        The fancy term for this is that \(\complex\) is \emph{\href{https://en.wikipedia.org/wiki/Algebraically_closed_field}{algebraically closed}}.
+    \end{remark}
+    
+    \begin{remark}{Unique Factorisation Domains}{}
+        Above I say factorising polynomials into irreducible polynomials is \emph{analogous} to factorising integers into prime numbers.
+        Actually, they are abstractly exactly the same.
+        It turns out that both \(\integers\) and \(\integers[x]\) have the special property of being a \href{https://en.wikipedia.org/wiki/Unique_factorization_domain}{unique factorisation domain} (UFD), meaning that there is exactly one way (up to order of terms and \enquote{units} (see next paragraph)) to factorise any element such that all factors are irreducible.
+        
+        Note that if we don't work over \(\integers\), say if we factorise over \(\rationals\), we can write \(17 = \frac{34}{3} \cdot \frac{3}{2}\).
+        In fact, over \(\rationals\) there are infinitely many ways to factorise \(17\) as a product of two smaller numbers, the one above is \(\frac{2 \cdot 17}{3} \cdot \frac{3}{2}\), and we can replace \(2\) and \(3\) with any positive integers (although this will only give us something new if they don't share any common factors).
+        Worse still, if we work over \(\reals\) then we get even more factorisations, like \(17 = \sqrt{17} \cdot \sqrt{17}\) or \(17 = \frac{8.5\pi}{\e} \cdot \frac{2\e}{\pi}\).
+        
+        The reason that we get multiple factorisations in \(\rationals\) and \(\reals\) is that we can take any factorisation and multiply it by \(x \cdot \frac{1}{x}\) (where \(x \ne 0\)) to get a new factorisation.
+        The technical statement here is that we can multiply by a unit and its inverse (a unit is just any element, \(x\), where \(1/x\) makes sense (without leaving the original set), so in \(\rationals\) or \(\reals\) the units are all \(x \ne 0\), whereas in \(\integers\) the only units are \(x = \pm 1\)).
+        Because of this we always ignore units in factorisations, so really factorisations are only unique up to terms like \(x \cdot \frac{1}{x}\).
+        So despite seemingly having multiple factorisations of \(17\) in \(\rationals\) and \(\reals\) none of these are really new, they're all of the form \(17 = 17 \cdot x \cdot \frac{1}{x}\).
+        For example, \(17 = 17 \cdot \frac{\pi}{2\e} \cdot \frac{2\e}{\pi}\) is the last factorisation above.
+        Similarly, \(\sqrt{17} = 17/\sqrt{17}\), so \(17 = \sqrt{17} \cdot \sqrt{17} = \frac{17}{\sqrt{17}} \cdot \sqrt{17}\) is the factorisation into square roots.
+        We don't consider these to really be different factorisations, so \(\rationals\) and \(\reals\) are actually also UFDs.
+        \textcolor{gray}{The complex numbers are also a UFD.}
+        
+        The fact that \(\integers\), \(\rationals\), and \(\reals\) \textcolor{gray}{(and \(\complex\))} are UFDs means that so are \(\integers[x]\), \(\rationals[x]\), and \(\reals[x]\) \textcolor{gray}{(and \(\complex[x]\))}.
+        This means that not only do factorisations like the ones in \cref{thm:factorisation of poly over R} and \cref{rmk:factorsiation of poly over C} exist, but they are unique, up to multiplication by units and changing the order of terms.
+    \end{remark}
+    
+    
 \end{document}
