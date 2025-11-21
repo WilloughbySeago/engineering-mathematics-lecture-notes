@@ -5075,6 +5075,9 @@ end
         Note that you don't always get each of these appearing, I've just chosen this example so that all three possible cases occur.
     \end{exm}
     
+    In order to actually compute the factorised version of a polynomial we'll need polynomial division, the subject of the next section.
+    The section after that covers how to use this to find the full factorisation of a polynomial.
+    
     \begin{remark}{}{rmk:factorsiation of poly over C}
         If we work over \(\complex\) things are simpler.
         The \emph{\href{https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra}{Fundamental Theorem of Algebra}} tells us that every non-constant polynomial over \(\complex\) has roots in \(\complex\).
@@ -5115,5 +5118,341 @@ end
         This means that not only do factorisations like the ones in \cref{thm:factorisation of poly over R} and \cref{rmk:factorsiation of poly over C} exist, but they are unique, up to multiplication by units and changing the order of terms.
     \end{remark}
     
+    \section{Polynomial Division}
+    Think about the integers, \(\integers\).
+    We can't (without leaving \(\integers\)) do \(\frac{13}{5}\), but we can do \enquote{division with remainder}, which means we can write
+    \begin{equation}
+        13 = 5 \cdot 2 + 3
+    \end{equation}
+    which tells us that \(5\) goes into \(13\) twice with \(3\) left over.
+    Another way to read this is that \(13\) divided by \(5\) is \(2\) remainder \(3\).
+    The general structure of dividing \(a\) by \(b\) with remainder is
+    \begin{equation}
+        a = bq + r
+    \end{equation}
+    where \(q\) is the \enquote{quotient}, and \(r\) is the \enquote{remainder}.
+    Note that by choosing \(q\) to be as large as possible while keeping \(bq \le a\) we can always choose to have \(0 \le r < b\).
+    We assume that this is always the case, which also makes \(q\) and \(r\) unique for a given \(a\) and \(b\) in \(\integers\).
     
+    In the rest of this section we'll see that we can do something very similar with polynomials.
+    Given two polynomials if we divide the the result isn't always a polynomial, for example, if \(f(x) = 3x^2 + 2x - 1\) and \(g(x) = x\) then
+    \begin{equation}
+        \frac{f(x)}{g(x)} = \frac{3x^2 + 2x - 1}{x} = 3x + 2 - \frac{1}{x},
+    \end{equation}
+    which is not a polynomial due to the \(1/x\) term.
+    
+    \begin{remark}{}{}
+        With integer division sometimes it's fine to move to the rational numbers, where \(13/5\) makes perfect sense.
+        The equivalent of this for polynomials, \(A[x]\), is that sometimes we're happy to have terms like \(1/x\) or \(1/(x^2 + 1)\), in which case we can move to something called the \enquote{field of rational functions}, often denoted \(A(x)\) (with normal brackets instead of square (that is parentheses instead of brackets if you're American)).
+        We'll look at rational functions in the next chapter.
+    \end{remark}
+    
+    Fortunately, we can do \enquote{division with remainder} for polynomials as well.
+    For the example above, we have
+    \begin{equation}
+        3x^2 + 2x - 1 = x(3x + 2) - 1.
+    \end{equation}
+    Here we have written \(f(x) = 3x^2 + 2x - 1\) as the denominator, \(g(x) = x\) times the quotient, \(q(x) = 3x + 2\), plus a remainder, \(r(x) = -1\).
+    In general, we're looking to write
+    \begin{equation}
+        f(x) = g(x)q(x) + r(x).
+    \end{equation}
+    
+    When we had integer division we were able to bound the size of \(r\).
+    We can similarly bound the \enquote{size} of \(r(x)\), but the correct notion of \enquote{size} for our polynomials is their degree.
+    In particular, we can always choose \(q(x)\) in such a way that \(\deg r(x) < \deg g(x)\) (note that \(\deg r(x) \ge 0\) always as degree can never be negative).
+    
+    Going back to integer division think about how you would compute \(q = 2\) and \(r = 3\) in \(13\) divided by \(5\):
+    \begin{enumerate}
+        \item First, we want the largest multiple of \(5\) which is still less than or equal to \(13\), \(5 \cdot 1 = 5\), \(5 \cdot 2 = 10\), \(5 \cdot 3 = 15\), which is too big, so \(q = 2\) is the correct choice.
+        \item Second, we now want to write
+        \begin{equation}
+            13 = 5 \cdot 2 + r
+        \end{equation}
+        and we can solve this for \(r\), we have
+        \begin{equation}
+            r = 13 - 5 \cdot 2 = 13 - 10 = 3.
+        \end{equation}
+        \item Finally, we can write this result as
+        \begin{equation}
+            13 = 5 \cdot 2 + 3.
+        \end{equation}
+    \end{enumerate}
+    The process for doing polynomial division is the same, except that we often have to repeat the process multiple times because each step just reduces the degree by 1, and we need to keep decreasing it until the degree it's at most the degree of \(g(x)\).
+    
+    \textit{Here's an example talking you through the thought process of doing division by a polynomial.
+    If you just want to see the \enquote{standard method} (long division) just skip ahead a bit.}
+    
+    For example, suppose we want to divide \(f(x) = 5x^3 + 4x - 2\) by \(g(x) = x + 1\).
+    We start by looking for the \enquote{largest} multiple of \(x + 1\) which is still \enquote{less than or equal to} \(f(x)\).
+    In the case of polynomials that means that we want the degree of this multiple to be at most the degree of \(f(x)\) (which is \(3\)) and we want the coefficient of the highest degree term of our multiple of \(x + 1\) to be at most the coefficient of the highest degree term of \(f(x)\) (which is \(5\)).
+    Note that when we consider multiples of \(x + 1\) we're allowed to multiply it by any polynomial.
+    
+    A first guess is that we should consider \(5x^2(x + 1)\) since this is \(5x^3 + 5x^2\).
+    However, then we need to subtract off \(5x^2\) since there's no \(x^2\) term in \(f(x)\).
+    We can only subtract multiples of \(x + 1\), so we should subtract \(5x(x + 1)\).
+    That is, we should consider \((5x^2 - 5x)(x + 1) = 5x^3 + 5x^2 - 5x^2 - 5x = 5x^3 - 5x\).
+    The problem with this is that we have \(-5x\), but we want \(+4x\), so we should add \(9x\), and again, we can only add multiples of \(x + 1\), so we add \(9(x + 1)\).
+    That is, we should consider 
+    \begin{equation}
+        (5x^2 - 5x + 9)(x + 1) = 5x^3 - 5x^2 + 9x + 5x^2 - 5x + 9 = 5x^3 + 4x + 9.
+    \end{equation}
+    Now the problem is that we have \(9\), but we want \(-2\) as the constant term.
+    This really is a problem since to get the required \(-11\) as a multiple of \(x + 1\) we'll have to introduce more factors of \(x\), which messes up what we've already done!
+    So, \(-11\) is the remainder, the bit we can't get as a multiple of the denominator.
+    
+    The result of all of this is that
+    \begin{equation}
+        \underbrace{5x^3 + 4x - 2}_{f(x)} = \underbrace{(x + 1)}_{g(x)}\underbrace{(5x^2 - 5x + 9)}_{q(x)} + \underbrace{(-11)}_{r(x)}.
+    \end{equation}
+    In this case the remainder happens to be a constant, because \(\deg g(x) = 1\) and so the degree of the remainder has to be \(0\) (that is, the remainder is just a constant with no \(x\) term).
+    
+    That's quite a lot of work to think through all of that each time.
+    For this reason there's a standard way to set these calculations out so that you don't end up writing paragraphs of text just to divide two polynomials.
+    To divide \(f(x)\) by \(g(x)\) the first step is to write
+    \begin{equation}
+        g(x) \overline{\smash{\big)}f(x)}.
+    \end{equation}
+    It's usually best to write out all powers of \(x\) below the leading order, so including the ones with \(0\) as their coefficient.
+    For the example of dividing \(f(x) = 5x^3 + 4x - 2\) by \(g(x) = x + 1\) we start by writing
+    \begin{equation}
+        x + 1 \overline{\smash{\raisebox{.18ex}{\(\mathclose{\big)}\)}}5x^3 + 0x^2 + 4x - 2}.
+    \end{equation}
+    We then look at the first term of the numerator, here \(5x^3\).
+    Above this we write what we have to multiply the denominator, \(x + 1\), by to get this as the leading term, so in this case it's \(5x^2\).
+    Below this we write the result of multiplying this by the denominator, so \(5x^2(x + 1)\).
+    This leaves us with
+    \begin{equation}
+        \begin{gathered}
+            \phantom{x+1)} 5x^2\\
+            x + 1 \overline{\smash{\raisebox{.16ex}{\(\mathclose{\big)}\)}}5x^3 + 0x^2+ 4x - 2}\\
+            \phantom{x+1)} 5x^3 + 5x^2.
+    \end{gathered}
+    \end{equation}
+    Then we subtract this from the line above, giving
+    \begin{equation}
+        \begin{gathered}
+            \phantom{x+1)} 5x^2\\
+            x + 1 \overline{\smash{\raisebox{.16ex}{\(\mathclose{\big)}\)}}5x^3 + 0x^2+ 4x - 2}\\
+            \phantom{x+1)} \underline{5x^3 + 5x^2}\\
+            \phantom{x+15x^3}\,\,\,-5x^2 +4x - 2.
+        \end{gathered}
+    \end{equation}
+    We then repeat this, using the bottom line, so we look for a multiple of \(x + 1\) which gives us a \(-5x^2\) term, so in this case we have \(-5x\) since \(-5x(x + 1) = -5x^2 - 5x\).
+    We write \(-5x\) above the line, and \(-5x^2 - 5x\) at the bottom and subtract it again:
+    \begin{equation}
+        \begin{gathered}
+            \phantom{x+1)} 5x^2 - 5x\\
+            x + 1 \overline{\smash{\raisebox{.16ex}{\(\mathclose{\big)}\)}}5x^3 + 0x^2+ 4x - 2}\\
+            \phantom{x+1)} \underline{5x^3 + 5x^2}\\
+            \phantom{x+15x^3}\,\,\,-5x^2 + 4x - 2\\
+            \phantom{x+15x^3}\,\,\,\underline{-5x^2 - 5x}\\
+            \phantom{x+15x^3-5x^2+2}\,\,\,9x - 2.\\
+        \end{gathered}
+    \end{equation}
+    We then repeat this one last time, to get a \(9x\) term we take \(9(x + 1)\), writing \(9\) above and \(9x + 9\) below we subtract it to get
+    \begin{equation}
+        \begin{gathered}
+            \phantom{x+1)} 5x^2 - 5x + 9\\[-0.5ex]
+            x + 1 \overline{\smash{\raisebox{.16ex}{\(\mathclose{\big)}\)}}5x^3 + 0x^2+ 4x - 2}\\
+            \phantom{x+1)} \underline{5x^3 + 5x^2}\\
+            \phantom{x+15x^3}\,\,\,-5x^2 + 4x - 2\\
+            \phantom{x+15x^3}\,\,\,\underline{-5x^2 - 5x}\\
+            \phantom{x+15x^3-5x^2+2}\,\,\,9x - 2\\
+            \phantom{x+15x^3-5x^2+2}\,\,\,\underline{9x + 9}\\
+            \phantom{x+15x^3-5x^2+2+2}\,\,\,-11
+        \end{gathered}
+    \end{equation}
+    Now, there's no way to get an \(11\) term by multiplying \(x + 1\) by a polynomial, so we're done.
+    We read off \(q(x)\) from the top, \(q(x) = 5x^2 - 5x + 9\), and we read off \(r(x)\) from what's left at the end, \(r(x) = -11\).
+    Thus,
+    \begin{equation}
+        5x^3 + 4x - 2 = (x + 1)(5x^2 - 5x + 9) + (-11),
+    \end{equation}
+    which is exactly what we got before.
+    
+    There are many other methods for setting out this division, you may have learned other methods.
+    Any of these methods will work (if you do it correctly), and it doesn't matter which you use.
+    I prefer this long division style set up because it lets you see the maths that's actually going on.
+    A lot of other methods require less writing but obfuscate the maths behind just blindly writing things in a grid in some way\footnote{See \href{https://www.bbc.co.uk/bitesize/guides/z2nttfr/revision/4}{here}.}.
+    The choice is yours though, so use the one you're happiest with.
+    
+    \section{Factorising Polynomials}
+    Consider a polynomial, \(f(x)\).
+    If \(\alpha_1\) is a root of this polynomial then \(f(\alpha_1) = 0\) and \(f(x)\) factorises as \(f(x) = (x - \alpha_1)f_1(x)\), where \(f_1(x)\) is a polynomial of degree less than the degree of \(f(x)\).
+    
+    We can repeat this, if \(\alpha_2\) is a root of \(f_1(x)\) then \(f_1(\alpha_2) = 0\) and \(f_1(x)\) factorises as \((x - \alpha_2)f_2(x)\) where \(f_2(x)\) is a polynomial of degree less than the degree of \(f_1(x)\).
+    Then \(f(x) = (x - \alpha_1)(x - \alpha_2)f_2(x)\).
+    
+    Repeating this enough times eventually we have roots \(\alpha_1, \alpha_2, \dotsc, \alpha_k\) such that \(f(\alpha_1) = f(\alpha_1) = \dotsb = f(\alpha_k) = 0\) and
+    \begin{equation}
+        f(x) = (x - \alpha_1) (x - \alpha_1) \dotsm (x - \alpha_k) f_k(x)
+    \end{equation}
+    where \(f_k(x)\) is a polynomial of degree at most \((\deg f(x)) - k\) and \(f_k(x)\) is irreducible, it can't be factored further.
+    
+    This process will allow us to factorise any polynomial as far as possible.
+    The steps are as follows:
+    \begin{enumerate}
+        \item Find a root, \(\alpha\), that is a value at which the polynomial vanishes.
+        This can be done using a computer, or graphically by plotting and guessing a value, or for most exam questions the roots will be simple, so just start with \(1\), \(-1\), \(2\), \(-2\), and so on and check if \(f\) vanishes at any of these values!
+        \item Then perform polynomial division, dividing \(f(x)\) by \(x - \alpha\).
+        There will be no remainder since \(x - \alpha\) is a factor of the polynomial.
+        If there is a remainder either something in your division has gone wrong or you were wrong about \(\alpha\) being a root.
+        The polynomial you're left with as the quotient in this is \(f_1(x)\).
+        \item Repeat the process for \(f_1(x)\), finding a root, \(\beta\), dividing by \(x - \beta\), with no remainder, and then you get \(f_2(x)\).
+        \item Eventually you'll be left with something that has no roots, and then you can stop.
+        If we're looking for real roots then when you get to a quadratic you can check its discriminant, if it's negative you can stop, if it's non-negative you need to factorise the quadratic and then you'll be done.
+    \end{enumerate}
+    
+    \begin{exm}{}{}
+        Consider the polynomial
+        \begin{equation}
+            f(x) = 2x^4 - 30x^2 - 20x + 48.
+        \end{equation}
+        It turns out that
+        \begin{equation}
+            f(1) = 2 - 30 - 20 + 48 = 0,
+        \end{equation}
+        so \(1\) is a root of this polynomial.
+        This means that
+        \begin{equation}
+            f(x) = (x - 1)f_1(x)
+        \end{equation}
+        for some polynomial \(f_1(x)\), and we know that \(f_1(x)\) is at most a cubic.
+        We use polynomial division, computing \(f(x)\) divided by \(x - 1\).
+        This gives 
+        \begin{equation}
+            f_1(x) = 2x^3 + 2x^2 - 28x - 48.
+        \end{equation}
+        It turns out that
+        \begin{equation}
+            f(-3) = 2 \cdot (-3)^3 + 2 \cdot (-3)^2 - 28 \cdot (-3) - 48 = 0,
+        \end{equation}
+        so \(-3\) is a root of this polynomial.
+        This means that
+        \begin{equation}
+            f(x) = (x - 1)(x + 3)f_2(x)
+        \end{equation}
+        for some polynomial \(f_2(x)\), and we know that \(f_2(x)\) is at most a quadratic.
+        We use polynomial division, computing \(f_1(x)\) divided by \(x + 3\).
+        This gives
+        \begin{equation}
+            f_2(x) = 2x^2 - 4x - 16.
+        \end{equation}
+        This is a quadratic, and we can use the quadratic formula to compute its roots (or just continue to guess them), they're
+        \begin{equation}
+            x = \frac{-(-4) \pm \sqrt{(-4)^2 - 4 \cdot 2 \cdot (-16)}}{2 \cdot 2} = \frac{4 \pm \sqrt{144}}{4} = -2, 4.
+        \end{equation}
+        Notice that \((x + 2)(x - 4)\) factorises as \(x^2 -2x - 4\), so this isn't quite right!
+        When we just look at roots we're ignoring an overall scale factor, here \(2\), so we need to add that in manually.
+        This leaves us with
+        \begin{equation}
+            f(x) = 2(x - 1)(x + 3)(x + 2)(x - 4).
+        \end{equation}
+    \end{exm}
+    
+    \chapter{Rational Functions}
+    \section{Rational Functions}
+    \begin{dfn}{Rational Function}{}
+        Let \(f(x), g(x) \in \reals[x]\) be polynomials (with coefficients in \(\reals\)).
+        We can form a rational function
+        \begin{equation}
+            \begin{aligned}
+                F \colon \reals \setminus \{\text{roots of } g\} &\to \reals\\
+                x \mapsto \frac{f(x)}{g(x)}.
+            \end{aligned}
+        \end{equation}
+        In this context the roots of \(g\) are often called the \define{poles}\index{pole} of the rational function.
+    \end{dfn}
+    
+    Note that we have to remove the roots of \(g\) because if we don't then there will be some inputs where \(g(x) = 0\), and then we're dividing by zero!
+    
+    The word \enquote{rational} here is used in the sense of a ratio, just as it's used for the \enquote{rational numbers} which are ratios of two integers.
+    
+    \begin{exm}{}{}
+        \begin{itemize}
+            \item \(\frac{2}{x}\) defines a rational function \(\reals \setminus \{0\} \to \reals\);
+            \item Any polynomial, \(f(x)\), defines a rational function \(\reals \to \reals\) since \(f(x) = \frac{f(x)}{1}\) and \(1\) has no roots.
+            \item \(\frac{5x^3 + 2}{4x + 2}\) defines a rational function \(\reals \setminus \{-1/2\} \to \reals\);
+            \item \(\frac{3x^5 - 7x^2 + 2x}{(x - 1)(x + 2)}\) defines a rational function \(\reals \setminus \{1, -2\} \to \reals\).
+        \end{itemize}
+    \end{exm}
+    
+    \section{Partial Fractions}
+    Just as \(\frac{5}{2}\) is an improper fraction, since the numerator is bigger than the denominator, there is a notion of \enquote{proper} rational functions.
+    
+    \begin{dfn}{}{}
+        A rational function, \(\frac{f(x)}{g(x)}\), is 
+        \begin{enumerate}
+            \item \defineindex{strictly proper} if \(\deg f(x) < \deg g(x)\);
+            \item \defineindex{proper} if \(\deg f(x) \le \deg g(x)\);
+            \item \defineindex{improper} if \(\deg f(x) > \deg g(x)\).
+        \end{enumerate}
+    \end{dfn}
+    
+    For integer fractions we can write \(\frac{5}{2} = 2 + \frac{1}{2}\), which lets us write the improper fraction \(5/2\) as a sum of proper fractions, \(2\) and \(1/2\).
+    
+    There is a general process for writing any rational function as a sum of proper rational functions.
+    This process is known as \enquote{partial fractions}.
+    
+    \begin{dfn}{Partial Fractions}{}
+        A \defineindex{partial fractions decomposition} of a rational function is a way of writing it as a sum of strictly proper rational functions.
+    \end{dfn}
+    
+    The method for finding a partial fractions decomposition is probably best explained by example.
+    Suppose we have the rational function
+    \begin{equation}
+        F(x) = \frac{5x^3 + 2x - 1}{(x + 1)(x - 1)}.
+    \end{equation}
+    The first step is always to fully factorise the denominator, which is already done in this example.
+    This is the simplest case where there are no repeated factors and no quadratic terms in the denominator.
+    The rule is that our partial fraction decomposition will look something like
+    \begin{equation}
+        F(x) = A(x) + \frac{B}{x + 1} + \frac{C}{x - 1}.
+    \end{equation}
+    We have some term that isn't a fraction, and then a fraction for each factor of the denominator.
+    Our goal is to work out what the values of \(A(x)\), \(B\), and \(C\) are.
+    Note that \(A(x)\) can be a polynomial in general, but since we're looking for proper fractions \(B\) and \(C\) are just numbers.
+    
+    To find \(A(x)\) we first do polynomial division with remainder.
+    Doing so we find that
+    \begin{equation}
+        5x^3 + 2x - 1 = (x + 1)(x - 1) \cdot 5x + (7x -1).
+    \end{equation}
+    Then dividing by \((x + 1)(x - 1)\) we have
+    \begin{equation}
+        F(x) = \frac{5x^3 + 2x - 1}{(x + 1)(x - 1)} = 5x + \frac{7x - 1}{(x + 1)(x - 1)}.
+    \end{equation}
+    From this we see that \(A(x) = 5x\) and
+    \begin{equation}
+        \frac{B}{x + 1} + \frac{C}{x - 1} = \frac{7x - 1}{(x + 1)(x - 1)}.
+    \end{equation}
+    To find \(B\) and \(C\) we now multiply by the denominator, \((x + 1)(x - 1)\), which gives
+    \begin{equation}
+        B(x - 1) + C(x + 1) = 7x - 1.
+    \end{equation}
+    There's a couple of ways to proceed now to find \(B\) and \(C\).
+    One is to expand everything and equate coefficients of \(x\).
+    An easier way to proceed is to pick values for \(x\) that make some terms vanish.
+    Let's take \(x = 1\).
+    Then \(x - 1 = 0\) and we're left with
+    \begin{equation}
+        2C = 6 \implies C = 3.
+    \end{equation}
+    Thus, we have
+    \begin{equation}
+        B(x - 1) + 3(x + 1) = 7x - 1.
+    \end{equation}
+    Again, we can expand and equate coefficients, or we can set \(x = -1\) giving
+    \begin{equation}
+        -2B = -8 \implies B = 4.
+    \end{equation}
+    Now that we have all unknown values we can just put everything back together to find
+    \begin{equation}
+        F(x) = 5x + \frac{4}{x + 1} + \frac{3}{x - 1}.
+    \end{equation}
+    At this point you should always recombine the fractions and check that you do get back the original fraction!
+    
+    There are two things that can make partial fractions more complicated than this.
+    The first is if the factorised denominator has an irreducible quadratic,
 \end{document}
